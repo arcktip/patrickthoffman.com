@@ -46,11 +46,14 @@ lftp -c "
   set sftp:auto-confirm yes
   set net:max-retries 3
   open sftp://$DH_USER:$DH_PASS@$DH_HOST
-  mirror --reverse --delete --verbose \
-    --exclude '^\.git' \
-    --exclude '^\.DS_Store' \
-    --exclude '^\.env\.deploy' \
-    --exclude '^deploy\.sh' \
+  mirror --reverse --verbose \
+    --exclude-glob .git \
+    --exclude-glob .git/ \
+    --exclude-glob .DS_Store \
+    --exclude-glob .dh-diag \
+    --exclude-glob .dh-diag/ \
+    --exclude-glob .env.deploy \
+    --exclude-glob deploy.sh \
     $SCRIPT_DIR/ $DH_DIR
   quit
 "
