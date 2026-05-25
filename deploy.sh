@@ -15,7 +15,7 @@ if [ ! -f "$ENV_FILE" ]; then
   cat > "$ENV_FILE" <<EOF
 DH_HOST=$DH_HOST
 DH_USER=$DH_USER
-DH_PASS=$DH_PASS
+DH_PASS='$DH_PASS'
 DH_DIR=$DH_DIR
 EOF
   echo "Credentials saved to .env.deploy"
