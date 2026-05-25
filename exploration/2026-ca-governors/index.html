@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2TKMRQXKMJ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-2TKMRQXKMJ');
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CA Governor 2026 — Assessment Rubric & Candidate Ratings — Patrick T. Hoffman</title>
+  <meta name="description" content="A six-criterion rubric scoring all 61 certified candidates in the 2026 California gubernatorial primary. Primary: June 2, 2026.">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/shared.css">
+  <style>
+    /* Rubric table */
+    .rubric-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0 2rem;
+      font-size: 0.95rem;
+    }
+    .rubric-table th {
+      background: var(--navy-dark);
+      color: rgba(255,255,255,0.85);
+      text-align: left;
+      padding: 0.6rem 0.9rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .rubric-table td {
+      padding: 0.65rem 0.9rem;
+      border-bottom: 1px solid var(--grey-mid);
+      color: var(--text-body);
+      line-height: 1.5;
+      vertical-align: top;
+    }
+    .rubric-table tr:last-child td { border-bottom: none; }
+    .rubric-table tr:nth-child(even) td { background: var(--grey-light); }
+    .rubric-num {
+      font-weight: 700;
+      color: var(--royal);
+      white-space: nowrap;
+    }
+
+    /* Tier heading */
+    .tier-label {
+      display: inline-block;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 3px;
+      margin-right: 0.5rem;
+      vertical-align: middle;
+    }
+    .tier-s  { background: #1a3a8a; color: #fff; }
+    .tier-a  { background: #2a5acd; color: #fff; }
+    .tier-b  { background: #6b7280; color: #fff; }
+    .tier-c  { background: #9ca3af; color: #fff; }
+    .tier-d  { background: #d1d5db; color: #444; }
+
+    /* Tier mapping legend */
+    .tier-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1.25rem 0 2rem;
+    }
+    .tier-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+    }
+
+    /* Candidate card */
+    .candidate-card {
+      border: 1px solid var(--grey-mid);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 2.5rem 0;
+    }
+    .candidate-card-header {
+      background: var(--grey-light);
+      padding: 0.85rem 1.25rem;
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--grey-mid);
+    }
+    .candidate-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--charcoal);
+    }
+    .candidate-party {
+      font-size: 0.75rem;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      font-weight: 600;
+      padding: 0.15rem 0.45rem;
+      border-radius: 3px;
+    }
+    .party-d { background: #dbeafe; color: #1e40af; }
+    .party-r { background: #fee2e2; color: #991b1b; }
+    .party-g { background: #d1fae5; color: #065f46; }
+    .candidate-total {
+      margin-left: auto;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--royal);
+      font-family: 'Playfair Display', serif;
+    }
+    .score-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    .score-table th {
+      background: var(--navy-dark);
+      color: rgba(255,255,255,0.7);
+      padding: 0.45rem 0.75rem;
+      text-align: center;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .score-table td {
+      text-align: center;
+      padding: 0.55rem 0.75rem;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--charcoal);
+      border-right: 1px solid var(--grey-mid);
+    }
+    .score-table td:last-child { border-right: none; }
+    .candidate-notes {
+      padding: 0.85rem 1.25rem;
+      font-size: 0.92rem;
+      color: var(--text-body);
+      line-height: 1.75;
+      border-top: 1px solid var(--grey-mid);
+    }
+    .candidate-notes strong { color: var(--charcoal); }
+
+    /* Tier list (B/C/D) */
+    .tier-list {
+      list-style: none;
+      padding: 0;
+      margin: 1rem 0 2rem;
+    }
+    .tier-list li {
+      padding: 0.65rem 0;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      font-size: 0.98rem;
+      color: var(--text-body);
+      line-height: 1.65;
+    }
+    .tier-list li:last-child { border-bottom: none; }
+    .tier-list strong { color: var(--charcoal); }
+
+    /* How-to-use numbered steps */
+    .how-to ol {
+      padding-left: 1.25rem;
+      margin: 1rem 0;
+    }
+    .how-to li {
+      font-size: 1.05rem;
+      line-height: 1.85;
+      color: var(--text-body);
+      margin-bottom: 0.75rem;
+    }
+
+    @media (max-width: 600px) {
+      .score-table th, .score-table td { padding: 0.4rem 0.4rem; font-size: 0.8rem; }
+      .candidate-total { margin-left: 0; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="top-nav solid" id="topNav">
+  <a href="../../index.html" class="nav-logo">PTH<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="../../index.html#about">About</a></li>
+    <li><a href="../../index.html#journey">Journey</a></li>
+    <li><a href="../../index.html#writing">Writing</a></li>
+    <li><a href="../../index.html#speaking">Speaking</a></li>
+    <li><a href="../../index.html#connect">Connect</a></li>
+  </ul>
+</nav>
+
+<header class="article-header">
+  <div class="article-header-content">
+    <a href="../../index.html" class="article-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+      Back to patrickthoffman.com
+    </a>
+    <div class="article-tags">
+      <span class="article-tag">Politics</span>
+      <span class="article-tag orange">California</span>
+      <span class="article-tag">2026</span>
+    </div>
+    <h1 class="article-title">California Governor 2026</h1>
+    <div class="article-meta">
+      <span class="article-meta-item">Assessment Rubric &amp; Candidate Ratings</span>
+      <span class="article-meta-item">Primary: June 2, 2026</span>
+      <span class="article-meta-item">61 certified candidates · Top two advance</span>
+    </div>
+  </div>
+</header>
+
+<article class="article-body">
+
+  <h2>The Rubric</h2>
+
+  <p>Six criteria, each scored <strong>0–5</strong> (max 30). Weighted equally — adjust based on what you care about most.</p>
+
+  <table class="rubric-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Criterion</th>
+        <th>What it measures</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="rubric-num">1 · Exp</td>
+        <td><strong>Relevant Experience</strong></td>
+        <td>Executive or legislative track record in governance — especially CA or federal — at a scale comparable to running a $300B state</td>
+      </tr>
+      <tr>
+        <td class="rubric-num">2 · Policy</td>
+        <td><strong>Policy Substance</strong></td>
+        <td>Specificity, internal consistency, and feasibility of the platform. Vague slogans score low; named programs with funding mechanisms score high</td>
+      </tr>
+      <tr>
+        <td class="rubric-num">3 · Coalition</td>
+        <td><strong>Coalition &amp; Endorsements</strong></td>
+        <td>Breadth and depth of institutional support: legislators, labor, mayors, congressional delegation</td>
+      </tr>
+      <tr>
+        <td class="rubric-num">4 · Viability</td>
+        <td><strong>Statewide Viability</strong></td>
+        <td>Polling, fundraising, name recognition, and geographic/demographic reach. Can they actually win?</td>
+      </tr>
+      <tr>
+        <td class="rubric-num">5 · Vision</td>
+        <td><strong>Vision for CA's "Big Five"</strong></td>
+        <td>A coherent plan on the projected $35B structural deficit, housing/homelessness, wildfires, federal hostility from the Trump admin, and cost of living</td>
+      </tr>
+      <tr>
+        <td class="rubric-num">6 · Character</td>
+        <td><strong>Character &amp; Judgment</strong></td>
+        <td>Ethics record, temperament, scandals, and how they've handled past crises</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="tier-legend">
+    <div class="tier-legend-item"><span class="tier-label tier-s">S</span> 24–30 · Frontrunner, competent, broad coalition</div>
+    <div class="tier-legend-item"><span class="tier-label tier-a">A</span> 18–23 · Credible major candidate</div>
+    <div class="tier-legend-item"><span class="tier-label tier-b">B</span> 12–17 · Real credentials but low viability</div>
+    <div class="tier-legend-item"><span class="tier-label tier-c">C</span> 6–11 · Minor, niche, or fringe</div>
+    <div class="tier-legend-item"><span class="tier-label tier-d">D</span> 0–5 · Vanity, perennial, or joke candidate</div>
+  </div>
+
+  <p><em>A note up front: I have detailed public records for roughly 15 candidates. The other 45+ are mostly first-time or perennial candidates with thin public footprints — I've tiered them based on what's available but haven't scored them line by line. That's an honest reflection of the information environment, not laziness.</em></p>
+
+  <hr>
+
+  <h2><span class="tier-label tier-s">S</span> Tier S — Frontrunners</h2>
+
+  <p>The field is too fragmented for any candidate to clearly sit in S tier. Hilton, Bianco, Porter, Becerra, Villaraigosa, and Mahan are all bunched in upper-A.</p>
+
+  <hr>
+
+  <h2><span class="tier-label tier-a">A</span> Tier A — Credible Major Candidates</h2>
+
+  <div class="candidate-card">
+    <div class="candidate-card-header">
+      <span class="candidate-name">Katie Porter</span>
+      <span class="candidate-party party-d">D</span>
+      <span class="candidate-total">23 / 30</span>
+    </div>
+    <table class="score-table">
+      <thead><tr><th>Exp</th><th>Policy</th><th>Coalition</th><th>Viability</th><th>Vision</th><th>Character</th></tr></thead>
+      <tbody><tr><td>4</td><td>4</td><td>4</td><td>4</td><td>4</td><td>3</td></tr></tbody>
+    </table>
+    <div class="candidate-notes">3-term US Rep, UC Irvine law prof, Warren protégé. Clear platform on consumer protection, denser housing near transit, middle-class tax cuts, corporate tax increases. Endorsed by Warren, several CA House Dems, Teamsters CA, UAW Region 6. Polling consistently 11–14%. <strong>Knock:</strong> some staff-treatment criticism from her 2024 Senate run; also a fairly thin executive record.</div>
+  </div>
+
+  <div class="candidate-card">
+    <div class="candidate-card-header">
+      <span class="candidate-name">Xavier Becerra</span>
+      <span class="candidate-party party-d">D</span>
+      <span class="candidate-total">23 / 30</span>
+    </div>
+    <table class="score-table">
+      <thead><tr><th>Exp</th><th>Policy</th><th>Coalition</th><th>Viability</th><th>Vision</th><th>Character</th></tr></thead>
+      <tbody><tr><td>5</td><td>4</td><td>4</td><td>3</td><td>4</td><td>3</td></tr></tbody>
+    </table>
+    <div class="candidate-notes">US HHS Secretary (2021–25), CA Attorney General (2017–21), 12-term Congressman. Anti-Trump bona fides — sued the first Trump administration 120+ times. Multiple House Dem endorsements, Latino caucus support. Rising fast post-Swalwell collapse but still trailing in raw polling (~4–6%). <strong>Knock:</strong> recent allegations around a campaign-account siphoning scheme involving a former aide; under sustained attack from Steyer's ad spend.</div>
+  </div>
+
+  <div class="candidate-card">
+    <div class="candidate-card-header">
+      <span class="candidate-name">Antonio Villaraigosa</span>
+      <span class="candidate-party party-d">D</span>
+      <span class="candidate-total">23 / 30</span>
+    </div>
+    <table class="score-table">
+      <thead><tr><th>Exp</th><th>Policy</th><th>Coalition</th><th>Viability</th><th>Vision</th><th>Character</th></tr></thead>
+      <tbody><tr><td>5</td><td>4</td><td>4</td><td>3</td><td>4</td><td>3</td></tr></tbody>
+    </table>
+    <div class="candidate-notes">LA Mayor (2005–13), former Assembly Speaker, second gubernatorial run. Deepest CA governance résumé in the field. Endorsed by Karen Bass, Barbara Boxer, building trades unions, Cruz Bustamante, large local-official roster. Specific platform on homebuyer assistance and an immigration-enforcement task force. Polling 3–5%. <strong>Knock:</strong> 2007 affair and old political baggage still come up; couldn't break through in 2018.</div>
+  </div>
+
+  <div class="candidate-card">
+    <div class="candidate-card-header">
+      <span class="candidate-name">Matt Mahan</span>
+      <span class="candidate-party party-d">D</span>
+      <span class="candidate-total">21 / 30</span>
+    </div>
+    <table class="score-table">
+      <thead><tr><th>Exp</th><th>Policy</th><th>Coalition</th><th>Viability</th><th>Vision</th><th>Character</th></tr></thead>
+      <tbody><tr><td>3</td><td>4</td><td>3</td><td>3</td><td>4</td><td>4</td></tr></tbody>
+    </table>
+    <div class="candidate-notes">San Jose Mayor since 2023. Tightest, most specific platform of the Dem field: tiny-home strategy on unsheltered homelessness, pay-for-performance for officials, gas-tax suspension, no new taxes. Endorsed by Rick Caruso, Sam Liccardo. Made the major TV debate via the Grose qualifying formula despite low polling. <strong>Knock:</strong> short résumé, modest statewide name ID.</div>
+  </div>
+
+  <div class="candidate-card">
+    <div class="candidate-card-header">
+      <span class="candidate-name">Steve Hilton</span>
+      <span class="candidate-party party-r">R</span>
+      <span class="candidate-total">20 / 30</span>
+    </div>
+    <table class="score-table">
+      <thead><tr><th>Exp</th><th>Policy</th><th>Coalition</th><th>Viability</th><th>Vision</th><th>Character</th></tr></thead>
+      <tbody><tr><td>2</td><td>3</td><td>4</td><td>5</td><td>3</td><td>3</td></tr></tbody>
+    </table>
+    <div class="candidate-notes">Former Cameron advisor, former Fox host. Trump-endorsed, with McClintock, Kiley, Voight, Ramaswamy. Polling 14–17% — at or near the lead. Platform: suspend environmental regs, middle-class income tax cuts, open natural land for single-family housing. <strong>Knock:</strong> zero US elected experience; running California is not running a UK PM's policy unit or a cable show.</div>
+  </div>
+
+  <div class="candidate-card">
+    <div class="candidate-card-header">
+      <span class="candidate-name">Chad Bianco</span>
+      <span class="candidate-party party-r">R</span>
+      <span class="candidate-total">19 / 30</span>
+    </div>
+    <table class="score-table">
+      <thead><tr><th>Exp</th><th>Policy</th><th>Coalition</th><th>Viability</th><th>Vision</th><th>Character</th></tr></thead>
+      <tbody><tr><td>3</td><td>3</td><td>4</td><td>5</td><td>2</td><td>2</td></tr></tbody>
+    </table>
+    <div class="candidate-notes">Riverside County Sheriff since 2018. Polling 12–23% — co-leading. Backed by Issa, Calvert, Bono, much of the CA GOP delegation, and several celebrity figures (Lorenzo Lamas, Royce Gracie, Dan Henderson, John Ratzenberger). Platform: eliminate income tax and gas tax, suspend environmental regs, overturn sanctuary law, boost oil/gas. <strong>Knock:</strong> past Oath Keepers ties, lawsuits and a state investigation over deaths in Riverside jails, narrow law-enforcement frame for a governorship.</div>
+  </div>
+
+  <div class="candidate-card">
+    <div class="candidate-card-header">
+      <span class="candidate-name">Tom Steyer</span>
+      <span class="candidate-party party-d">D</span>
+      <span class="candidate-total">18 / 30</span>
+    </div>
+    <table class="score-table">
+      <thead><tr><th>Exp</th><th>Policy</th><th>Coalition</th><th>Viability</th><th>Vision</th><th>Character</th></tr></thead>
+      <tbody><tr><td>2</td><td>3</td><td>3</td><td>4</td><td>3</td><td>3</td></tr></tbody>
+    </table>
+    <div class="candidate-notes">Billionaire hedge fund founder, 2020 presidential candidate. No elected office. Climate-forward platform; endorsed by John Podesta, Ali Zaidi, Bill McKibben, Sierra Club. Spending massive sums — viability is bought, not earned. Polling 8–10%. <strong>Knock:</strong> aggressive negative-ad strategy against Becerra has drawn criticism; hedge-fund background cuts against populist messaging.</div>
+  </div>
+
+  <div class="candidate-card">
+    <div class="candidate-card-header">
+      <span class="candidate-name">Tony Thurmond</span>
+      <span class="candidate-party party-d">D</span>
+      <span class="candidate-total">18 / 30</span>
+    </div>
+    <table class="score-table">
+      <thead><tr><th>Exp</th><th>Policy</th><th>Coalition</th><th>Viability</th><th>Vision</th><th>Character</th></tr></thead>
+      <tbody><tr><td>4</td><td>3</td><td>3</td><td>2</td><td>3</td><td>3</td></tr></tbody>
+    </table>
+    <div class="candidate-notes">State Superintendent of Public Instruction since 2019, former Assembly member. Furthest left of the Dem field — supports a one-time billionaire wealth tax to backfill federal Medi-Cal cuts. Endorsed by Oakland Mayor Barbara Lee, California Faculty Association. Polling 1–3%. <strong>Knock:</strong> management criticism at CDE; limited statewide traction.</div>
+  </div>
+
+  <hr>
+
+  <h2><span class="tier-label tier-b">B</span> Tier B — Real Credentials, Limited Viability</h2>
+
+  <p>Meaningful experience but polling at or near zero with little realistic path.</p>
+
+  <ul class="tier-list">
+    <li><strong>Betty Yee (D)</strong> — Former CA Controller (2015–23). Withdrew and endorsed Steyer; name remains on ballot. Would be A-tier if active.</li>
+    <li><strong>Eric Swalwell (D)</strong> — US Rep since 2013. Was leading the Dem field until April 2026 allegations from multiple women (including one rape allegation). Effectively withdrawn; name remains on ballot. <strong>Disqualified on Character grounds; do not vote for.</strong></li>
+    <li><strong>Ian Calderon (D)</strong> — Former Assembly Majority Leader (2016–20). Polling 0–1%.</li>
+    <li><strong>Michael Younger (D)</strong> — VP at Calbright College, former CA Labor &amp; Workforce Development Agency deputy secretary. Polling &lt;1%.</li>
+    <li><strong>Ethan Agarwal (D)</strong> — Tech entrepreneur, no elected experience but credible business background.</li>
+    <li><strong>Butch Ware (Green)</strong> — Associate professor, 2024 Green VP nominee. Endorsed by Nina Turner. Polling ~2%.</li>
+    <li><strong>David Serpa (R)</strong> — Real estate businessman, 2024 CA-39 runner-up.</li>
+  </ul>
+
+  <hr>
+
+  <h2><span class="tier-label tier-c">C</span> Tier C — Minor or Niche Candidates</h2>
+
+  <p>On the ballot but with minimal coalition, fundraising, or name recognition. Most poll at 0–1% or are not polled at all.</p>
+
+  <ul class="tier-list">
+    <li><strong>Ché Ahn (R)</strong> — Pastor, Bethel-affiliated; religious-right platform</li>
+    <li><strong>Brandon Jones (R)</strong> — Marketing agency founder</li>
+    <li><strong>Daniel Mercuri (R)</strong> — Author, repeat governor candidate (2021, 2022)</li>
+    <li><strong>Leo Zacky (R)</strong> — Zacky Farms VP, repeat governor candidate</li>
+    <li><strong>Jon Slavet (R)</strong> — Tech entrepreneur</li>
+    <li><strong>Sophia Brink</strong> — Legislative aide</li>
+    <li><strong>Zoltan Istvan (D)</strong> — Transhumanist Party founder, perennial candidate</li>
+    <li><strong>Art Olivier (L)</strong> — Former Bellflower mayor</li>
+    <li><strong>Tom Woodard (L)</strong> — Retired CEO</li>
+    <li><strong>Margaret Trowe (NPP)</strong> — Hotel worker</li>
+    <li><strong>Mohammad Arif (P&amp;F)</strong> — Peace and Freedom candidate</li>
+    <li><strong>Serge Fiankan (I)</strong> — Independent</li>
+    <li><strong>Larry Azevedo (D), Sophia Edum-a-Sam (D), Derek Grasty (D)</strong> — Local-level or first-time candidates</li>
+  </ul>
+
+  <hr>
+
+  <h2><span class="tier-label tier-d">D</span> Tier D — Vanity, Perennial, or No Realistic Path</h2>
+
+  <p>First-time candidates with no public platform, perennial candidates with no traction, or filings that read as protest/vanity entries. Not named individually because (a) the information environment is genuinely thin, and (b) the rubric doesn't distinguish meaningfully between them — they all score 0–5 on viability and most criteria. This bucket accounts for the bulk of the gap between the ~20 candidates with public records and the full 61 on the ballot.</p>
+
+  <hr>
+
+  <h2>How to Use This</h2>
+
+  <div class="how-to">
+    <ol>
+      <li><strong>If you only have 30 seconds</strong>, the realistic primary contest is between six people: Hilton, Bianco, Porter, Becerra, Villaraigosa, and Mahan. Most polls have been pointing toward Hilton or Bianco taking one spot, with the Democratic vote splintered across the other five-plus.</li>
+      <li><strong>If a criterion matters more to you than the others</strong>, reweight. If "Vision for the Big Five" is what you care about, the field looks different than if you weight "Viability" heaviest. The numbers above assume equal weighting.</li>
+      <li><strong>Don't take "viability" as destiny.</strong> California Democratic leaders are encouraging late voting precisely because the picture keeps shifting; Swalwell's collapse upended the field in April.</li>
+      <li><strong>Caveats.</strong> These ratings reflect publicly available information as of mid-May 2026, lean on reporting from CalMatters, KQED, KPBS, the LA Times, Politico, and Wikipedia, and represent my best descriptive read — not an endorsement. Reasonable people will score these differently, especially on policy and vision, where values do a lot of the work.</li>
+    </ol>
+  </div>
+
+</article>
+
+<div class="article-author">
+  <div class="author-card">
+    <div class="author-avatar">PTH</div>
+    <div class="author-info">
+      <h4>Patrick T. Hoffman</h4>
+      <p>Product executive, entrepreneur, and architect. Building at Meta. Mentoring PMs through The Product Mentor. Exploring cities, wilderness, and everything in between.</p>
+      <div class="author-links">
+        <a href="https://www.threads.com/@arcktip">@arcktip</a>
+        <a href="https://www.linkedin.com/in/pth/">LinkedIn</a>
+        <a href="https://www.patrickthoffman.com">patrickthoffman.com</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 Patrick T. Hoffman · <a href="https://www.patrickthoffman.com">Home</a> · <a href="https://www.threads.com/@arcktip">@arcktip</a></p>
+</footer>
+
+<script>
+  const nav = document.getElementById('topNav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40));
+</script>
+
+</body>
+</html>
