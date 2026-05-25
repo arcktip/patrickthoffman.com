@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Complete Product Owner — Patrick T. Hoffman</title>
+  <meta name="description" content="A comprehensive 9-module course guide for people transitioning to the Product Owner role. 39 deep-dive topics with practical guidance on Scrum and being an effective Product Owner in an agile environment.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+  <style>
+    /* ========== DESIGN TOKENS (from shared.css) ========== */
+    :root {
+      --royal: #1a3a8a;
+      --royal-light: #2a5acd;
+      --orange: #E87722;
+      --orange-accessible: #c45e0a;
+      --yellow: #F5C518;
+      --white: #FFFFFF;
+      --grey-light: #F0F2F5;
+      --grey-mid: #D1D5DB;
+      --charcoal: #1C1C1E;
+      --navy-dark: #0a1428;
+      --navy-mid: #101e3a;
+      --text-body: #444;
+      --text-secondary: #636363;
+      --text-muted: #666;
+    }
+
+    /* ========== RESET ========== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      color: var(--charcoal);
+      background: var(--white);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+
+    /* ========== NAVIGATION ========== */
+    .top-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      padding: 0.85rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--navy-dark);
+      transition: all 0.4s ease;
+    }
+    .top-nav.scrolled {
+      background: rgba(10,20,40,0.96);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.2);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: 1.15rem;
+      color: var(--white);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+    .nav-logo span { color: var(--orange); }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: rgba(255,255,255,0.65);
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+    }
+
+    /* ========== ARTICLE HEADER ========== */
+    .article-header {
+      background: var(--navy-dark);
+      padding: 8rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .article-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(rgba(26,58,138,0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(26,58,138,0.1) 1px, transparent 1px);
+      background-size: 30px 30px;
+      opacity: 0.4;
+    }
+    .article-header-content {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .article-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      margin-bottom: 2rem;
+      transition: color 0.3s;
+    }
+    .article-back:hover { color: var(--yellow); }
+    .article-back svg { width: 16px; height: 16px; }
+    .article-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .article-tag {
+      display: inline-block;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--white);
+      background: var(--royal);
+      padding: 0.25rem 0.6rem;
+      border-radius: 3px;
+    }
+    .article-tag.orange { background: var(--orange-accessible); }
+    .article-tag.yellow { background: #b8960a; }
+    .article-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+    .article-subtitle {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      max-width: 600px;
+    }
+    .article-meta {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.55);
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .article-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    /* ========== COURSE STATS BAR ========== */
+    .course-stats {
+      background: var(--navy-mid);
+      border-top: 1px solid rgba(26,58,138,0.3);
+      padding: 1.25rem 2rem;
+    }
+    .course-stats-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+    }
+    .stat {
+      text-align: center;
+    }
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--orange);
+    }
+    .stat-label {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.45);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 0.15rem;
+    }
+
+    /* ========== MAIN LAYOUT WITH TOC ========== */
+    .course-layout {
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      max-width: 1100px;
+      margin: 0 auto;
+      gap: 3rem;
+      padding: 3rem 2rem 6rem;
+      align-items: start;
+    }
+
+    /* ========== STICKY TOC ========== */
+    .toc {
+      position: sticky;
+      top: 5rem;
+      padding: 1.5rem 0;
+    }
+    .toc-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .toc-list {
+      list-style: none;
+      border-left: 1px solid var(--grey-mid);
+    }
+    .toc-item {
+      display: block;
+    }
+    .toc-item a {
+      display: block;
+      padding: 0.45rem 0 0.45rem 1rem;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-left: 2px solid transparent;
+      margin-left: -1px;
+      transition: all 0.25s ease;
+      line-height: 1.35;
+    }
+    .toc-item a:hover {
+      color: var(--charcoal);
+    }
+    .toc-item a.active {
+      color: var(--royal);
+      border-left-color: var(--royal);
+      font-weight: 700;
+    }
+
+    /* ========== MODULE SECTIONS ========== */
+    .module {
+      margin-bottom: 3.5rem;
+    }
+    .module-header {
+      margin-bottom: 1.75rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--grey-mid);
+    }
+    .module-eyebrow {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--orange-accessible);
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+    .module-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: var(--charcoal);
+      line-height: 1.25;
+      margin-bottom: 0.6rem;
+    }
+    .module-description {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+
+    /* ========== TOPIC ACCORDION ========== */
+    .topic {
+      border: 1px solid rgba(0,0,0,0.07);
+      border-radius: 8px;
+      margin-bottom: 0.75rem;
+      background: var(--white);
+      transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .topic:hover {
+      border-color: rgba(26,58,138,0.2);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    }
+    .topic.open {
+      border-color: rgba(26,58,138,0.25);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+    .topic-trigger {
+      width: 100%;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1.1rem 1.25rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      font-family: inherit;
+    }
+    .topic-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.8rem;
+      font-weight: 900;
+      color: var(--royal);
+      background: rgba(26,58,138,0.06);
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+      transition: all 0.3s ease;
+    }
+    .topic.open .topic-number {
+      background: var(--royal);
+      color: var(--white);
+    }
+    .topic-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .topic-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--charcoal);
+      line-height: 1.3;
+      margin-bottom: 0.2rem;
+    }
+    .topic-summary {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .topic-chevron {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      margin-top: 6px;
+      color: var(--grey-mid);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s;
+    }
+    .topic.open .topic-chevron {
+      transform: rotate(180deg);
+      color: var(--royal);
+    }
+
+    /* ========== TOPIC EXPANDED CONTENT ========== */
+    .topic-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .topic.open .topic-content {
+      max-height: 5000px;
+    }
+    .topic-body {
+      padding: 0 1.25rem 1.5rem 4rem;
+    }
+    .topic-divider {
+      height: 1px;
+      background: var(--grey-mid);
+      margin-bottom: 1.5rem;
+      opacity: 0.5;
+    }
+    .topic-body p {
+      font-size: 1rem;
+      line-height: 1.85;
+      color: var(--text-body);
+      margin-bottom: 1.25rem;
+    }
+    .topic-body p:last-child {
+      margin-bottom: 0;
+    }
+    .topic-body .lead {
+      font-size: 1.05rem;
+      color: var(--charcoal);
+      font-weight: 400;
+    }
+    .topic-takeaways {
+      background: var(--grey-light);
+      border-left: 3px solid var(--royal);
+      border-radius: 0 8px 8px 0;
+      padding: 1.25rem 1.5rem;
+      margin-top: 1.5rem;
+    }
+    .topic-takeaways-title {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+      color: var(--royal);
+      margin-bottom: 0.6rem;
+    }
+    .topic-takeaways p {
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: var(--text-body);
+      margin-bottom: 0;
+    }
+
+    /* ========== AUTHOR CARD ========== */
+    .article-author {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 2rem 4rem;
+    }
+    .author-card {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      padding: 2rem;
+      background: var(--grey-light);
+      border-radius: 10px;
+      border-left: 3px solid var(--royal);
+    }
+    .author-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--navy-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--orange);
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+    .author-info h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .author-info p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .author-links {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+    .author-links a {
+      font-size: 0.8rem;
+      color: var(--royal-light);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+    .author-links a:hover { color: var(--orange); }
+
+    /* ========== FOOTER ========== */
+    footer {
+      position: relative;
+      z-index: 10;
+      background: var(--navy-dark);
+      color: rgba(255,255,255,0.4);
+      text-align: center;
+      padding: 2.5rem 2rem;
+      font-size: 0.8rem;
+    }
+    footer a {
+      color: var(--orange);
+      text-decoration: none;
+    }
+    footer a:hover { color: var(--yellow); }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 900px) {
+      .course-layout {
+        grid-template-columns: 1fr;
+        padding: 2.5rem 1.5rem 4rem;
+      }
+      .toc {
+        position: relative;
+        top: 0;
+        background: var(--grey-light);
+        border-radius: 10px;
+        padding: 1.25rem 1.5rem;
+        order: -1;
+      }
+      .toc-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem 0;
+        border-left: none;
+      }
+      .toc-item a {
+        border-left: none;
+        padding: 0.35rem 0.75rem;
+        border-radius: 4px;
+        font-size: 0.7rem;
+      }
+      .toc-item a.active {
+        background: rgba(26,58,138,0.08);
+        border-left: none;
+      }
+    }
+    @media (max-width: 768px) {
+      .article-header { padding: 7rem 1.5rem 3rem; }
+      .topic-body { padding: 0 1rem 1.5rem 1rem; }
+      .article-author { padding: 0 1.5rem 3rem; }
+      .author-card { flex-direction: column; text-align: center; }
+      .author-links { justify-content: center; }
+      .course-stats-inner { gap: 1.5rem; }
+    }
+
+    /* ========== REDUCED MOTION ========== */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== NAVIGATION ========== -->
+  <nav class="top-nav" id="topNav">
+    <a href="/" class="nav-logo">PTH<span>.</span></a>
+    <ul class="nav-links">
+      <li><a href="/#about">About</a></li>
+      <li><a href="/#journey">Journey</a></li>
+      <li><a href="/#writing">Writing</a></li>
+      <li><a href="/#speaking">Speaking</a></li>
+      <li><a href="/#connect">Connect</a></li>
+    </ul>
+  </nav>
+
+  <!-- ========== ARTICLE HEADER ========== -->
+  <header class="article-header">
+    <div class="article-header-content">
+      <a href="/#writing" class="article-back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back to Writing
+      </a>
+      <div class="article-tags">
+        <span class="article-tag">Scrum</span>
+        <span class="article-tag orange">Product</span>
+        <span class="article-tag yellow">Mentorship</span>
+      </div>
+      <h1 class="article-title">The Complete Product Owner</h1>
+      <p class="article-subtitle">A course for people in the Product Owner role. Nine modules. Thirty-nine deep-dive topics. Everything you need to lead with clarity.</p>
+      <div class="article-meta">
+        <span class="article-meta-item">Patrick T. Hoffman</span>
+        <span class="article-meta-item">2026</span>
+        <span class="article-meta-item">~42 min read</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== STATS BAR ========== -->
+  <div class="course-stats">
+    <div class="course-stats-inner">
+      <div class="stat">
+        <div class="stat-number">9</div>
+        <div class="stat-label">Modules</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">39</div>
+        <div class="stat-label">Topics</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">3</div>
+        <div class="stat-label">Pillars</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">5</div>
+        <div class="stat-label">Scrum Events</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== MAIN CONTENT ========== -->
+  <div class="course-layout">
+    <main class="course-content">
+
+      <!-- ===== MODULE 1 ===== -->
+      <section class="module" id="mod-1">
+        <div class="module-header">
+          <div class="module-eyebrow">Module 1</div>
+          <h2 class="module-title">Agile &amp; Scrum Foundations</h2>
+          <p class="module-description">The philosophy, values, and principles that underpin Agile and Scrum. Product Managers transitioning into the Product Owner role must first understand why these frameworks exist and the problems they solve.</p>
+        </div>
+
+        <div class="topic" id="topic-1">
+          <button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false">
+            <span class="topic-number">1</span>
+            <div class="topic-info">
+              <div class="topic-name">The Scrum Alliance</div>
+              <div class="topic-summary">Understanding the governing body behind Scrum certification and community.</div>
+            </div>
+            <svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="topic-content">
+            <div class="topic-body">
+              <div class="topic-divider"></div>
+              <p class="lead">The Scrum Alliance is one of the most recognized organizations in the Agile world. Founded in 2001 by Ken Schwaber and others, it exists to promote and advance the practice of Scrum globally. For new Product Managers stepping into the Product Owner role, understanding the Scrum Alliance matters because it sets the standards for certification, training, and community resources you will rely on throughout your career.</p>
+              <p>The Scrum Alliance offers a tiered certification path. The entry-level Certified ScrumMaster (CSM) and Certified Scrum Product Owner (CSPO) certifications are the most popular starting points. Beyond these, advanced certifications such as Advanced CSPO (A-CSPO) and Certified Scrum Professional Product Owner (CSP-PO) allow you to deepen your expertise and demonstrate mastery to employers and stakeholders.</p>
+              <p>What distinguishes the Scrum Alliance from other certification bodies is its emphasis on in-person or live virtual training with Certified Scrum Trainers (CSTs). This means your learning is guided by experienced practitioners, not just a self-paced online exam. The Alliance also maintains a global community through user groups, conferences like the Global Scrum Gathering, and an extensive library of resources.</p>
+              <p>As a new Product Owner, joining the Scrum Alliance community gives you access to mentors, networking opportunities, and continuing education requirements that keep your skills sharp. Think of the Alliance not just as a credential provider but as your professional home for Scrum practice.</p>
+              <div class="topic-takeaways">
+                <div class="topic-takeaways-title">Key Takeaways</div>
+                <p>Pursue CSPO certification as a baseline credential. Leverage the Scrum Alliance community for ongoing learning and mentorship. Understand that Scrum Alliance certifications require live instructor-led training, which builds deeper understanding than self-study alone.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic" id="topic-2">
+          <button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false">
+            <span class="topic-number">2</span>
+            <div class="topic-info">
+              <div class="topic-name">Agile</div>
+              <div class="topic-summary">The overarching philosophy of adaptive, iterative software and product development.</div>
+            </div>
+            <svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="topic-content">
+            <div class="topic-body">
+              <div class="topic-divider"></div>
+              <p class="lead">Agile is not a single methodology but rather an umbrella term for a family of approaches that share common values: collaboration, adaptability, customer focus, and iterative delivery. For a Product Manager becoming a Product Owner, understanding Agile at this conceptual level is essential because Scrum is just one implementation of Agile thinking.</p>
+              <p>The Agile movement emerged in the 1990s as a response to the failures of traditional "waterfall" project management. In waterfall, teams spent months or years gathering requirements, designing systems, building them, and then testing at the end. The result was often a product that no longer matched market needs by the time it shipped. Agile flipped this model by advocating for short development cycles, frequent customer feedback, and continuous adaptation.</p>
+              <p>Agile encompasses frameworks like Scrum, Kanban, Extreme Programming (XP), Lean Software Development, and others. Each emphasizes different aspects of the Agile philosophy but shares the core belief that working software delivered frequently is more valuable than comprehensive documentation delivered late.</p>
+              <p>For Product Owners, Agile thinking means you are not expected to have all the answers upfront. Instead, you are expected to continuously learn from users, inspect what the team has built, and adapt your plans accordingly. Your product backlog is a living document, not a fixed contract. Your roadmap is a hypothesis, not a guarantee.</p>
+              <p>The most common misconception new Product Managers have about Agile is that it means "no planning." In reality, Agile requires more frequent and more disciplined planning than waterfall. You plan at the release level, the sprint level, and the daily level. The difference is that each planning session incorporates the latest information from customers and the development team.</p>
+              <div class="topic-takeaways">
+                <div class="topic-takeaways-title">Key Takeaways</div>
+                <p>Agile is a philosophy, not a process. Embrace uncertainty and continuous learning. Your role as Product Owner is to be the voice of the customer and to make prioritization decisions based on the latest available information.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic" id="topic-3">
+          <button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false">
+            <span class="topic-number">3</span>
+            <div class="topic-info">
+              <div class="topic-name">Agile Manifesto</div>
+              <div class="topic-summary">The four values and twelve principles that define Agile software development.</div>
+            </div>
+            <svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="topic-content">
+            <div class="topic-body">
+              <div class="topic-divider"></div>
+              <p class="lead">The Agile Manifesto, published in February 2001, is a one-page document created by seventeen software practitioners who met at a ski lodge in Snowbird, Utah. Despite its brevity, it fundamentally changed how the technology industry thinks about building products. Every Product Owner should know it by heart.</p>
+              <p>The Manifesto states four core values. First, individuals and interactions over processes and tools. Second, working software over comprehensive documentation. Third, customer collaboration over contract negotiation. Fourth, responding to change over following a plan. The Manifesto clarifies that while the items on the right have value, the items on the left are valued more.</p>
+              <p>Behind these four values lie twelve principles that give more specific guidance. Among the most important for Product Owners: deliver working software frequently, with a preference for shorter timescales. Welcome changing requirements, even late in development. Business people and developers must work together daily throughout the project.</p>
+              <p>For new Product Managers, the Manifesto serves as a philosophical compass. When you are unsure how to handle a situation, ask yourself which choice best aligns with these values. Should you spend three weeks writing a detailed specification document, or should you write a brief user story and sit down with the development team to discuss it? The Manifesto would guide you toward the latter.</p>
+              <p>One critical nuance: the Manifesto does not say documentation is bad or that plans are useless. It says that when you must choose, favor the items on the left. Great Product Owners write documentation when it adds value and create plans that can flex. They simply refuse to let process become more important than people and outcomes.</p>
+              <div class="topic-takeaways">
+                <div class="topic-takeaways-title">Key Takeaways</div>
+                <p>Memorize the four values and understand the twelve principles. Use them as a decision-making framework when you face uncertainty. Remember that Agile values are about priorities, not absolutes.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic" id="topic-4">
+          <button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false">
+            <span class="topic-number">4</span>
+            <div class="topic-info">
+              <div class="topic-name">Scrum Foundations</div>
+              <div class="topic-summary">The core structure, roles, artifacts, and events that make up the Scrum framework.</div>
+            </div>
+            <svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="topic-content">
+            <div class="topic-body">
+              <div class="topic-divider"></div>
+              <p class="lead">Scrum is a lightweight framework within which people can address complex adaptive problems, while productively and creatively delivering products of the highest possible value. That definition comes from the Scrum Guide, the definitive reference for Scrum authored by Ken Schwaber and Jeff Sutherland.</p>
+              <p>Scrum is built on three pillars: transparency, inspection, and adaptation. Transparency means that all aspects of the process must be visible to those responsible for the outcome. Inspection means that Scrum users must frequently inspect Scrum artifacts and progress toward a Sprint Goal to detect undesirable variances. Adaptation means that if an inspector determines that one or more aspects of a process deviate outside acceptable limits, the process or the material being processed must be adjusted.</p>
+              <p>The Scrum framework consists of three roles, five events, and three artifacts. The roles are the Product Owner, the Scrum Master, and the Development Team. The five events are the Sprint itself, Sprint Planning, the Daily Scrum, the Sprint Review, and the Sprint Retrospective. The three artifacts are the Product Backlog, the Sprint Backlog, and the Increment.</p>
+              <p>For Product Managers new to Scrum, the most important thing to understand is that Scrum is intentionally incomplete. It provides just enough structure to enable empirical process control but leaves the specific practices and techniques up to each team. Scrum works best when the team is cross-functional, self-managing, and small — typically three to nine people.</p>
+              <div class="topic-takeaways">
+                <div class="topic-takeaways-title">Key Takeaways</div>
+                <p>Learn the Scrum Guide thoroughly. Understand that Scrum is a framework, not a methodology. Your role as Product Owner is one of three equally important roles. Embrace the three pillars of transparency, inspection, and adaptation.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic" id="topic-5">
+          <button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false">
+            <span class="topic-number">5</span>
+            <div class="topic-info">
+              <div class="topic-name">Applicability of Scrum</div>
+              <div class="topic-summary">When and where Scrum works best, and when other approaches may be more suitable.</div>
+            </div>
+            <svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="topic-content">
+            <div class="topic-body">
+              <div class="topic-divider"></div>
+              <p class="lead">Not every project or product is a perfect fit for Scrum. Understanding where Scrum excels and where it struggles is critical for Product Managers who need to choose the right approach for their context.</p>
+              <p>Scrum was originally designed for software development, but it has since been applied to hardware development, marketing campaigns, school curricula, and even home renovation projects. The common thread among successful Scrum adoptions is complexity and uncertainty. When you do not fully understand either the problem or the solution, Scrum's empirical approach of building small increments and learning from feedback is powerful.</p>
+              <p>The Cynefin framework, developed by Dave Snowden, provides a useful lens. In the "complex" domain, where cause and effect can only be understood in retrospect, Scrum shines. In the "complicated" domain, where experts can analyze and predict outcomes, Scrum can still work but may be overkill. In the "obvious" domain, where best practices are well-known, a simple checklist might suffice.</p>
+              <p>For Product Owners, this means you should advocate for Scrum when your product involves significant unknowns: new markets, new technologies, evolving customer needs, or competitive uncertainty. If you find yourself in a situation where Scrum is being forced onto work that does not benefit from it, have the courage to suggest alternatives like Kanban or even structured waterfall approaches.</p>
+              <div class="topic-takeaways">
+                <div class="topic-takeaways-title">Key Takeaways</div>
+                <p>Scrum is best for complex work with high uncertainty. Use the Cynefin framework to assess your context. Do not force Scrum where it does not fit. Be pragmatic about framework selection.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic" id="topic-6">
+          <button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false">
+            <span class="topic-number">6</span>
+            <div class="topic-info">
+              <div class="topic-name">Defined vs. Empirical Process Control</div>
+              <div class="topic-summary">Understanding the two fundamental approaches to managing work processes.</div>
+            </div>
+            <svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="topic-content">
+            <div class="topic-body">
+              <div class="topic-divider"></div>
+              <p class="lead">Process control is one of the most important conceptual foundations for understanding why Scrum works the way it does. There are two fundamental approaches: defined process control and empirical process control. Scrum is firmly rooted in the empirical approach.</p>
+              <p>Defined process control works when a process is well understood, repeatable, and predictable. Think of a manufacturing assembly line where the same inputs reliably produce the same outputs. In defined process control, you can plan the entire process upfront because every step is known and every outcome is predictable.</p>
+              <p>Empirical process control is used when a process is too complex or too poorly understood to be fully defined in advance. Instead of planning everything upfront, you proceed in short cycles, observe the actual results, and adjust your approach based on what you learn. This is the scientific method applied to product development.</p>
+              <p>For Product Owners, embracing empirical process control means accepting several important truths. Your initial product backlog is your best guess, not a contract. Your estimates are approximations, not commitments. Your roadmap is a strategic hypothesis that will be refined as you learn. Sprint Reviews are not just demonstrations; they are inspection points where you gather evidence to inform your next set of decisions.</p>
+              <div class="topic-takeaways">
+                <div class="topic-takeaways-title">Key Takeaways</div>
+                <p>Scrum uses empirical process control because product development is complex and unpredictable. Plan to replan. Use every Sprint as an opportunity to inspect and adapt your product strategy.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic" id="topic-7">
+          <button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false">
+            <span class="topic-number">7</span>
+            <div class="topic-info">
+              <div class="topic-name">Empirical Foundations of Scrum</div>
+              <div class="topic-summary">How transparency, inspection, and adaptation form the empirical backbone of Scrum.</div>
+            </div>
+            <svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="topic-content">
+            <div class="topic-body">
+              <div class="topic-divider"></div>
+              <p class="lead">The three pillars of empiricism in Scrum are transparency, inspection, and adaptation. These are not abstract principles but practical requirements that, when neglected, cause Scrum implementations to fail. Product Owners play a critical role in upholding all three.</p>
+              <p>Transparency requires that the significant aspects of the process are visible to those responsible for the outcome. For the Product Owner, this means your Product Backlog must be visible, understandable, and accessible to all stakeholders. Your prioritization rationale should be clear. Hidden backlogs, secret priorities, or undisclosed constraints undermine transparency and cripple empirical process control.</p>
+              <p>Inspection requires that Scrum artifacts and progress toward agreed-upon goals are frequently examined. As Product Owner, you inspect the increment at the Sprint Review to determine whether it moves the product closer to its vision. You inspect customer feedback and usage data to validate or invalidate your assumptions about what users need.</p>
+              <p>Adaptation requires that when inspection reveals that something needs to change, you adjust as quickly as possible. If the Sprint Review reveals that a feature does not solve the customer's problem as expected, you adapt the backlog. If market conditions shift, you reprioritize. The ability and willingness to adapt is what separates successful Product Owners from those who cling to outdated plans.</p>
+              <div class="topic-takeaways">
+                <div class="topic-takeaways-title">Key Takeaways</div>
+                <p>Make your Product Backlog and priorities transparent. Inspect your product and process at every opportunity. Adapt quickly when evidence suggests a change is needed. These three pillars are non-negotiable.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== MODULE 2 ===== -->
+      <section class="module" id="mod-2">
+        <div class="module-header">
+          <div class="module-eyebrow">Module 2</div>
+          <h2 class="module-title">Core Scrum Events</h2>
+          <p class="module-description">The five formal Scrum events and their time-boxed nature. Understanding these events and their purpose is essential for the Product Owner to participate effectively and ensure value is delivered each Sprint.</p>
+        </div>
+
+        <div class="topic" id="topic-8"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">8</span><div class="topic-info"><div class="topic-name">Core Scrum Overview</div><div class="topic-summary">A bird's-eye view of how the Scrum roles, events, and artifacts fit together.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">Before diving into individual Scrum events and artifacts, it helps to see the big picture of how everything connects. Scrum is like a well-designed machine where each part serves a specific purpose and depends on every other part to function properly.</p><p>The Scrum Team consists of exactly three accountabilities: the Product Owner, the Scrum Master, and the Developers. The Product Owner is accountable for maximizing the value of the product by managing the Product Backlog. The Scrum Master is accountable for the Scrum Team's effectiveness. The Developers are accountable for creating a usable Increment each Sprint.</p><p>The team works in Sprints, which are fixed-length iterations of one month or less. Each Sprint contains four events: Sprint Planning, the Daily Scrum, the Sprint Review, and the Sprint Retrospective. The three artifacts provide transparency: the Product Backlog, the Sprint Backlog, and the Increment.</p><p>For Product Owners, understanding the flow is critical: you maintain the Product Backlog, participate in Sprint Planning to set the Sprint Goal, attend Daily Scrums as needed, lead the Sprint Review to gather feedback, and participate in the Retrospective to improve team processes.</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>Scrum has three roles, five events, and three artifacts. Each element serves a specific purpose. The Product Owner touches every part of the framework and is central to its success.</p></div></div></div></div>
+
+        <div class="topic" id="topic-9"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">9</span><div class="topic-info"><div class="topic-name">5 Core Scrum Events</div><div class="topic-summary">Understanding the Sprint and its four contained events.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">Scrum defines exactly five events, and each exists for a specific reason related to the pillars of transparency, inspection, and adaptation. Removing or skipping any event compromises the framework's ability to deliver value predictably.</p><p>The Sprint is the container event that holds all other events. Sprint Planning kicks off each Sprint — the entire Scrum Team collaborates to define the Sprint Goal, select Product Backlog Items, and create a plan for delivering them. The Daily Scrum is a fifteen-minute event for the Developers to inspect progress toward the Sprint Goal.</p><p>The Sprint Review occurs at the end of the Sprint, where the Scrum Team presents the Increment to stakeholders and collaborates on what to do next. The Sprint Retrospective closes the Sprint — the team inspects how the last Sprint went and identifies improvements.</p><p>For Product Owners, the key insight is that these events create a rhythm of planning, executing, reviewing, and improving that repeats every Sprint. This cadence provides regular opportunities to inspect the product and adapt your strategy. Treat these events as sacred.</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>Every Scrum event serves a specific inspect-and-adapt purpose. The Sprint contains all other events. Product Owners play an active role in Sprint Planning, Sprint Review, and Sprint Retrospective.</p></div></div></div></div>
+
+        <div class="topic" id="topic-10"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">10</span><div class="topic-info"><div class="topic-name">Scrum Time-Boxed Events</div><div class="topic-summary">Why time-boxing is critical and the specific time limits for each Scrum event.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">Time-boxing is one of Scrum's most powerful and most frequently violated practices. A time-box is a maximum duration for an event. When the time expires, the event ends, regardless of whether all intended work is complete.</p><p>For a one-month Sprint, the time-boxes are: Sprint Planning is eight hours maximum, the Daily Scrum is fifteen minutes, the Sprint Review is four hours, and the Sprint Retrospective is three hours. For shorter Sprints, these are proportionally shorter. Most teams working in two-week Sprints use approximately four hours for Planning, fifteen minutes for Daily Scrum, two hours for Review, and ninety minutes for Retrospective.</p><p>Time-boxing creates a sense of urgency that prevents conversations from wandering and forces participants to focus on what matters most. It makes meetings predictable, and prevents the diminishing returns from overlong meetings.</p><p>For Product Owners, time-boxing has specific implications. In Sprint Planning, you need to come prepared with a refined and ordered Product Backlog so the team does not waste planning time clarifying requirements. The most common mistake new Product Owners make is treating time-boxes as targets rather than maximums. A Sprint Planning that finishes in two hours is perfectly fine.</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>Respect time-boxes rigorously. Come to events prepared so time is used efficiently. Treat time-boxes as maximums, not targets. End early when objectives are met.</p></div></div></div></div>
+      </section>
+
+      <!-- ===== MODULE 3 ===== -->
+      <section class="module" id="mod-3">
+        <div class="module-header">
+          <div class="module-eyebrow">Module 3</div>
+          <h2 class="module-title">The Sprint</h2>
+          <p class="module-description">A deep dive into the Sprint itself and all the events and artifacts that occur within it — planning, execution, review, retrospection, and tracking.</p>
+        </div>
+
+        <div class="topic" id="topic-11"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">11</span><div class="topic-info"><div class="topic-name">Sprint</div><div class="topic-summary">The heartbeat of Scrum: a fixed-length iteration for delivering an Increment.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">The Sprint is the heartbeat of Scrum, a fixed-length event of one month or less that creates consistency and limits risk. Everything in Scrum happens within the context of a Sprint.</p><p>Each Sprint is like a miniature project with a clear goal, a plan created during Sprint Planning, the development work itself, and the Sprint Review and Retrospective. Most teams choose two-week Sprints. The right Sprint length depends on your context: how quickly your market changes, how long it takes to build meaningful increments, and how much uncertainty you face.</p><p>Several important rules govern Sprints. During a Sprint, no changes should be made that would endanger the Sprint Goal. Quality does not decrease. The Product Backlog is refined as needed. Scope may be clarified and renegotiated as more is learned. A Sprint can be cancelled, but only by the Product Owner, and only if the Sprint Goal becomes obsolete.</p><p>For Product Owners, the Sprint provides a regular cadence for delivering value, gathering feedback, and adjusting course. Think of each Sprint as a hypothesis: you believe that building certain features will create certain value, and the Sprint Review is where you test that hypothesis.</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>Sprints are fixed-length iterations that create rhythm and predictability. Choose a Sprint length that matches your context. Only the Product Owner can cancel a Sprint. Protect the Sprint Goal.</p></div></div></div></div>
+
+        <div class="topic" id="topic-12"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">12</span><div class="topic-info"><div class="topic-name">Sprint Planning</div><div class="topic-summary">How the team collaborates to define the Sprint Goal and plan the Sprint's work.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">Sprint Planning initiates the Sprint by laying out the work to be performed. The entire Scrum Team collaborates, and the resulting plan is created by the team, not imposed by the Product Owner or anyone else.</p><p>Sprint Planning addresses three topics. First, why is this Sprint valuable? The Product Owner proposes how the product could increase its value. Second, what can be done this Sprint? The Developers select items from the Product Backlog. Third, how will the chosen work get done? The Developers plan the work necessary to create an Increment that meets the Definition of Done.</p><p>The Sprint Goal is perhaps the most important outcome of Sprint Planning. A good Sprint Goal provides coherence, meaning, and flexibility. It tells the team why they are doing this work. A Sprint Goal of "Enable users to complete their first purchase" is far more useful than "Build items 47 through 53 on the backlog."</p><p>Common anti-patterns include the Product Owner dictating exactly what the team must build, insufficient backlog refinement leading to hours of clarification, and failing to establish a meaningful Sprint Goal. The best Sprint Planning sessions feel collaborative and energizing.</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>Come to Sprint Planning with a refined, ordered backlog. Collaborate on a meaningful Sprint Goal. Let the Developers determine how much work they can take on.</p></div></div></div></div>
+
+        <div class="topic" id="topic-13"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">13</span><div class="topic-info"><div class="topic-name">Daily Scrum Meeting</div><div class="topic-summary">The team's daily synchronization event for inspecting progress and adapting plans.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">The Daily Scrum is a fifteen-minute event for the Developers. Its purpose is to inspect progress toward the Sprint Goal and adapt the Sprint Backlog as necessary. This is not a status report to the Product Owner or Scrum Master; it is a planning meeting for the Developers.</p><p>The Developers choose whatever structure and techniques they want, as long as the meeting focuses on progress toward the Sprint Goal. The traditional three-question format is optional but widely used. Some teams prefer to walk the Sprint board from right to left.</p><p>For Product Owners, your role is nuanced. You may attend to stay informed and to be available if the Developers have questions. However, you should not dominate the conversation, assign work, or use the Daily Scrum as a status report. If you hear that a planned item is more complex than expected, you can use that information for a separate scope conversation.</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>The Daily Scrum belongs to the Developers. Attend to listen and learn, not to direct. Use the information you gather to support the team and make informed prioritization decisions.</p></div></div></div></div>
+
+        <div class="topic" id="topic-14"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">14</span><div class="topic-info"><div class="topic-name">Sprint Review Meeting</div><div class="topic-summary">Inspecting the Increment and adapting the Product Backlog based on feedback.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">The Sprint Review is arguably the most important event for the Product Owner because it is your primary opportunity to gather feedback and adapt the Product Backlog. It is a working session, not a demonstration or a gate.</p><p>As Product Owner, you typically facilitate the Sprint Review. Set the context by reminding attendees of the Sprint Goal and the broader Product Goal. Invite the Developers to show what they have completed. Facilitate discussion about what stakeholders think of the Increment and what the most important things to work on next might be.</p><p>Effective Sprint Reviews involve the right stakeholders: customers, users, executives, subject matter experts, and partner teams. A Sprint Review attended only by the Scrum Team misses the point entirely.</p><p>Common anti-patterns include turning the review into a slideshow, only showing "happy path" scenarios, failing to discuss what was not completed, and not adapting the Product Backlog based on the feedback received. The best Sprint Reviews generate rich discussion and lead to immediate backlog adjustments.</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>The Sprint Review is your most valuable feedback opportunity. Invite the right stakeholders. Facilitate collaboration, not presentation. Adapt the Product Backlog based on what you learn.</p></div></div></div></div>
+
+        <div class="topic" id="topic-15"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">15</span><div class="topic-info"><div class="topic-name">Sprint Retrospective Meeting</div><div class="topic-summary">The team's opportunity to inspect and improve its own processes and practices.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">The Sprint Retrospective provides the Scrum Team with an opportunity to inspect itself and create a plan for improvements. While the Sprint Review focuses on the product, the Retrospective focuses on the process.</p><p>The Retrospective addresses three questions: What went well during the Sprint? What problems were encountered? How can the team improve? The Scrum Team identifies the most helpful changes and commits to addressing at least one high-impact improvement in the next Sprint.</p><p>Your role in the Retrospective is to be an honest, constructive participant. Share what you observed. Acknowledge your own areas for improvement. Listen to feedback about how you can better support the team. Be willing to experiment with changes to your own practices.</p><p>Effective Retrospectives require psychological safety. As Product Owner, you can contribute by being vulnerable about your own mistakes, responding to critical feedback with curiosity rather than defensiveness, and following through on commitments you make during the Retrospective.</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>Participate actively and honestly in Retrospectives. Be open to feedback about your own practices. Ensure the team commits to at least one improvement per Sprint. Follow through on your commitments.</p></div></div></div></div>
+
+        <div class="topic" id="topic-16"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">16</span><div class="topic-info"><div class="topic-name">Sprint Burndown Charts</div><div class="topic-summary">Visual tools for tracking progress toward Sprint completion.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">Sprint Burndown Charts provide a visual representation of how much work remains versus how much time is left, making it easy to see at a glance whether the team is on track to complete the Sprint Backlog.</p><p>A Sprint Burndown Chart has two axes. The horizontal axis represents the days of the Sprint. The vertical axis represents remaining work, typically measured in story points or hours. An ideal line runs diagonally from the total planned work to zero. The actual line tracks the team's real progress.</p><p>When the actual line is above the ideal line, the team is behind pace. Significant deviations indicate that something has changed: scope was added, tasks turned out more complex than expected, or the team encountered blockers.</p><p>For Product Owners, the Sprint Burndown provides early warning signals. If you notice midway through the Sprint that the team is behind, it may be time to have a scope conversation. Can lower-priority items be removed? Is there a way to simplify an item to still achieve the Sprint Goal?</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>Use burndown charts as early warning systems, not scorecards. Have proactive scope conversations when the burndown shows deviation. The burndown is one tool among many for understanding Sprint progress.</p></div></div></div></div>
+
+        <div class="topic" id="topic-17"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">17</span><div class="topic-info"><div class="topic-name">Sprint Backlog</div><div class="topic-summary">The set of Product Backlog Items selected for the Sprint plus the plan for delivering them.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">The Sprint Backlog is a plan by and for the Developers. It comprises the Sprint Goal (the why), the set of Product Backlog Items selected for the Sprint (the what), and an actionable plan for delivering the Increment (the how).</p><p>The Sprint Backlog is created during Sprint Planning and is updated throughout the Sprint as the Developers learn more. It is not a fixed contract but a living plan that evolves. The Developers own the Sprint Backlog and decide how to organize and manage the work within it.</p><p>An important distinction: once the Sprint Backlog is set during Sprint Planning, the Product Owner should not add new work without the Developers' agreement. If a critical new requirement emerges mid-Sprint, you discuss it with the team and negotiate. The Sprint Goal guides these decisions.</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>The Sprint Backlog belongs to the Developers. Respect their ownership while staying informed. Negotiate scope changes collaboratively. The Sprint Goal is the north star.</p></div></div></div></div>
+      </section>
+
+      <!-- ===== MODULE 4 ===== -->
+      <section class="module" id="mod-4">
+        <div class="module-header">
+          <div class="module-eyebrow">Module 4</div>
+          <h2 class="module-title">Product Vision &amp; Strategy</h2>
+          <p class="module-description">The Product Owner's strategic responsibilities — from defining the product vision to communicating it effectively through elevator statements and assumption mapping.</p>
+        </div>
+
+        <div class="topic" id="topic-18"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">18</span><div class="topic-info"><div class="topic-name">Product Vision, Goals, and Plans</div><div class="topic-summary">Creating a compelling product vision and translating it into actionable goals and plans.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">The Product Vision is the Product Owner's most powerful tool. It describes the future state of the product: who it serves, what problems it solves, and why it matters. A clear, compelling vision aligns the entire team and organization.</p><p>A good Product Vision is aspirational yet achievable, specific enough to guide decisions yet broad enough to allow for adaptation, and customer-focused rather than technology-focused. Think of it as a lighthouse that keeps the ship on course even when the waters are rough.</p><p>Product Goals bridge the gap between the long-term vision and the short-term Sprint work. Each Sprint should move the product closer to the current Product Goal. Product Plans provide the tactical roadmap, intentionally lightweight and adaptive — a rolling roadmap showing committed work for the current quarter, tentative plans for the next, and broad themes beyond that.</p><p>For new Product Managers, a common mistake is spending too much time on the plan and too little on the vision. Plans change constantly. The vision, while it can evolve, should be relatively stable and should anchor all planning discussions.</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>Invest deeply in crafting a compelling product vision. Use Product Goals to create intermediate targets. Keep plans lightweight and adaptive. The vision is your anchor; plans are your sails.</p></div></div></div></div>
+
+        <div class="topic" id="topic-19"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">19</span><div class="topic-info"><div class="topic-name">Elevator Statement</div><div class="topic-summary">A concise, compelling summary of your product's value proposition.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">The Elevator Statement is a concise description of your product that you could deliver in thirty to sixty seconds. It forces clarity of thought and enables consistent messaging about your product's purpose and value.</p><p>Geoffrey Moore's template from "Crossing the Chasm" provides an excellent structure: For [target customer] who [statement of need], the [product name] is a [product category] that [key benefit]. Unlike [competitive alternative], our product [statement of primary differentiation].</p><p>This template forces you to be specific about your target customer, articulate a genuine need, categorize your product, state your primary benefit, name your competition, and differentiate. It aligns the Scrum Team around a shared understanding and helps stakeholders quickly understand the product at Sprint Reviews.</p><p>Writing an effective Elevator Statement is harder than it looks. Most first drafts are too vague, too technical, or try to say too much. Practice writing and refining regularly. If people cannot explain back what your product does, revise it.</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>Write a clear Elevator Statement using a structured template. Use it to align your team and communicate with stakeholders. Revise it regularly. If you cannot explain your product in sixty seconds, you do not understand it well enough.</p></div></div></div></div>
+
+        <div class="topic" id="topic-20"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">20</span><div class="topic-info"><div class="topic-name">Product Assumption Map Exercise</div><div class="topic-summary">Identifying and testing the critical assumptions underlying your product strategy.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">Every product strategy is built on assumptions. The Product Assumption Map makes those assumptions explicit, prioritizes them by risk, and creates a plan to test the most critical ones.</p><p>The exercise begins by brainstorming all assumptions your product relies on across categories: customer assumptions, problem assumptions, solution assumptions, market assumptions, and business model assumptions. Once listed, map them on two axes: importance and uncertainty. Assumptions that are both highly important and highly uncertain are your biggest risks.</p><p>Testing can take many forms: customer interviews, prototypes, landing page tests, A/B experiments, or building a minimal feature and measuring its impact. For Product Owners in Scrum, the assumption map directly informs backlog prioritization. Items that test high-risk assumptions should be near the top, even before items that seem more obviously useful.</p><p>Building a perfect feature for a problem that does not exist is the most expensive mistake a product team can make. The assumption map should be revisited regularly as you learn from Sprint Reviews, customer feedback, and market changes.</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>Identify and map your product assumptions explicitly. Prioritize testing high-importance, high-uncertainty assumptions first. Use assumption testing to inform Product Backlog prioritization.</p></div></div></div></div>
+      </section>
+
+      <!-- ===== MODULE 5 ===== -->
+      <section class="module" id="mod-5">
+        <div class="module-header">
+          <div class="module-eyebrow">Module 5</div>
+          <h2 class="module-title">The Product Backlog</h2>
+          <p class="module-description">The Product Owner's primary artifact. Understanding how to create, maintain, and refine the backlog is central to the Product Owner role.</p>
+        </div>
+
+        <div class="topic" id="topic-21"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">21</span><div class="topic-info"><div class="topic-name">Product Backlog</div><div class="topic-summary">The single, ordered list of everything that might be needed in the product.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">The Product Backlog is the single source of truth for everything the Scrum Team might work on. It is an ordered list of items that could improve the product, and the Product Owner is accountable for its content, availability, and ordering.</p><p>The Product Backlog is never complete. It constantly evolves as new information emerges. Items higher on the backlog are more detailed and refined than items lower on the list — a concept known as progressive elaboration. Ordering should reflect a balance of customer value, business value, risk, learning value, and dependencies.</p><p>A common misconception is that the Product Backlog is simply a list of features. In reality, it should contain new features, improvements, bug fixes, technical debt reduction, infrastructure upgrades, experiments, and research spikes. A healthy backlog reflects the full range of work needed to sustain and grow a product.</p><p>For new Product Managers, the biggest challenge is often saying no. Your job is not to make everyone happy by adding everything to the backlog. Your job is to maximize value, which means ruthlessly prioritizing and being transparent about why other items are lower priority.</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>You own the Product Backlog. Keep it ordered, transparent, and focused. Include diverse item types, not just features. Learn to say no with empathy and data. The backlog is always evolving.</p></div></div></div></div>
+
+        <div class="topic" id="topic-22"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">22</span><div class="topic-info"><div class="topic-name">Product Backlog Items</div><div class="topic-summary">Understanding the different types of items that make up the Product Backlog.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">Product Backlog Items (PBIs) are the individual entries in the Product Backlog. While user stories are the most well-known format, the Product Backlog can and should contain multiple types of items.</p><p>User Stories describe desired functionality from the user's perspective. Bugs describe defects that need fixing — they should be prioritized against other backlog items. Technical Debt items address shortcuts that slow down development. Spikes are time-boxed research activities designed to reduce uncertainty. Enablers support future capabilities like new APIs or infrastructure.</p><p>For Product Owners, the key insight is that a healthy Product Backlog is diverse. If your backlog contains only user stories, you are likely ignoring important dimensions of product health. Work with your Developers and Scrum Master to ensure the backlog reflects the full range of work needed.</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>The Product Backlog contains many types of items, not just user stories. Include bugs, technical debt, spikes, and enablers. Prioritize all items holistically. A diverse backlog indicates a healthy product.</p></div></div></div></div>
+
+        <div class="topic" id="topic-23"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">23</span><div class="topic-info"><div class="topic-name">Product Backlog Refinement</div><div class="topic-summary">The ongoing process of adding detail, estimates, and order to the Product Backlog.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">Product Backlog Refinement is the act of adding detail, estimates, and order to items in the Product Backlog. It is an ongoing process, not a single meeting, and typically consumes no more than ten percent of the Developers' capacity.</p><p>During refinement, the team reviews upcoming items, breaks large items into smaller ones, adds acceptance criteria, discusses technical approach, provides estimates, and identifies dependencies. A well-refined backlog has a clear gradient of detail — top items are detailed, mid-level items have general descriptions, and bottom items are brief.</p><p>Common anti-patterns include waiting until Sprint Planning to refine items, refining too far in advance, over-specifying items, and having only the Product Owner do refinement without the Developers. The best refinement sessions are collaborative conversations, not one-way presentations.</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>Refine regularly throughout the Sprint, not just before Planning. Maintain a gradient of detail from top to bottom. Collaborate with Developers during refinement. Spend no more than ten percent of Sprint capacity on refinement.</p></div></div></div></div>
+      </section>
+
+      <!-- ===== MODULE 6 ===== -->
+      <section class="module" id="mod-6">
+        <div class="module-header">
+          <div class="module-eyebrow">Module 6</div>
+          <h2 class="module-title">User Stories &amp; Requirements</h2>
+          <p class="module-description">How to capture, communicate, and manage requirements using user stories, the I.N.V.E.S.T. criteria, and quality definitions like Done and Ready.</p>
+        </div>
+
+        <div class="topic" id="topic-24"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">24</span><div class="topic-info"><div class="topic-name">Collaborative Requirements</div><div class="topic-summary">Moving from traditional requirements documents to collaborative, conversational approaches.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">In Agile and Scrum, requirements are treated as ongoing conversations rather than fixed documents. Collaborative requirements gathering recognizes that the best products emerge from continuous dialogue.</p><p>The key principle is "card, conversation, confirmation" credited to Ron Jeffries. The card is a brief written description that serves as a reminder to have a conversation. The conversation fills in the details. The confirmation is the acceptance criteria that define when the requirement has been met.</p><p>This approach requires a significant mindset shift. Instead of writing comprehensive specifications, you write brief user stories and make yourself available for ongoing conversations. It acknowledges that requirements evolve, reduces waste, keeps Developers engaged as partners, and surfaces misunderstandings early.</p><p>The challenge is that collaborative requirements demand more ongoing involvement. You cannot write a document and walk away. This is why being an effective Product Owner is a full-time commitment, not a side responsibility.</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>Embrace "card, conversation, confirmation." Write brief user stories as conversation starters. Be available for ongoing dialogue. Requirements are discovered, not just gathered.</p></div></div></div></div>
+
+        <div class="topic" id="topic-25"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">25</span><div class="topic-info"><div class="topic-name">Splitting Stories</div><div class="topic-summary">Techniques for breaking large user stories into smaller, deliverable pieces.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">Story splitting is one of the most valuable skills a Product Owner can develop. Large stories are too big for a single Sprint. Breaking them into smaller stories that each deliver value enables flow, incremental delivery, and faster feedback.</p><p>The cardinal rule: each resulting story must deliver value independently. Splitting by technical layer creates stories that deliver no value until assembled. Instead, split so each story provides a thin slice of end-to-end functionality.</p><p>Proven techniques include splitting by workflow step, by business rule (implement the happy path first), by data type, by interface (web first, then mobile), and by performance (make it work, then make it fast). A useful test: if a story cannot be completed in a single Sprint, it must be split. Aim for stories completable in two to three days.</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>Master story splitting as a core skill. Each split story must deliver value independently. Use proven techniques like splitting by workflow, business rule, or data type. Aim for stories completable in two to three days.</p></div></div></div></div>
+
+        <div class="topic" id="topic-26"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">26</span><div class="topic-info"><div class="topic-name">User Stories</div><div class="topic-summary">The most common format for expressing customer needs in Agile product development.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">User Stories are short descriptions of a feature told from the perspective of the person who desires the new capability: "As a [type of user], I want [some goal] so that [some reason]."</p><p>This format is powerful because "As a" forces you to identify who wants this capability, "I want" describes functionality in the user's language, and "so that" explains the underlying need giving Developers context for implementation decisions.</p><p>A user story is not a specification — it is a promise to have a conversation. Each story should be accompanied by acceptance criteria: specific, testable conditions using a "Given/When/Then" format or simple bullet points that define what "done" means.</p><p>The temptation for new Product Managers is to write stories that are either too vague or too detailed. The sweet spot clearly communicates need and value while leaving room for the team to find the best solution.</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>Use the "As a/I want/So that" format consistently. Write stories from the user's perspective. Include acceptance criteria for every story. Stories are conversation starters, not specifications.</p></div></div></div></div>
+
+        <div class="topic" id="topic-27"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">27</span><div class="topic-info"><div class="topic-name">I.N.V.E.S.T.</div><div class="topic-summary">Six criteria for writing effective user stories.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">I.N.V.E.S.T. is an acronym created by Bill Wake describing six characteristics of a well-written user story: Independent, Negotiable, Valuable, Estimable, Small, and Testable.</p><p>Independent means stories should be self-contained. Negotiable means they are invitations to conversation, not contracts. Valuable means every story must deliver value. Estimable means the team can gauge its size. Small means completable within a Sprint, ideally two to three days. Testable means there is a way to verify completion.</p><p>For Product Owners, I.N.V.E.S.T. is a practical checklist to review before bringing stories to refinement. If a story fails any of these criteria, it needs more work before the team can commit to it. Memorize this acronym — you will use it constantly.</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>Use I.N.V.E.S.T. as a quality checklist for every user story. Each criterion serves a specific purpose. Stories that do not meet all six criteria need further refinement.</p></div></div></div></div>
+
+        <div class="topic" id="topic-28"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">28</span><div class="topic-info"><div class="topic-name">User Story Exercise</div><div class="topic-summary">Hands-on practice in writing and evaluating user stories.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">Theory without practice produces weak Product Owners. Choose a familiar product — your email client, a ride-sharing app, or an online shopping platform — and imagine you are the Product Owner.</p><p>Identify three distinct user personas: a new user, a power user, and an administrator. For each, write five user stories using "As a/I want/So that" with three to five acceptance criteria each. Then evaluate against I.N.V.E.S.T. Take your three largest stories and practice splitting each into at least two smaller stories that deliver value independently.</p><p>Finally, practice prioritization. Order all stories from most to least important and write a one-sentence justification for each top-three position. Repeat this exercise with different products. Like any skill, writing great user stories requires deliberate practice and feedback from peers.</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>Practice writing user stories regularly with real products. Evaluate against I.N.V.E.S.T. Practice splitting and prioritization. Seek feedback from peers.</p></div></div></div></div>
+
+        <div class="topic" id="topic-29"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">29</span><div class="topic-info"><div class="topic-name">Definition of Done &amp; Definition of Ready</div><div class="topic-summary">Two critical quality gates that protect the team and the product.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">The Definition of Done (DoD) is a formal description of the state of the Increment when it meets the quality measures required. It applies to every Product Backlog Item and is non-negotiable within a Sprint.</p><p>A typical DoD might include: code is written and peer-reviewed, unit tests pass, integration tests pass, documentation is updated, the feature is deployed to staging, and the Product Owner has accepted the story. The Definition of Ready describes criteria a backlog item must meet before the team will accept it into Sprint Planning.</p><p>The DoD protects quality; the DoR protects predictability. Both are team agreements, not unilateral decisions. Be careful not to make the DoR so strict that it creates a mini-waterfall gate. The goal is "ready enough to start," not "fully specified with no questions remaining." Review and evolve both regularly in Retrospectives.</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>Establish and maintain both DoD and DoR with your team. The DoD protects product quality. The DoR protects Sprint predictability. Both are team agreements. Review and evolve them regularly.</p></div></div></div></div>
+      </section>
+
+      <!-- ===== MODULE 7 ===== -->
+      <section class="module" id="mod-7">
+        <div class="module-header">
+          <div class="module-eyebrow">Module 7</div>
+          <h2 class="module-title">The Scrum Team</h2>
+          <p class="module-description">Team structure, roles, responsibilities, and the essential practice of estimation and sizing.</p>
+        </div>
+
+        <div class="topic" id="topic-30"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">30</span><div class="topic-info"><div class="topic-name">The Scrum Team: Roles &amp; Responsibilities</div><div class="topic-summary">Understanding the three accountabilities and how they collaborate.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">The Scrum Team consists of three accountabilities: the Product Owner decides what to build and in what order, the Developers decide how to build it and how much they can take on, and the Scrum Master ensures the framework is followed.</p><p>The Product Owner is accountable for maximizing value by managing the Product Backlog. The Scrum Master helps everyone understand Scrum and serves the Product Owner by finding techniques for effective backlog management. The Developers create the Increment each Sprint, adhering to the Definition of Done.</p><p>When role boundaries are respected, the team operates effectively. When they are violated — when the Product Owner dictates technical approach or Developers ignore backlog priorities — dysfunction follows. Collaboration between roles is essential, especially during refinement, Sprint Planning, Sprint Review, and Retrospective.</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>Respect role boundaries while fostering collaboration. You decide what and why; the Developers decide how and how much. Build a trusting relationship with your Scrum Master. The team succeeds or fails together.</p></div></div></div></div>
+
+        <div class="topic" id="topic-31"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">31</span><div class="topic-info"><div class="topic-name">Estimation &amp; Sizing</div><div class="topic-summary">Techniques for estimating the effort and complexity of Product Backlog Items.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">Estimation in Scrum helps the team understand relative complexity, make informed Sprint Planning decisions, and enable rough forecasting. Story points represent overall effort using a modified Fibonacci sequence (1, 2, 3, 5, 8, 13, 21).</p><p>Planning Poker is the most popular technique. The Product Owner presents a story, the team discusses briefly, then each Developer simultaneously reveals their estimate. If estimates differ significantly, the outliers explain their reasoning and the team re-estimates. T-shirt sizing (XS, S, M, L, XL) is a simpler alternative for roadmap-level estimation.</p><p>For Product Owners, estimation helps you understand the cost of prioritization decisions and forecast delivery. Important: never pressure the team to lower estimates. Estimates belong to the Developers. If an item seems too large, discuss whether scope can be reduced or the item split.</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>Estimation is about understanding relative complexity, not predicting exact timelines. Use story points and Planning Poker. Respect that estimates belong to the Developers. Never pressure for lower estimates.</p></div></div></div></div>
+      </section>
+
+      <!-- ===== MODULE 8 ===== -->
+      <section class="module" id="mod-8">
+        <div class="module-header">
+          <div class="module-eyebrow">Module 8</div>
+          <h2 class="module-title">Planning &amp; Release Management</h2>
+          <p class="module-description">Broader planning practices that extend beyond individual Sprints — iterative development, story mapping, release planning, and risk management.</p>
+        </div>
+
+        <div class="topic" id="topic-32"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">32</span><div class="topic-info"><div class="topic-name">Iterative &amp; Incremental Development</div><div class="topic-summary">The dual concepts that power Agile product development.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">Iterative development means building through successive refinement — like a painter who sketches, then adds color, then adds detail. Incremental development means adding new pieces of functionality over time — like building a house from foundation to frame to walls.</p><p>Scrum combines both. Each Sprint delivers an increment (adding new functionality) while the team also iterates (refining existing functionality based on feedback). This combination means early versions do not need to be perfect. You ship a basic version and improve it based on real user feedback — far more efficient than building the perfect version on the first attempt.</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>Iterative means refining; incremental means adding. Scrum uses both. Deliver usable increments early and iterate based on feedback. Embrace progressive enhancement.</p></div></div></div></div>
+
+        <div class="topic" id="topic-33"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">33</span><div class="topic-info"><div class="topic-name">Story Mapping</div><div class="topic-summary">A visual technique for organizing user stories into a coherent product narrative.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">Story Mapping, created by Jeff Patton, organizes user stories into a two-dimensional map. The horizontal axis represents the user's journey. The vertical axis represents priority, with essential stories at the top and enhancements below.</p><p>Build a story map by identifying main activities your user performs, arranging them left to right. Under each, list supporting stories arranged vertically by priority. Draw a horizontal line — everything above it is your minimum viable product. Story mapping reveals gaps in your thinking, helps define release slices, communicates strategy visually, and provides context for individual stories.</p><p>Story mapping is especially valuable at the beginning of a new product or major initiative, and when a team feels lost in the backlog and needs to see the big picture.</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>Use story mapping to visualize the user journey and delivery strategy. Build the map collaboratively. Use horizontal lines to define release slices. Story maps provide context that flat backlogs cannot.</p></div></div></div></div>
+
+        <div class="topic" id="topic-34"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">34</span><div class="topic-info"><div class="topic-name">Release Planning</div><div class="topic-summary">Planning beyond the Sprint: forecasting when features will be delivered.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">A Scrum release plan is a forecast based on the team's past performance that is updated regularly. It is a planning tool, not a contract. The basic inputs are the ordered Product Backlog, the team's velocity, and the desired release criteria.</p><p>Effective practices include using velocity ranges for confidence intervals, identifying must-have versus nice-to-have items, not loading the release plan to 100% capacity, and updating after every Sprint. Release planning is where your strategic thinking shines: which combination of features creates the most value? What is the minimum viable release?</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>Release plans are forecasts, not commitments. Use velocity data for realistic projections. Include ranges to account for uncertainty. Identify must-have versus nice-to-have items. Update after every Sprint.</p></div></div></div></div>
+
+        <div class="topic" id="topic-35"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">35</span><div class="topic-info"><div class="topic-name">Release &amp; Theme Prioritization</div><div class="topic-summary">Techniques for determining which themes and features to include in each release.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">Theme-based prioritization groups related backlog items into strategic initiatives. Several frameworks can guide decisions: MoSCoW (Must/Should/Could/Won't), WSJF (Weighted Shortest Job First), and the Kano Model (basic, performance, excitement features).</p><p>The most practical approach combines quantitative and qualitative inputs. Start with your product vision, gather data on pain points and opportunities, use a prioritization framework, then validate with stakeholders and customers.</p><p>Common mistakes include prioritizing based on who shouts loudest (HiPPO), treating all items as equally important, failing to account for dependencies, and not revisiting priorities. The courage to say "not now" or "never" to proposed features is one of the most valuable qualities a Product Owner can develop.</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>Group stories into themes for strategic clarity. Use prioritization frameworks to structure decisions. Combine quantitative data with qualitative judgment. Have the courage to say no.</p></div></div></div></div>
+
+        <div class="topic" id="topic-36"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">36</span><div class="topic-info"><div class="topic-name">Release Burndown Charts</div><div class="topic-summary">Tracking progress toward release goals across multiple Sprints.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">Release Burndown Charts plot the total remaining work against the Sprints completed and remaining. They reveal the true pace of progress and make scope changes visible — when items are added the line jumps up; when removed, it drops.</p><p>For Product Owners, the Release Burndown is a communication tool. Share it regularly with stakeholders for honest conversations about progress and tradeoffs. Some teams prefer Release Burn-Up Charts, which show cumulative work completed and total scope as separate lines, making it easier to distinguish between "building too slowly" and "adding too much scope."</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>Use Release Burndown Charts to track multi-Sprint progress. Share them regularly with stakeholders. Use the data for honest conversations about scope and timeline. Make scope changes visible.</p></div></div></div></div>
+
+        <div class="topic" id="topic-37"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">37</span><div class="topic-info"><div class="topic-name">Risk Management &amp; Prioritization</div><div class="topic-summary">Identifying, assessing, and mitigating risks through strategic backlog management.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">In Scrum, risk is managed through short iterations that limit blast radius, early delivery of high-risk items, and continuous feedback that validates assumptions before too much is invested.</p><p>Risk-aware prioritization means pushing high-risk items toward the top. If there is uncertainty about technology, build a proof of concept early. If there is uncertainty about customer demand, build and release a simple version and measure adoption. Categories to consider: market risk, technology risk, usability risk, value risk, and stakeholder risk.</p><p>Spikes — time-boxed research activities — are the Product Owner's best friend for managing uncertainty. When risk is too high to proceed blindly, schedule a spike to investigate and reduce uncertainty before committing to full implementation.</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>Use backlog prioritization as your primary risk management tool. Address high-risk items early. Use spikes to reduce uncertainty. Short iterations are inherently risk-reducing.</p></div></div></div></div>
+      </section>
+
+      <!-- ===== MODULE 9 ===== -->
+      <section class="module" id="mod-9">
+        <div class="module-header">
+          <div class="module-eyebrow">Module 9</div>
+          <h2 class="module-title">Scaling &amp; Distributing Scrum</h2>
+          <p class="module-description">The challenges of applying Scrum at scale across multiple teams and in distributed environments.</p>
+        </div>
+
+        <div class="topic" id="topic-38"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">38</span><div class="topic-info"><div class="topic-name">Scaling Scrum</div><div class="topic-summary">Approaches for applying Scrum when a product requires more than one team.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">As products grow in complexity, a single Scrum Team may not be sufficient. Several scaling frameworks exist: Nexus (the most Scrum-native), Large-Scale Scrum or LeSS (minimalist approach), and the Scaled Agile Framework or SAFe (most comprehensive and prescriptive).</p><p>For Product Owners, scaling introduces significant challenges around backlog ownership, consistency, dependency management, and integration. Universal principles apply regardless of framework: maintain a single Product Backlog, ensure clear cross-team communication, invest in cross-team refinement, and focus on the Definition of Done.</p><p>The most important advice: resist the temptation to manage multiple team backlogs yourself. Empower team-level Product Owners who manage details while you focus on overall product strategy and backlog ordering.</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>Scaling Scrum requires additional coordination but core principles remain the same. Evaluate Nexus, LeSS, and SAFe for your context. Maintain a single Product Backlog. Focus on integration and the big picture.</p></div></div></div></div>
+
+        <div class="topic" id="topic-39"><button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false"><span class="topic-number">39</span><div class="topic-info"><div class="topic-name">Distributed Scrum</div><div class="topic-summary">Practices for effective Scrum when team members are not co-located.</div></div><svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="topic-content"><div class="topic-body"><div class="topic-divider"></div><p class="lead">The primary challenge of distributed Scrum is communication. Co-located teams benefit from informal interactions that distributed teams must create intentionally.</p><p>Practices for success include establishing overlapping working hours, investing in video conferencing and persistent chat tooling, creating explicit communication norms (when to use chat versus video, response time expectations), and meeting in person periodically for Sprint Planning kickoffs or quarterly planning.</p><p>For Product Owners of distributed teams, availability becomes even more critical. You may need schedule flexibility to overlap with all time zones. Ensure the Product Backlog is always accessible and well-documented. Use video calls generously for refinement so the team can ask questions in real time.</p><div class="topic-takeaways"><div class="topic-takeaways-title">Key Takeaways</div><p>Distributed Scrum requires intentional communication practices. Establish overlapping hours. Invest in collaboration tools. Create explicit norms. Be accessible across time zones and keep the backlog exceptionally well-documented.</p></div></div></div></div>
+      </section>
+
+    </main>
+
+    <!-- ========== STICKY TABLE OF CONTENTS ========== -->
+    <aside class="toc" id="toc">
+      <div class="toc-label">Modules</div>
+      <ul class="toc-list">
+        <li class="toc-item"><a href="#mod-1" class="active">Agile &amp; Scrum Foundations</a></li>
+        <li class="toc-item"><a href="#mod-2">Core Scrum Events</a></li>
+        <li class="toc-item"><a href="#mod-3">The Sprint</a></li>
+        <li class="toc-item"><a href="#mod-4">Vision &amp; Strategy</a></li>
+        <li class="toc-item"><a href="#mod-5">The Product Backlog</a></li>
+        <li class="toc-item"><a href="#mod-6">Stories &amp; Requirements</a></li>
+        <li class="toc-item"><a href="#mod-7">The Scrum Team</a></li>
+        <li class="toc-item"><a href="#mod-8">Planning &amp; Releases</a></li>
+        <li class="toc-item"><a href="#mod-9">Scaling &amp; Distribution</a></li>
+      </ul>
+    </aside>
+  </div>
+
+  <!-- ========== AUTHOR CARD ========== -->
+  <div class="article-author">
+    <div class="author-card">
+      <div class="author-avatar">PTH</div>
+      <div class="author-info">
+        <h4>Patrick T. Hoffman</h4>
+        <p>Product executive, entrepreneur, and architect. Building at Meta. Mentoring PMs through The Product Mentor. Exploring cities, wilderness, and everything in between.</p>
+        <div class="author-links">
+          <a href="https://www.threads.com/@arcktip">@arcktip</a>
+          <a href="https://www.linkedin.com/in/pth/">LinkedIn</a>
+          <a href="https://www.patrickthoffman.com/">patrickthoffman.com</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== FOOTER ========== -->
+  <footer>
+    &copy; 2026 Patrick T. Hoffman &middot; <a href="/">Home</a> &middot; <a href="https://www.threads.com/@arcktip">@arcktip</a>
+  </footer>
+
+  <!-- ========== JAVASCRIPT ========== -->
+  <script>
+    // Accordion toggle
+    function toggleTopic(btn) {
+      const topic = btn.closest('.topic');
+      const wasOpen = topic.classList.contains('open');
+
+      // Close all topics in the same module (optional: comment out for multi-open)
+      // topic.closest('.module').querySelectorAll('.topic.open').forEach(t => {
+      //   t.classList.remove('open');
+      //   t.querySelector('.topic-trigger').setAttribute('aria-expanded', 'false');
+      // });
+
+      if (!wasOpen) {
+        topic.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      } else {
+        topic.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+      }
+    }
+
+    // Sticky TOC active state on scroll
+    const modules = document.querySelectorAll('.module');
+    const tocLinks = document.querySelectorAll('.toc-item a');
+
+    function updateTOC() {
+      let current = '';
+      modules.forEach(mod => {
+        const rect = mod.getBoundingClientRect();
+        if (rect.top <= 160) {
+          current = mod.id;
+        }
+      });
+      tocLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+      });
+    }
+
+    // Throttled scroll listener
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateTOC();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+
+    // Nav scroll effect
+    const nav = document.getElementById('topNav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    });
+  </script>
+</body>
+</html>

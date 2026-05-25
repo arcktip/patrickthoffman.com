@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2TKMRQXKMJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-2TKMRQXKMJ');
+</script>
+<title>Firefly Field — Mutual Information</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=JetBrains+Mono:wght@300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#020408; overflow:hidden; font-family:'Cormorant Garamond',serif; cursor:none; }
+  #c { position:fixed; top:0; left:0; }
+  #ui {
+    position:fixed; bottom:0; left:0; right:0;
+    padding:1.2rem 2rem;
+    background:linear-gradient(transparent, rgba(2,4,8,0.9));
+    display:flex; align-items:flex-end; justify-content:space-between;
+    pointer-events:none;
+  }
+  .ui-left h1 {
+    font-size:1.4rem; font-weight:300; color:rgba(255,220,100,0.8);
+    line-height:1.2;
+  }
+  .ui-left p { font-size:0.85rem; font-style:italic; color:rgba(255,255,255,0.35); margin-top:0.2rem; }
+  .mi-display {
+    text-align:right;
+  }
+  .mi-val {
+    font-family:'JetBrains Mono',monospace; font-size:2.5rem; font-weight:300;
+    color:#ffd166; line-height:1;
+    text-shadow:0 0 20px rgba(255,209,102,0.5);
+    transition:color 0.5s;
+  }
+  .mi-lbl { font-size:0.65rem; color:rgba(255,255,255,0.3); letter-spacing:0.3em; text-transform:uppercase; margin-top:0.2rem; }
+  .narrative {
+    position:fixed; top:1.5rem; left:50%; transform:translateX(-50%);
+    font-style:italic; color:rgba(255,255,255,0.4); font-size:0.95rem;
+    text-align:center; pointer-events:none; transition:opacity 1s;
+    white-space:nowrap;
+  }
+  .zone-hint {
+    position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+    font-size:0.7rem; font-family:'JetBrains Mono',monospace;
+    color:rgba(255,255,255,0.06); pointer-events:none; letter-spacing:0.2em;
+  }
+  #samples {
+    position:fixed; bottom:4rem; left:50%; transform:translateX(-50%);
+    font-family:'JetBrains Mono',monospace; font-size:0.65rem;
+    color:rgba(255,255,255,0.2); letter-spacing:0.15em;
+  }
+  #reset {
+    position:fixed; top:1.5rem; right:1.5rem;
+    background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);
+    color:rgba(255,255,255,0.3); font-family:'JetBrains Mono',monospace;
+    font-size:0.65rem; letter-spacing:0.2em; cursor:pointer;
+    padding:0.4rem 0.9rem; transition:all 0.2s; pointer-events:all;
+  }
+  #reset:hover { border-color:rgba(255,209,102,0.4); color:rgba(255,209,102,0.6); }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+  /* Nav overlay adjustments */
+  .top-nav {
+    background: transparent;
+    z-index: 100 !important;
+    pointer-events: all !important;
+  }
+  .top-nav * {
+    pointer-events: all !important;
+  }
+  .top-nav.scrolled,
+  .top-nav.solid {
+    background: rgba(10,20,40,0.85);
+    backdrop-filter: blur(12px);
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== NAV ========== -->
+<nav class="top-nav solid" id="topNav">
+  <a href="/" class="nav-logo">PTH<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="/#about">About</a></li>
+    <li><a href="/#journey">Journey</a></li>
+    <li><a href="/#passions">Passions</a></li>
+    <li><a href="/#writing">Writing</a></li>
+    <li><a href="/#speaking">Speaking</a></li>
+    <li><a href="/#connect">Connect</a></li>
+  </ul>
+</nav>
+
+<div id="c"></div>
+
+<div class="narrative" id="narrative">Move your mouse — you are the warm light. The cool light watches and learns.</div>
+<div class="zone-hint">4 × 4 ZONE GRID</div>
+
+<div id="ui">
+  <div class="ui-left">
+    <h1>Firefly Field</h1>
+    <p>Your movement teaches the second firefly your language</p>
+  </div>
+  <div class="mi-display">
+    <div class="mi-val" id="miVal">0.000</div>
+    <div class="mi-lbl">Mutual Information (nats)</div>
+  </div>
+</div>
+
+<div id="samples">samples: 0 · zones: 4×4</div>
+<button id="reset" onclick="resetLearning()">↺ RESET</button>
+
+<script>
+// ─── MUTUAL INFORMATION ENGINE ───────────────────────────────────────────────
+const ZONES = 4; // 4x4 grid = 16 states each
+const jointFreq = Array.from({length:ZONES*ZONES}, ()=>Array(ZONES*ZONES).fill(0));
+let totalSamples = 0;
+let currentMI = 0;
+
+function posToZone(px, py, W, H) {
+  const col = Math.floor(px / W * ZONES);
+  const row = Math.floor(py / H * ZONES);
+  return Math.min(row, ZONES-1) * ZONES + Math.min(col, ZONES-1);
+}
+
+function addSample(xZone, yZone) {
+  jointFreq[xZone][yZone]++;
+  totalSamples++;
+  if (totalSamples % 5 === 0) computeMI();
+}
+
+function computeMI() {
+  const N = ZONES * ZONES;
+  const total = totalSamples;
+  if (total < 10) { currentMI = 0; return; }
+  const joint = jointFreq.map(r => r.map(v => v/total));
+  const px = Array(N).fill(0), py = Array(N).fill(0);
+  for (let i=0;i<N;i++) for (let j=0;j<N;j++) { px[i]+=joint[i][j]; py[j]+=joint[i][j]; }
+  let mi = 0;
+  for (let i=0;i<N;i++) for (let j=0;j<N;j++) {
+    if (joint[i][j]>0 && px[i]>0 && py[j]>0)
+      mi += joint[i][j]*Math.log(joint[i][j]/(px[i]*py[j]));
+  }
+  currentMI = Math.max(0, mi);
+}
+
+function bestYZone(xZone) {
+  // Find the Y zone most associated with current X zone
+  const N = ZONES*ZONES;
+  const row = jointFreq[xZone];
+  const rowSum = row.reduce((a,b)=>a+b,0);
+  if (rowSum < 3) return Math.floor(Math.random()*N); // explore
+  // epsilon-greedy: 20% explore, 80% exploit
+  if (Math.random() < 0.15) return Math.floor(Math.random()*N);
+  let best=0, bestVal=-1;
+  for (let j=0;j<N;j++) { if(row[j]>bestVal){bestVal=row[j];best=j;} }
+  return best;
+}
+
+function zoneToCenter(zone, W, H) {
+  const col = zone % ZONES;
+  const row = Math.floor(zone / ZONES);
+  return {
+    x: (col + 0.5) / ZONES * W,
+    y: (row + 0.5) / ZONES * H
+  };
+}
+
+function resetLearning() {
+  for(let i=0;i<ZONES*ZONES;i++) for(let j=0;j<ZONES*ZONES;j++) jointFreq[i][j]=0;
+  totalSamples=0; currentMI=0;
+  document.getElementById('miVal').textContent='0.000';
+  document.getElementById('samples').textContent='samples: 0 · zones: 4×4';
+}
+
+// ─── P5 SKETCH ────────────────────────────────────────────────────────────────
+new p5(function(p) {
+  // Firefly X = warm gold, user-controlled
+  const X = { x:0, y:0, vx:0, vy:0, trail:[], zone:-1 };
+  // Firefly Y = cool teal, AI-controlled
+  const Y = { x:0, y:0, tx:0, ty:0, trail:[], zone:-1, speed:2.5 };
+  
+  let particles = [];
+  let sampleTimer = 0;
+  let miSmooth = 0;
+  let narrativeTimer = 0;
+
+  const NARRATIVES = [
+    "Move your mouse — you are the warm light. The cool light watches and learns.",
+    "The teal firefly is observing your patterns…",
+    "It begins to anticipate where you'll wander next.",
+    "Your movement is becoming a language it reads.",
+    "The fireflies now share a grammar of light.",
+    "Perfect resonance: two lights, one understanding."
+  ];
+
+  class Particle {
+    constructor(x, y, col, size) {
+      this.x = x; this.y = y;
+      this.vx = p.random(-0.8,0.8); this.vy = p.random(-0.8,0.8);
+      this.life = 1.0; this.decay = p.random(0.012,0.025);
+      this.col = col; this.sz = size || p.random(2,5);
+    }
+    update() {
+      this.x += this.vx; this.y += this.vy;
+      this.vx *= 0.97; this.vy *= 0.97;
+      this.life -= this.decay;
+    }
+    draw() {
+      const a = this.life * 0.7;
+      p.noStroke();
+      p.fill(p.red(this.col), p.green(this.col), p.blue(this.col), a*255);
+      p.ellipse(this.x, this.y, this.sz*this.life);
+    }
+    dead() { return this.life <= 0; }
+  }
+
+  p.setup = function() {
+    const cnv = p.createCanvas(p.windowWidth, p.windowHeight);
+    cnv.parent('c');
+    X.x = p.width/2; X.y = p.height/2;
+    Y.x = p.width*0.3; Y.y = p.height*0.5;
+    Y.tx = Y.x; Y.ty = Y.y;
+    p.colorMode(p.RGB);
+  };
+
+  p.draw = function() {
+    // Fade background
+    p.fill(2, 4, 8, 30);
+    p.noStroke();
+    p.rect(0, 0, p.width, p.height);
+
+    // Draw grid faintly
+    drawGrid();
+
+    // ── UPDATE X (user mouse) ──────────────────────────────────────
+    X.x = p.mouseX; X.y = p.mouseY;
+    X.trail.push({x:X.x, y:X.y});
+    if(X.trail.length > 40) X.trail.shift();
+
+    // Sample X zone
+    const xZone = posToZone(X.x, X.y, p.width, p.height);
+    X.zone = xZone;
+
+    // ── UPDATE Y (AI learner) ─────────────────────────────────────
+    sampleTimer++;
+    if(sampleTimer % 8 === 0) {
+      // Get Y's best zone given current X
+      const yTargetZone = bestYZone(xZone);
+      const center = zoneToCenter(yTargetZone, p.width, p.height);
+      // Add jitter within zone
+      Y.tx = center.x + p.random(-p.width/ZONES*0.35, p.width/ZONES*0.35);
+      Y.ty = center.y + p.random(-p.height/ZONES*0.35, p.height/ZONES*0.35);
+      Y.zone = yTargetZone;
+
+      // Record joint sample
+      addSample(xZone, Y.zone);
+      document.getElementById('samples').textContent = 
+        `samples: ${totalSamples} · I(X;Y) updates every 5`;
+    }
+
+    // Move Y toward target
+    const dx = Y.tx - Y.x, dy = Y.ty - Y.y;
+    const dist = Math.sqrt(dx*dx+dy*dy);
+    if(dist > 1) {
+      // Lerp speed increases with MI (learns to move faster/more confidently)
+      const spd = 0.02 + currentMI * 0.03;
+      Y.x += dx * Math.min(spd, 0.08);
+      Y.y += dy * Math.min(spd, 0.08);
+    }
+    Y.trail.push({x:Y.x, y:Y.y});
+    if(Y.trail.length > 35) Y.trail.shift();
+
+    // ── SPAWN PARTICLES ────────────────────────────────────────────
+    if(p.frameCount % 3 === 0) {
+      particles.push(new Particle(X.x, X.y, p.color(255,209,102), p.random(3,7)));
+    }
+    if(p.frameCount % 4 === 0) {
+      particles.push(new Particle(Y.x, Y.y, p.color(80,220,200), p.random(2,6)));
+    }
+
+    // ── DRAW TRAILS ───────────────────────────────────────────────
+    drawTrail(X.trail, [255,209,102]);
+    drawTrail(Y.trail, [80,220,200]);
+
+    // ── DRAW PARTICLES ────────────────────────────────────────────
+    particles = particles.filter(pt => { pt.update(); pt.draw(); return !pt.dead(); });
+
+    // ── DRAW CONNECTION LINE ──────────────────────────────────────
+    drawConnection();
+
+    // ── DRAW FIREFLIES ────────────────────────────────────────────
+    drawFirefly(X.x, X.y, [255,209,102], 16, currentMI);
+    drawFirefly(Y.x, Y.y, [80,220,200], 14, currentMI*0.8);
+
+    // ── DRAW ZONE LABELS ──────────────────────────────────────────
+    drawZoneHighlight(X.zone, [255,209,102,30]);
+    drawZoneHighlight(Y.zone, [80,220,200,20]);
+
+    // ── UPDATE MI DISPLAY ─────────────────────────────────────────
+    miSmooth += (currentMI - miSmooth) * 0.05;
+    const miEl = document.getElementById('miVal');
+    miEl.textContent = miSmooth.toFixed(4);
+    const hue = Math.min(currentMI * 60, 60);
+    miEl.style.color = `hsl(${45+hue},90%,${60+currentMI*10}%)`;
+
+    // ── NARRATIVE ─────────────────────────────────────────────────
+    narrativeTimer++;
+    if(narrativeTimer % 180 === 0) {
+      const idx = Math.min(Math.floor(currentMI / 0.4), NARRATIVES.length-1);
+      document.getElementById('narrative').textContent = NARRATIVES[idx];
+    }
+
+    // ── CURSOR ────────────────────────────────────────────────────
+    drawCursor(X.x, X.y);
+  };
+
+  function drawGrid() {
+    p.stroke(255, 255, 255, 6);
+    p.strokeWeight(0.5);
+    for(let i=1;i<ZONES;i++) {
+      p.line(i/ZONES*p.width, 0, i/ZONES*p.width, p.height);
+      p.line(0, i/ZONES*p.height, p.width, i/ZONES*p.height);
+    }
+  }
+
+  function drawTrail(trail, col) {
+    for(let i=1;i<trail.length;i++) {
+      const alpha = (i/trail.length) * 120;
+      const w = (i/trail.length) * 3;
+      p.stroke(col[0],col[1],col[2],alpha);
+      p.strokeWeight(w);
+      p.line(trail[i-1].x,trail[i-1].y,trail[i].x,trail[i].y);
+    }
+  }
+
+  function drawFirefly(x, y, col, size, mi) {
+    // Outer glow
+    const glow = size * (1.5 + mi * 0.8);
+    for(let r=glow; r>0; r-=2) {
+      const a = (1 - r/glow) * 60;
+      p.noStroke();
+      p.fill(col[0],col[1],col[2],a);
+      p.ellipse(x, y, r*2);
+    }
+    // Core
+    p.fill(col[0],col[1],col[2],220);
+    p.noStroke();
+    p.ellipse(x, y, size);
+    // Hot center
+    p.fill(255,255,240,200);
+    p.ellipse(x, y, size*0.5);
+  }
+
+  function drawConnection() {
+    const dx = Y.x - X.x, dy = Y.y - X.y;
+    const dist = Math.sqrt(dx*dx+dy*dy);
+    const maxDist = Math.sqrt(p.width*p.width+p.height*p.height)*0.6;
+    const alpha = Math.max(0, (1 - dist/maxDist)) * currentMI * 80;
+    if(alpha < 2) return;
+
+    // Draw wavy connection
+    const steps = 30;
+    p.noFill(); p.strokeWeight(1);
+    p.beginShape();
+    for(let t=0; t<=1; t+=1/steps) {
+      const cx = X.x + dx*t;
+      const cy = X.y + dy*t;
+      const perp = {x:-dy/dist, y:dx/dist};
+      const wave = Math.sin(t*Math.PI*3 + p.frameCount*0.05) * (1-currentMI) * 15;
+      p.stroke(
+        p.lerp(255, 80, t), p.lerp(209, 220, t), p.lerp(102, 200, t),
+        alpha
+      );
+      p.vertex(cx + perp.x*wave, cy + perp.y*wave);
+    }
+    p.endShape();
+  }
+
+  function drawZoneHighlight(zone, col) {
+    if(zone < 0) return;
+    const c = zone % ZONES, r = Math.floor(zone/ZONES);
+    const x = c/ZONES*p.width, y = r/ZONES*p.height;
+    const w = p.width/ZONES, h = p.height/ZONES;
+    p.noStroke();
+    p.fill(col[0]||255, col[1]||255, col[2]||255, col[3]||20);
+    p.rect(x,y,w,h);
+  }
+
+  function drawCursor(x, y) {
+    p.noFill();
+    p.stroke(255,209,102,150);
+    p.strokeWeight(1);
+    p.ellipse(x,y,20);
+    p.stroke(255,209,102,80);
+    p.ellipse(x,y,30);
+  }
+
+  p.windowResized = function() {
+    p.resizeCanvas(p.windowWidth, p.windowHeight);
+  };
+});
+
+// ===== NAV SCROLL =====
+const topNav = document.getElementById('topNav');
+window.addEventListener('scroll', () => {
+  topNav.classList.toggle('scrolled', window.scrollY > 80);
+});
+</script>
+
+</body>
+</html>

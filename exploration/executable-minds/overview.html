@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executable Minds — Patrick T. Hoffman</title>
+    <meta name="description" content="Explore the Executable Minds shared fiction universe — where beliefs are running programs and every mind executes code it cannot see.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .hero { min-height:92vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:6rem 2.5rem 4rem; }
+        .hero .section-label { margin-bottom:1.8rem; }
+        .hero h1 { font-size:clamp(2.8rem,7vw,4.5rem); font-weight:400; line-height:1.08; letter-spacing:-.02em; margin-bottom:1.5rem; }
+        .hero h1 em { font-style:italic; color:var(--accent); }
+        .hero .hero-sub { font-size:1.1rem; color:var(--text-secondary); max-width:560px; margin:0 auto 2.5rem; line-height:1.7; }
+        .hero-ctas { display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; }
+        .hero-ctas a { font-size:.85rem; font-weight:500; padding:.7rem 1.8rem; border:1px solid var(--border); border-radius:100px; color:var(--text-secondary); transition:all .3s; }
+        .hero-ctas a:hover { border-color:var(--accent); color:var(--accent); }
+        .hero-ctas a.primary { background:var(--accent); border-color:var(--accent); color:var(--bg); }
+        .hero-ctas a.primary:hover { background:#dfc06a; border-color:#dfc06a; }
+        .scroll-cue { margin-top:3rem; font-size:.7rem; letter-spacing:.15em; text-transform:uppercase; color:var(--text-muted); animation:breathe 3s ease-in-out infinite; }
+        @keyframes breathe { 0%,100%{opacity:.35} 50%{opacity:.9} }
+        /* Timeline */
+        .timeline { position:relative; padding-left:2.5rem; }
+        .timeline::before { content:''; position:absolute; left:0; top:0; bottom:0; width:1px; background:var(--border); }
+        .timeline-item { position:relative; margin-bottom:2rem; }
+        .timeline-item::before { content:''; position:absolute; left:-2.5rem; top:.55rem; width:9px; height:9px; border-radius:50%; background:var(--accent); border:2px solid var(--bg-section); }
+        .timeline-item .tl-date { font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin-bottom:.3rem; }
+        .timeline-item h3 { font-size:1.05rem; margin-bottom:.2rem; }
+        .timeline-item h3 a { color:var(--text); }
+        .timeline-item h3 a:hover { color:var(--accent); }
+        .timeline-item p { font-size:.85rem; color:var(--text-secondary); line-height:1.6; }
+        .timeline-item .tl-location { font-size:.78rem; color:var(--text-muted); font-style:italic; }
+    </style>
+</head>
+<body>
+<nav class="site-nav" id="nav">
+    <a href="https://www.patrickthoffman.com" class="logo"><span>PTH.</span></a>
+    <ul class="nav-links">
+        <li><a href="world.html">World</a></li>
+        <li><a href="the-sauce-holds.html">Sauce Holds</a></li>
+        <li><a href="weight-of-seeing.html">Weight of Seeing</a></li>
+        <li><a href="garment-district.html">Garment District</a></li>
+        <li><a href="characters.html">Characters</a></li>
+        <li><a href="https://www.patrickthoffman.com">Home</a></li>
+    </ul>
+</nav>
+
+<section class="hero">
+    <span class="section-label">patrickthoffman.com / exploration</span>
+    <h1><em>Executable</em> Minds</h1>
+    <p class="hero-sub">A shared fiction universe where beliefs are running programs, every mind executes code it cannot see, and the closest thing to freedom is the ability to watch the algorithm run.</p>
+    <div class="hero-ctas">
+        <a href="world.html" class="primary">Enter the World</a>
+        <a href="the-sauce-holds.html">Read a Story</a>
+        <a href="characters.html">Meet the Characters</a>
+    </div>
+    <p class="scroll-cue">Scroll</p>
+</section>
+
+<!-- Premise -->
+<section class="section section--alt">
+    <div class="container">
+        <div class="narrow fade-in">
+            <span class="section-label">The Premise</span>
+            <h2>What if every belief you hold is a program you didn't write?</h2>
+            <p class="page-subtitle">In the near-future world of <strong>Executable Minds</strong>, the dominant scientific paradigm is algorithmic memetics. Every culturally transmitted system of ideas is a <em>memeplex</em>: a running program that processes information, applies evaluative weights, and produces behavioral outputs. It does not sit in memory. It runs.</p>
+            <p class="page-subtitle">Two people watching the same event will perceive different realities — not because they disagree, but because their cognitive architectures are generating different outputs from identical inputs. Neither person experiences themselves as running a program. Both experience themselves as seeing reality clearly.</p>
+        </div>
+        <div class="stats fade-in" style="justify-content:center;">
+            <div class="stat"><div class="stat-num">14</div><div class="stat-label">World Rules</div></div>
+            <div class="stat"><div class="stat-num">5</div><div class="stat-label">Stories</div></div>
+            <div class="stat"><div class="stat-num">16</div><div class="stat-label">Characters</div></div>
+            <div class="stat"><div class="stat-num">3</div><div class="stat-label">Cities</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- Timeline -->
+<section class="section">
+    <div class="container">
+        <div class="narrow fade-in">
+            <span class="section-label">The Timeline</span>
+            <h2>Five stories across three cities</h2>
+            <p class="page-subtitle">The Executable Minds canon spans from present-day Paris to near-future Hong Kong — each story a different lens on the same set of rules about how minds work. The stories can be read in any order, but here is the chronological arc.</p>
+        </div>
+        <div class="narrow">
+            <div class="timeline fade-in">
+                <div class="timeline-item">
+                    <div class="tl-date">Present Day</div>
+                    <h3><a href="the-sauce-holds.html">The Sauce Holds</a></h3>
+                    <p class="tl-location">Paris — Aubervilliers, Pantin, Saint-Denis</p>
+                    <p>Three kitchen workers converge along Boulevard de la Chapelle. Same sleeping man, same police check, same phone screen — three different cities. The world-building rules operating in pure contemporary realism, without any futuristic technology. Just the code that's already running.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="tl-date">~2058</div>
+                    <h3><a href="weight-of-seeing.html">The Weight of Seeing</a></h3>
+                    <p class="tl-location">Pacifica & San Francisco, California</p>
+                    <p>A Saturday with two old friends — one who builds optimization systems and one who sees the machinery in everything. Naia introduces Sam to algorithmic memetics on a bench above the Pacific. The origin story for the characters who will shape the Reunion decades later.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="tl-date">2043</div>
+                    <h3><a href="garment-district.html">Garment District</a></h3>
+                    <p class="tl-location">New York City</p>
+                    <p>Two women who have known each other since age eight discover that the gap between them is structural, not personal. Danielle Cortez leaves finance to co-found Second Skin — the biometric textile company that will still be dressing people fifty-five years later.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="tl-date">~2068</div>
+                    <h3><a href="five-frequencies.html">Five Frequencies</a></h3>
+                    <p class="tl-location">Kwun Tong, Hong Kong</p>
+                    <p>Eight-year-old Kip comes home from school carrying a wound. One evening, told through five parents who each process the same crisis through a different cognitive architecture — and a child who hears every frequency at once.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="tl-date">2098</div>
+                    <h3><a href="reunion.html">The Reunion of Frequencies</a></h3>
+                    <p class="tl-location">Sham Shui Po, Hong Kong</p>
+                    <p>Thirty years later. Kip turns thirty. Dai is dead. The story-worlds of Garment District and Weight of Seeing physically meet when strangers arrive carrying their own histories — and on a balcony above the harbor, two of them discover the wrong question.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Navigate -->
+<section class="section section--alt">
+    <div class="container">
+        <span class="section-label fade-in">Explore</span>
+        <h2 class="fade-in">The full canon</h2>
+        <div class="card-grid card-grid--2col fade-in" style="margin-top:2rem;">
+            <div class="card"><a href="research-paper.html" class="card-link">
+                <div class="card-label">Origin</div>
+                <h3>The Memeplex as Executable Code</h3>
+                <p>The cross-disciplinary research paper that serves as the scientific foundation — a formal reframing of the memeplex as an algorithm, developed through five disciplinary lenses.</p>
+                <div class="card-footer">Read the paper →</div>
+            </a></div>
+            <div class="card"><a href="world.html" class="card-link">
+                <div class="card-label">Foundation</div>
+                <h3>The World Rules</h3>
+                <p>Fourteen sections of binding worldbuilding law derived from the research paper — the transfer function, perception, self-repair, transmission, media ecology, polarization, and the transparency problem.</p>
+                <div class="card-footer">Explore the rules →</div>
+            </a></div>
+            <div class="card"><a href="the-sauce-holds.html" class="card-link">
+                <div class="card-label">Story · Paris</div>
+                <h3>The Sauce Holds</h3>
+                <p>Three kitchen workers pass the same sleeping man, the same police check, the same phone screen — and see three different cities. The world-building rules in pure contemporary realism.</p>
+                <div class="card-footer">Read the story →</div>
+            </a></div>
+            <div class="card"><a href="weight-of-seeing.html" class="card-link">
+                <div class="card-label">Story · Pacifica</div>
+                <h3>The Weight of Seeing</h3>
+                <p>The origin story of Naia and Sam — two friends who spend a day together and discover that the distance between them is not a misunderstanding but an architecture.</p>
+                <div class="card-footer">Read the story →</div>
+            </a></div>
+            <div class="card"><a href="garment-district.html" class="card-link">
+                <div class="card-label">Story · New York 2043</div>
+                <h3>Garment District</h3>
+                <p>Two women running incompatible code. A fashion show becomes the fault line between a designer's way of seeing and an engineer's way of building.</p>
+                <div class="card-footer">Read the story →</div>
+            </a></div>
+            <div class="card"><a href="five-frequencies.html" class="card-link">
+                <div class="card-label">Story · Hong Kong ~2068</div>
+                <h3>Five Frequencies</h3>
+                <p>One evening, told through five parents. One child at the kitchen table hears every frequency at once.</p>
+                <div class="card-footer">Read the story →</div>
+            </a></div>
+            <div class="card"><a href="reunion.html" class="card-link">
+                <div class="card-label">Story · Hong Kong 2098</div>
+                <h3>The Reunion of Frequencies</h3>
+                <p>Kip turns thirty. Dai is dead. Strangers arrive. On a balcony above the harbor, two of them discover that the question they've been asking was the wrong question.</p>
+                <div class="card-footer">Read the story →</div>
+            </a></div>
+            <div class="card"><a href="characters.html" class="card-link">
+                <div class="card-label">Sixteen Frequencies</div>
+                <h3>The Characters</h3>
+                <p>Every character is tuned to a different frequency. From Nour's discipline to Naia's systems to Mo's exits to Clémence's seams — sixteen ways of processing the same world.</p>
+                <div class="card-footer">Meet the characters →</div>
+            </a></div>
+        </div>
+    </div>
+</section>
+
+<section class="section" style="text-align:center;">
+    <div class="narrow fade-in">
+        <p style="font-size:1.15rem; font-style:italic; color:var(--text-secondary); line-height:1.7; max-width:560px; margin:0 auto;">"The algorithm runs. Your characters live inside it. Tell us what that feels like."</p>
+        <p style="font-size:.78rem; color:var(--text-muted); margin-top:1rem; letter-spacing:.06em;">— Executable Minds World-Building Bible</p>
+    </div>
+</section>
+
+<section class="section section--alt">
+    <div class="narrow">
+        <div class="author-card">
+            <div class="author-card__avatar">PTH</div>
+            <div>
+                <h4>Patrick T. Hoffman</h4>
+                <p>Product executive, entrepreneur, and architect. Building at Meta. Exploring cities, wilderness, and everything in between.</p>
+                <div class="author-links">
+                    <a href="https://www.threads.com/@arcktip">@arcktip</a>
+                    <a href="https://www.linkedin.com/in/pth/">LinkedIn</a>
+                    <a href="https://www.patrickthoffman.com">patrickthoffman.com</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="site-footer">
+    <p>© 2026 Patrick T. Hoffman · <a href="https://www.patrickthoffman.com">Home</a> · <a href="https://www.threads.com/@arcktip">@arcktip</a></p>
+</footer>
+<script>
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40));
+    const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold:.1, rootMargin:'0px 0px -30px 0px' });
+    document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Retail Media Intel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://apis.google.com/js/api.js" async defer></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#07070b;color:#d4d4e0;font-family:'DM Sans',system-ui,sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#252538;border-radius:2px}
+.rmi-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.rmi-modal{background:#151520;border:1px solid #252538;border-radius:8px;padding:20px;max-width:480px;width:100%;max-height:80vh;overflow-y:auto}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}.fade-in{animation:fadeIn .25s ease-out}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}.pulsing{animation:pulse 1.5s ease-in-out infinite}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+var {useState,useCallback,useEffect,useRef} = React;
+
+// ═══════════════════════════════════════
+// DATA MODEL
+// ═══════════════════════════════════════
+// store = {
+//   sessions: [{ id, date (ingest time), contentDate (when articles are from), articles:[{id,title,source,url,summary,entities,themes,signal_type,sentiment,significance,strategic_insight}], synthesis, source }],
+//   trendReports: [{ id, date, data, snapshot }],
+//   briefingReports: [{ id, date, data:{executive_summary,market_dynamics,key_developments[],strategic_implications,competitive_landscape,action_items[],risk_factors[],opportunities[]}, snapshot }],
+//   lastIngestDate: "ISO string or null",
+//   version: 2
+// }
+
+var STORE_KEY = "rmi-store-v2";
+var KEY_KEY = "rmi-api-key";
+var GOOGLE_CLIENT_ID = "833064591981-pkfibmcbjeccr75nmjicd2ipbo6atbhs.apps.googleusercontent.com";
+var GDRIVE_FILE = "rmi-backup.json";
+
+function newId() { return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+
+function emptyStore() { return { sessions:[], trendReports:[], briefingReports:[], lastIngestDate:null, version:2 }; }
+
+// Get effective content date for a session (contentDate if set, otherwise ingest date)
+function getContentDate(session) {
+  return session.contentDate || session.date;
+}
+
+// Try to extract a publication date from a URL path (e.g. /2025/12/15/article or /2025-12-article)
+function extractDateFromUrl(url) {
+  try {
+    var path = new URL(url).pathname;
+    // Pattern: /YYYY/MM/DD/ or /YYYY/MM/
+    var match = path.match(/\/(\d{4})\/(\d{1,2})\/(\d{1,2})\//);
+    if (match) {
+      var y = parseInt(match[1]), m = parseInt(match[2]), d = parseInt(match[3]);
+      if (y >= 2015 && y <= 2030 && m >= 1 && m <= 12 && d >= 1 && d <= 31) {
+        return new Date(y, m - 1, d).toISOString();
+      }
+    }
+    var match2 = path.match(/\/(\d{4})\/(\d{1,2})\//);
+    if (match2) {
+      var y = parseInt(match2[1]), m = parseInt(match2[2]);
+      if (y >= 2015 && y <= 2030 && m >= 1 && m <= 12) {
+        return new Date(y, m - 1, 15).toISOString(); // mid-month estimate
+      }
+    }
+    // Pattern: /YYYY-MM-DD- in slug
+    var match3 = path.match(/\/(\d{4})-(\d{2})-(\d{2})/);
+    if (match3) {
+      var y = parseInt(match3[1]), m = parseInt(match3[2]), d = parseInt(match3[3]);
+      if (y >= 2015 && y <= 2030 && m >= 1 && m <= 12 && d >= 1 && d <= 31) {
+        return new Date(y, m - 1, d).toISOString();
+      }
+    }
+    return null;
+  } catch(e) { return null; }
+}
+
+// Given a list of URLs, try to infer a common content date
+function inferContentDateFromUrls(urls) {
+  var dates = [];
+  urls.forEach(function(url) {
+    var d = extractDateFromUrl(url);
+    if (d) dates.push(d);
+  });
+  if (dates.length === 0) return null;
+  // Return the median date
+  dates.sort();
+  return dates[Math.floor(dates.length / 2)];
+}
+
+// Sort sessions by contentDate descending (most recent content first)
+function sortSessions(sessions) {
+  return sessions.slice().sort(function(a, b) {
+    var da = new Date(getContentDate(a)).getTime();
+    var db = new Date(getContentDate(b)).getTime();
+    return db - da;
+  });
+}
+
+function loadStore() {
+  try {
+    var raw = localStorage.getItem(STORE_KEY);
+    if (!raw) {
+      // Migrate from v1
+      var oldSessions = JSON.parse(localStorage.getItem("rmi-sessions") || "null");
+      if (oldSessions && oldSessions.length > 0) {
+        var store = emptyStore();
+        store.sessions = oldSessions.map(function(s) {
+          s.articles = (s.articles||[]).map(function(a) { if (!a.id) a.id = newId(); return a; });
+          return s;
+        });
+        saveStore(store);
+        return store;
+      }
+      return emptyStore();
+    }
+    var store = JSON.parse(raw);
+    // Ensure all articles have IDs
+    (store.sessions||[]).forEach(function(s) {
+      (s.articles||[]).forEach(function(a) { if (!a.id) a.id = newId(); });
+    });
+    if (!store.trendReports) store.trendReports = [];
+    if (!store.briefingReports) store.briefingReports = [];
+    if (!store.lastIngestDate) store.lastIngestDate = null;
+    return store;
+  } catch(e) { return emptyStore(); }
+}
+
+function saveStore(store) {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(store)); } catch(e) {}
+}
+
+function loadSetting(key) { try { return localStorage.getItem(key) || ""; } catch(e) { return ""; } }
+function saveSetting(key, val) { try { localStorage.setItem(key, val); } catch(e) {} }
+
+// Build a Set of all URLs already ingested across all sessions
+function getAllUrls(store) {
+  var urls = new Set();
+  (store.sessions || []).forEach(function(s) {
+    (s.articles || []).forEach(function(a) {
+      if (a.url && a.url.length > 0) urls.add(a.url);
+    });
+  });
+  return urls;
+}
+
+// Dedup articles against a Set of known URLs; returns { kept:[], skipped:number }
+function deduplicateArticles(articles, knownUrls) {
+  var kept = [];
+  var skipped = 0;
+  articles.forEach(function(a) {
+    if (a.url && a.url.length > 0 && knownUrls.has(a.url)) {
+      skipped++;
+    } else {
+      kept.push(a);
+      if (a.url && a.url.length > 0) knownUrls.add(a.url); // prevent intra-batch dupes too
+    }
+  });
+  return { kept: kept, skipped: skipped };
+}
+
+// Calculate how stale the data is
+function daysSinceIngest(lastIngestDate) {
+  if (!lastIngestDate) return Infinity;
+  var diff = Date.now() - new Date(lastIngestDate).getTime();
+  return Math.floor(diff / (1000 * 60 * 60 * 24));
+}
+
+// ═══════════════════════════════════════
+// GOOGLE DRIVE SYNC
+// ═══════════════════════════════════════
+
+var gdriveState = { tokenClient: null, accessToken: null };
+
+// Wait for Google Identity Services to load
+function ensureGoogleLoaded() {
+  return new Promise(function(resolve, reject) {
+    if (window.google && window.google.accounts && window.google.accounts.oauth2) {
+      resolve();
+      return;
+    }
+    var attempts = 0;
+    var poll = setInterval(function() {
+      attempts++;
+      if (window.google && window.google.accounts && window.google.accounts.oauth2) {
+        clearInterval(poll);
+        resolve();
+      } else if (attempts > 50) {
+        clearInterval(poll);
+        reject(new Error("Google Identity Services failed to load. Check your internet connection and refresh."));
+      }
+    }, 100);
+  });
+}
+
+function initGDrive() {
+  if (gdriveState.tokenClient) return;
+  gdriveState.tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: GOOGLE_CLIENT_ID,
+    scope: "https://www.googleapis.com/auth/drive.file",
+    callback: function() {} // replaced at auth time
+  });
+}
+
+function gdriveAuth() {
+  return new Promise(function(resolve, reject) {
+    ensureGoogleLoaded().then(function() {
+      initGDrive();
+      if (gdriveState.accessToken) { resolve(gdriveState.accessToken); return; }
+      if (!gdriveState.tokenClient) { reject(new Error("Drive client not initialized")); return; }
+      gdriveState.tokenClient.callback = function(resp) {
+        if (resp.error) { reject(new Error(resp.error)); return; }
+        if (resp.access_token) { gdriveState.accessToken = resp.access_token; resolve(resp.access_token); }
+        else { reject(new Error("No access token received")); }
+      };
+      gdriveState.tokenClient.requestAccessToken({ prompt: "" });
+    }).catch(reject);
+  });
+}
+
+async function gdriveFindFile(token) {
+  var res = await fetch("https://www.googleapis.com/drive/v3/files?q=name%3D'" + GDRIVE_FILE + "'+and+trashed%3Dfalse&spaces=drive&fields=files(id,name,modifiedTime)", {
+    headers: { Authorization: "Bearer " + token }
+  });
+  var data = await res.json();
+  return (data.files && data.files.length > 0) ? data.files[0] : null;
+}
+
+async function gdriveSave(token, store) {
+  var existing = await gdriveFindFile(token);
+  var body = JSON.stringify(store);
+  if (existing) {
+    await fetch("https://www.googleapis.com/upload/drive/v3/files/" + existing.id + "?uploadType=media", {
+      method: "PATCH",
+      headers: { Authorization: "Bearer " + token, "Content-Type": "application/json" },
+      body: body
+    });
+  } else {
+    var metadata = JSON.stringify({ name: GDRIVE_FILE, mimeType: "application/json" });
+    var form = new FormData();
+    form.append("metadata", new Blob([metadata], { type: "application/json" }));
+    form.append("file", new Blob([body], { type: "application/json" }));
+    await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart", {
+      method: "POST",
+      headers: { Authorization: "Bearer " + token },
+      body: form
+    });
+  }
+}
+
+async function gdriveLoad(token) {
+  var file = await gdriveFindFile(token);
+  if (!file) return null;
+  var res = await fetch("https://www.googleapis.com/drive/v3/files/" + file.id + "?alt=media", {
+    headers: { Authorization: "Bearer " + token }
+  });
+  return await res.json();
+}
+
+// ═══════════════════════════════════════
+// GMAIL FETCH
+// ═══════════════════════════════════════
+
+var gmailState = { tokenClient: null, accessToken: null };
+
+function initGmail() {
+  if (gmailState.tokenClient) return;
+  gmailState.tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: GOOGLE_CLIENT_ID,
+    scope: "https://www.googleapis.com/auth/gmail.readonly",
+    callback: function() {} // replaced at auth time
+  });
+}
+
+function gmailAuth() {
+  return new Promise(function(resolve, reject) {
+    ensureGoogleLoaded().then(function() {
+      initGmail();
+      if (gmailState.accessToken) { resolve(gmailState.accessToken); return; }
+      if (!gmailState.tokenClient) { reject(new Error("Gmail client not initialized")); return; }
+      gmailState.tokenClient.callback = function(resp) {
+        if (resp.error) { reject(new Error(resp.error)); return; }
+        if (resp.access_token) { gmailState.accessToken = resp.access_token; resolve(resp.access_token); }
+        else { reject(new Error("No access token received")); }
+      };
+      gmailState.tokenClient.requestAccessToken({ prompt: "" });
+    }).catch(reject);
+  });
+}
+
+// Base64url decode (Gmail uses URL-safe base64)
+function b64Decode(str) {
+  if (!str) return "";
+  var padded = str.replace(/-/g, "+").replace(/_/g, "/");
+  while (padded.length % 4 !== 0) padded += "=";
+  try { return decodeURIComponent(escape(atob(padded))); }
+  catch(e) { try { return atob(padded); } catch(e2) { return ""; } }
+}
+
+// Extract text content from a Gmail message payload
+function extractEmailContent(payload) {
+  var text = "";
+
+  function walk(part) {
+    if (!part) return;
+    var mime = (part.mimeType || "").toLowerCase();
+    // Prefer text/html for richer link extraction, fall back to text/plain
+    if ((mime === "text/html" || mime === "text/plain") && part.body && part.body.data) {
+      text += b64Decode(part.body.data) + "\n";
+    }
+    if (part.parts) {
+      part.parts.forEach(walk);
+    }
+  }
+
+  walk(payload);
+
+  // Strip HTML tags but preserve href URLs
+  text = text.replace(/<a[^>]+href=["']([^"']+)["'][^>]*>/gi, " $1 ");
+  text = text.replace(/<[^>]+>/g, " ");
+  text = text.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&nbsp;/g, " ");
+  text = text.replace(/\s+/g, " ").trim();
+
+  return text;
+}
+
+async function gmailFetchAlerts(token, maxResults) {
+  // Search for Google Alert emails
+  var searchUrl = "https://gmail.googleapis.com/gmail/v1/users/me/messages?q=" +
+    encodeURIComponent("from:googlealerts-noreply@google.com") +
+    "&maxResults=" + (maxResults || 10);
+
+  var searchRes = await fetch(searchUrl, {
+    headers: { Authorization: "Bearer " + token }
+  });
+  if (!searchRes.ok) throw new Error("Gmail search failed: " + searchRes.status);
+  var searchData = await searchRes.json();
+  var messageIds = (searchData.messages || []).map(function(m) { return m.id; });
+
+  if (messageIds.length === 0) return { content: "", count: 0 };
+
+  // Fetch each message's content and track email dates
+  var allContent = "";
+  var fetched = 0;
+  var emailDates = [];
+  for (var i = 0; i < messageIds.length; i++) {
+    var msgRes = await fetch(
+      "https://gmail.googleapis.com/gmail/v1/users/me/messages/" + messageIds[i] + "?format=full",
+      { headers: { Authorization: "Bearer " + token } }
+    );
+    if (msgRes.ok) {
+      var msg = await msgRes.json();
+      var content = extractEmailContent(msg.payload);
+      if (content.length > 10) {
+        allContent += content + "\n\n---\n\n";
+        fetched++;
+        // Track the email's actual date
+        if (msg.internalDate) {
+          emailDates.push(new Date(parseInt(msg.internalDate)).toISOString());
+        }
+      }
+    }
+  }
+
+  // Determine content date range from email dates
+  emailDates.sort();
+  var contentDate = emailDates.length > 0 ? emailDates[Math.floor(emailDates.length / 2)] : null;
+  var dateRange = emailDates.length > 0 ? { earliest: emailDates[0], latest: emailDates[emailDates.length - 1] } : null;
+
+  return { content: allContent, count: fetched, contentDate: contentDate, dateRange: dateRange };
+}
+
+// ═══════════════════════════════════════
+// LOCAL FILE BACKUP
+// ═══════════════════════════════════════
+
+function downloadBackup(store) {
+  var blob = new Blob([JSON.stringify(store, null, 2)], { type: "application/json" });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url;
+  a.download = "rmi-backup-" + new Date().toISOString().slice(0, 10) + ".json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ═══════════════════════════════════════
+// CLAUDE API
+// ═══════════════════════════════════════
+
+var ANALYSIS_PROMPT = "You are an analyst covering retail media and commerce/shopping. Analyze the pasted content from Google Alert emails. For URLs, infer from URL slugs and domains.\n\nClassify each article into relevant themes from these domains:\n- Retail Media: retail media network, in-store media, data clean room, CTV/offsite, measurement, first-party data, shopper data, programmatic, walled garden, standardization, search ads, AI/automation, self-serve, onsite display, shoppable, privacy\n- Commerce & Shopping: product feeds, Shopping ads, CSS partners, marketplace, fulfillment, commerce platform, checkout, product discovery, free listings, feed optimization\n\nAn article can belong to multiple domains.\n\nReturn ONLY valid JSON (no markdown, no backticks):\n{\"articles\":[{\"title\":\"string\",\"source\":\"string\",\"url\":\"string\",\"summary\":\"2-3 sentences\",\"entities\":[\"string\"],\"themes\":[\"string\"],\"domains\":[\"retail-media and/or commerce\"],\"signal_type\":\"deal|partnership|product_launch|earnings|regulation|opinion|research|trend\",\"sentiment\":\"positive|negative|neutral\",\"significance\":3,\"strategic_insight\":\"one sentence\"}],\"meta_synthesis\":{\"dominant_themes\":[\"top 3\"],\"key_movers\":[\"companies\"],\"emerging_signals\":[\"patterns\"],\"market_direction\":\"1-2 sentences\",\"action_items\":[\"2-3 items\"]}}\n\nContent:\n";
+
+var TREND_PROMPT = "You are a strategist covering retail media and commerce/shopping. Synthesize the accumulated intelligence. Data spans two domains: Retail Media and Commerce & Shopping. Identify trends within each domain and cross-domain connections.\n\nReturn ONLY valid JSON (no markdown, no backticks):\n{\"trend_lines\":[{\"theme\":\"string\",\"trajectory\":\"accelerating|stable|decelerating|emerging\",\"evidence_count\":0,\"narrative\":\"2-3 sentences\",\"key_players\":[\"string\"],\"domains\":[\"retail-media and/or commerce\"]}],\"contradictions\":[\"string\"],\"blind_spots\":[\"string\"],\"connections\":[\"non-obvious cross-domain links\"],\"weekly_briefing\":\"4-5 paragraph executive briefing covering both domains.\"}\n\nData:\n";
+
+var BRIEFING_PROMPT = "You are a senior strategist preparing an intelligence briefing for someone building products in the retail media and commerce space. You have accumulated article data from Google Alerts across multiple sessions, spanning two domains: Retail Media (networks, measurement, in-store, programmatic, etc.) and Commerce & Shopping (product feeds, Shopping ads, Merchant Center, marketplaces, etc.).\n\nAnalyze ALL the data provided — look across sessions AND across domains for patterns. Connect dots between retail media developments and commerce/shopping developments. Be specific: name companies, cite numbers, reference concrete developments.\n\nReturn ONLY valid JSON (no markdown, no backticks):\n{\n\"executive_summary\": \"3-4 paragraph overview covering BOTH retail media and commerce/shopping. Be specific and opinionated. Reference concrete developments, name companies, cite growth figures. Highlight cross-domain connections.\",\n\"market_dynamics\": \"2-3 paragraphs on structural forces — consolidation, tech shifts, budget flows, regulatory pressure. Connect signals across both domains.\",\n\"key_developments\": [\n{\"headline\": \"short headline\", \"analysis\": \"2-3 sentences explaining why this matters\", \"entities\": [\"companies\"], \"domains\": [\"retail-media and/or commerce\"], \"significance\": 1-5}\n],\n\"strategic_implications\": \"2-3 paragraphs for someone BUILDING retail media or commerce products. What should they prioritize? What cross-domain opportunities exist?\",\n\"competitive_landscape\": \"1-2 paragraphs on who is winning across both domains.\",\n\"action_items\": [\"5-7 specific, actionable items for a product or strategy team\"],\n\"risk_factors\": [\"3-4 specific risks with concrete reasoning\"],\n\"opportunities\": [\"3-4 specific opportunities — especially cross-domain gaps\"]\n}\n\nAccumulated intelligence data:\n";
+
+function extractJSON(text) {
+  if (!text) return null;
+  var s = text.replace(/```json/g,"").replace(/```/g,"").trim();
+  var start = s.indexOf("{"); if (start===-1) return null;
+  var depth=0, end=-1;
+  for (var i=start;i<s.length;i++) { if(s[i]==="{")depth++; else if(s[i]==="}"){depth--;if(depth===0){end=i;break;}} }
+  if (end===-1) return null;
+  try { return JSON.parse(s.slice(start,end+1)); } catch(e) { return null; }
+}
+
+async function callClaude(apiKey, prompt) {
+  var res = await fetch("https://api.anthropic.com/v1/messages", {
+    method:"POST",
+    headers:{"Content-Type":"application/json","x-api-key":apiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+    body:JSON.stringify({ model:"claude-sonnet-4-20250514", max_tokens:4096, messages:[{role:"user",content:prompt}] })
+  });
+  if (!res.ok) throw new Error("API "+res.status);
+  var data = await res.json();
+  if (data.error) throw new Error(data.error.message);
+  return (data.content||[]).filter(function(b){return b.type==="text";}).map(function(b){return b.text;}).join("\n");
+}
+
+// ═══════════════════════════════════════
+// LOCAL NLP ENGINE
+// ═══════════════════════════════════════
+
+// ═══════════════════════════════════════
+// INTELLIGENCE DOMAINS
+// ═══════════════════════════════════════
+
+var DOMAINS = {
+  "retail-media": {
+    name: "Retail Media",
+    color: "vi",
+    themes: {
+      "retail media network": ["retail media network","rmn","retail media","media network"],
+      "in-store media": ["in-store","instore","in store","digital signage","shelf display","point of sale"],
+      "data clean room": ["clean room","cleanroom","data collaboration","data sharing"],
+      "CTV / offsite": ["ctv","connected tv","offsite","off-site","streaming ad","ott"],
+      "measurement": ["measurement","attribution","incrementality","roas","roi","closed-loop","closed loop"],
+      "first-party data": ["first-party","first party","1p data","1st party","customer data"],
+      "shopper data": ["shopper data","purchase data","transaction data","loyalty data","shopper insight"],
+      "programmatic": ["programmatic","real-time bidding","rtb","dsp","ssp","demand-side","supply-side"],
+      "walled garden": ["walled garden","walled-garden","closed ecosystem"],
+      "standardization": ["standardization","standard","iab","guideline","taxonomy","interoperab"],
+      "search ads": ["search ad","sponsored search","retail search","product listing","sponsored product"],
+      "AI / automation": ["artificial intelligence"," ai ","machine learning","automation","generative","llm","chatbot"],
+      "self-serve": ["self-serve","self serve","self-service","platform access"],
+      "onsite display": ["onsite","on-site","display ad","banner","sponsored display"],
+      "shoppable": ["shoppable","shop the look","commerce media","social commerce"],
+      "privacy": ["privacy","gdpr","ccpa","cookieless","cookie-less","deprecat","consent"]
+    },
+    entities: ["Amazon","Walmart","Target","Kroger","Instacart","DoorDash","Uber","Lyft","Google","Meta","Microsoft","Apple","TikTok","Pinterest","Snap","Reddit","The Trade Desk","Criteo","CitrusAd","Epsilon","LiveRamp","Habu","InfoSum","Albertsons","CVS","Walgreens","Dollar General","Home Depot","Lowes","Best Buy","Costco","Sams Club","Nordstrom","Macys","Kohls","Wayfair","Chewy","Roundel","Walmart Connect","Amazon Ads","Kroger Precision Marketing","Albertsons Media Collective","CVS Media Exchange","Best Buy Ads","Instacart Ads","DoorDash Ads","Gopuff Ads","Uber Advertising","Lyft Media","Chase","PayPal","Mastercard","Visa","JPMorgan","Capital One","Disney","Netflix","Roku","Peacock","Hulu","Procter Gamble","Unilever","Mars","PepsiCo","Coca-Cola","Nestle","IAB","ANA","MRC","GroupM","Omnicom","Publicis","Dentsu","IPG","WPP","McKinsey","BCG","Deloitte","Accenture","eMarketer","Forrester","Gartner"]
+  },
+  "commerce": {
+    name: "Commerce & Shopping",
+    color: "cy",
+    themes: {
+      "product feeds": ["product feed","data feed","shopping feed","merchant center","google merchant"],
+      "Shopping ads": ["shopping ads","shopping campaign","performance max","pmax","smart shopping","product listing ad"," pla "],
+      "CSS partners": ["comparison shopping","css partner","css program"],
+      "marketplace": ["marketplace","seller central","vendor central","3p seller","third-party seller","third party seller"],
+      "fulfillment": ["fulfillment","shipping","last mile","warehouse","logistics"],
+      "commerce platform": ["shopify","bigcommerce","magento","woocommerce","salesforce commerce","commercetools"],
+      "checkout": ["checkout","payment","buy now pay later","bnpl","apple pay","google pay"],
+      "product discovery": ["product discovery","visual search","recommendation engine","personalization"],
+      "free listings": ["free listings","organic shopping","surfaces across google"],
+      "feed optimization": ["feed optimization","feed management","product data quality","feed quality"]
+    },
+    entities: ["Google Shopping","Merchant Center","Shopify","BigCommerce","Magento","WooCommerce","Salesforce Commerce","Channable","DataFeedWatch","Feedonomics","GoDataFeed","Productsup","ChannelAdvisor","Bazaarvoice","Salsify","Akeneo","CommerceHub","Mirakl","Marketplacer","Shopware","PrestaShop","Wix","Squarespace"]
+  }
+};
+
+// Shared across all domains (signal type and sentiment are domain-agnostic)
+var SIGNAL_KEYWORDS={deal:["acquire","acquisition","merger","acqui","bought","purchase","deal","$","million","billion","funding","invest","raise"],partnership:["partner","collaborat","integrat","alliance","team up","join force","agreement"],product_launch:["launch","unveil","introduc","debut","announc","new feature","new platform","release","rollout","roll out"],earnings:["earnings","revenue","quarter","q1","q2","q3","q4","profit","growth","fiscal","financial result"],regulation:["regulat","legislation","antitrust","ftc","sec filing","compliance","govern","congress","senate","eu ","policy"],research:["study","research","report","survey","forecast","analysis","data show","according to","emarketer","forrester","gartner"],opinion:["opinion","editorial","perspective","column","think","commentary","outlook"],trend:["trend","shift","emerging","growing","accelerat","future of","evolution","next wave"]};
+var SENTIMENT_POS=["growth","surge","boost","record","accelerat","gain","opportunity","expand","success","strong","positive","leading","innovati","breakthrough"];
+var SENTIMENT_NEG=["decline","drop","fall","challenge","threat","concern","risk","struggle","cut","loss","layoff","slow","pullback","uncertain"];
+
+function extractURLs(t){return(t.match(/https?:\/\/[^\s<>"{}|\\^`\[\](),]+/g)||[]).map(function(u){return u.replace(/[.),;:!?]+$/,"");});}
+
+// Unwrap Google redirect URLs to get the real destination
+function unwrapGoogleUrl(url) {
+  try {
+    var u = new URL(url);
+    if (u.hostname.indexOf("google.") > -1 && u.pathname === "/url") {
+      var realUrl = u.searchParams.get("url") || u.searchParams.get("q");
+      if (realUrl && realUrl.indexOf("http") === 0) return decodeURIComponent(realUrl);
+    }
+    return url;
+  } catch(e) { return url; }
+}
+
+// Filter out non-article URLs
+function isJunkUrl(url) {
+  try {
+    var u = new URL(url);
+    var host = u.hostname.toLowerCase();
+    var path = u.pathname.toLowerCase();
+    // All remaining google.com links after unwrapping are junk (share, feedback, alerts UI, etc.)
+    if (host.indexOf("google.") > -1) return true;
+    // Google infrastructure
+    if (host.indexOf("googleapis.com") > -1) return true;
+    if (host.indexOf("gstatic.com") > -1) return true;
+    if (host.indexOf("googleusercontent.com") > -1) return true;
+    if (host.indexOf("doubleclick.") > -1) return true;
+    if (host.indexOf("googlesyndication.") > -1) return true;
+    if (host.indexOf("googleadservices.") > -1) return true;
+    if (host.indexOf("google-analytics.") > -1) return true;
+    // Asset files
+    if (/\.(jpg|jpeg|png|gif|svg|ico|css|js|woff|woff2|ttf|eot)$/i.test(path)) return true;
+    // Unsubscribe / preferences
+    if (path.indexOf("unsubscribe") > -1 || path.indexOf("/preferences") > -1) return true;
+    return false;
+  } catch(e) { return true; }
+}
+
+function parseURL(url){try{var u=new URL(url);return{domain:u.hostname.replace("www.",""),slug:(u.pathname.replace(/\/$/,"").split("/").filter(function(s){return s.length>0;}).pop()||"").replace(/[-_]/g," ").replace(/[0-9]{6,}/g," ").trim(),url:url};}catch(e){return null;}}
+function inferTitle(slug,domain){if(!slug)return"Article from "+domain;return slug.charAt(0).toUpperCase()+slug.slice(1);}
+// Match themes across all domains; returns { themes: [...], domains: [...] }
+function matchAllThemes(t) {
+  var lower = t.toLowerCase();
+  var allThemes = [];
+  var matchedDomains = [];
+  var domainKeys = Object.keys(DOMAINS);
+  for (var d = 0; d < domainKeys.length; d++) {
+    var domainId = domainKeys[d];
+    var domainThemes = DOMAINS[domainId].themes;
+    var domainMatched = false;
+    var themeKeys = Object.keys(domainThemes);
+    for (var i = 0; i < themeKeys.length; i++) {
+      var kws = domainThemes[themeKeys[i]];
+      for (var j = 0; j < kws.length; j++) {
+        if (lower.indexOf(kws[j]) > -1) {
+          if (allThemes.indexOf(themeKeys[i]) === -1) allThemes.push(themeKeys[i]);
+          domainMatched = true;
+          break;
+        }
+      }
+    }
+    if (domainMatched && matchedDomains.indexOf(domainId) === -1) {
+      matchedDomains.push(domainId);
+    }
+  }
+  // Default to retail-media if nothing matched
+  if (allThemes.length === 0) { allThemes = ["retail media"]; matchedDomains = ["retail-media"]; }
+  return { themes: allThemes, domains: matchedDomains };
+}
+
+// Match entities across all domains; returns flat array
+function matchAllEntities(t) {
+  var found = [];
+  var seen = {};
+  var domainKeys = Object.keys(DOMAINS);
+  for (var d = 0; d < domainKeys.length; d++) {
+    var ents = DOMAINS[domainKeys[d]].entities;
+    for (var i = 0; i < ents.length; i++) {
+      if (!seen[ents[i]] && (t.indexOf(ents[i]) > -1 || t.toLowerCase().indexOf(ents[i].toLowerCase()) > -1)) {
+        found.push(ents[i]);
+        seen[ents[i]] = true;
+      }
+    }
+  }
+  return found;
+}
+
+// Signal and sentiment matching — shared across domains
+function matchSignal(t){var l=t.toLowerCase(),best="trend",bs=0;Object.keys(SIGNAL_KEYWORDS).forEach(function(k){var sc=0;SIGNAL_KEYWORDS[k].forEach(function(w){if(l.indexOf(w)>-1)sc++;});if(sc>bs){bs=sc;best=k;}});return best;}
+function matchSentiment(t){var l=t.toLowerCase(),p=0,n=0;SENTIMENT_POS.forEach(function(w){if(l.indexOf(w)>-1)p++;});SENTIMENT_NEG.forEach(function(w){if(l.indexOf(w)>-1)n++;});return p>n?"positive":n>p?"negative":"neutral";}
+
+function localAnalyze(rawText) {
+  var rawUrls = extractURLs(rawText);
+  var articles = [];
+
+  // Phase 1: Unwrap Google redirects, then filter junk
+  var cleanUrls = [];
+  rawUrls.forEach(function(url) {
+    var unwrapped = unwrapGoogleUrl(url);
+    if (!isJunkUrl(unwrapped)) {
+      cleanUrls.push({ original: url, clean: unwrapped });
+    }
+  });
+
+  // Phase 2: Analyze each clean URL with domain-aware matching
+  cleanUrls.forEach(function(entry) {
+    var p = parseURL(entry.clean);
+    if (!p) return;
+    var idx = rawText.indexOf(entry.original);
+    var ctx = p.slug + " " + p.domain + " " + rawText.slice(Math.max(0, idx - 250), Math.min(rawText.length, idx + entry.original.length + 250));
+    var themeResult = matchAllThemes(ctx);
+    var ents = matchAllEntities(ctx);
+    articles.push({
+      id: newId(), title: inferTitle(p.slug, p.domain), source: p.domain, url: entry.clean,
+      themes: themeResult.themes, domains: themeResult.domains,
+      signal_type: matchSignal(ctx), sentiment: matchSentiment(ctx),
+      entities: ents, significance: Math.min(5, Math.max(1, themeResult.themes.length + ents.length - 1))
+    });
+  });
+
+  if (articles.length === 0 && rawText.trim().length > 20) {
+    var themeResult = matchAllThemes(rawText);
+    articles.push({id:newId(),title:rawText.slice(0,60).replace(/\n/g," ").trim()+"...",source:"pasted text",url:"",themes:themeResult.themes,domains:themeResult.domains,signal_type:matchSignal(rawText),sentiment:matchSentiment(rawText),entities:matchAllEntities(rawText),significance:2});
+  }
+  var seen = {}, out = [];
+  articles.forEach(function(a) { var k = a.url || a.title; if (!seen[k]) { seen[k] = true; out.push(a); } });
+  return out;
+}
+
+function synthesize(sessions) {
+  var tc={},ec={},sn={positive:0,negative:0,neutral:0},sc={},dc={},total=0;
+  sessions.forEach(function(s){(s.articles||[]).forEach(function(a){
+    total++;
+    sn[a.sentiment]=(sn[a.sentiment]||0)+1;
+    sc[a.signal_type]=(sc[a.signal_type]||0)+1;
+    (a.themes||[]).forEach(function(t){tc[t]=(tc[t]||0)+1;});
+    (a.entities||[]).forEach(function(e){ec[e]=(ec[e]||0)+1;});
+    (a.domains||[]).forEach(function(d){dc[d]=(dc[d]||0)+1;});
+  });});
+  return{themeCount:tc,entityCount:ec,sentiments:sn,signalCounts:sc,domainCount:dc,totalArticles:total};
+}
+
+// ═══════════════════════════════════════
+// THEME + COMPONENTS
+// ═══════════════════════════════════════
+
+var c={bg:"#07070b",s1:"#0e0e16",s2:"#151520",br:"#252538",brA:"#3a5a8a",tx:"#d4d4e0",txS:"#9494a8",txD:"#505068",ac:"#5b8def",acS:"rgba(91,141,239,0.1)",acG:"rgba(91,141,239,0.05)",gn:"#34d399",gnS:"rgba(52,211,153,0.1)",am:"#fbbf24",amS:"rgba(251,191,36,0.1)",rd:"#f87171",rdS:"rgba(248,113,113,0.1)",vi:"#a78bfa",viS:"rgba(167,139,250,0.1)",cy:"#22d3ee",cyS:"rgba(34,211,238,0.1)",mono:"'JetBrains Mono','Fira Code','SF Mono',monospace",sans:"'DM Sans',system-ui,sans-serif"};
+
+function Tag(p){return <span style={{display:"inline-block",padding:"2px 7px",borderRadius:"3px",fontSize:"10px",fontFamily:c.mono,fontWeight:500,color:p.color,background:p.bg,letterSpacing:"0.03em",marginRight:"3px",marginBottom:"3px"}}>{p.children}</span>;}
+function Card(p){return <div style={{padding:"14px 16px",background:c.s2,border:"1px solid "+c.br,borderRadius:"6px",marginBottom:"12px"}}>{p.children}</div>;}
+function Lbl(p){return <div style={{fontFamily:c.mono,fontSize:"10px",color:p.color||c.ac,textTransform:"uppercase",letterSpacing:"0.12em",marginBottom:"10px"}}>{p.children}</div>;}
+function Btn(p){return <button onClick={p.onClick} disabled={p.disabled} style={{padding:p.small?"7px 12px":"10px 20px",background:p.danger?c.rdS:p.ghost?"transparent":p.disabled?c.s2:c.ac,color:p.danger?c.rd:p.ghost?c.txS:p.disabled?c.txD:"#fff",border:p.ghost?"1px solid "+c.br:p.danger?"1px solid "+c.rd+"33":"none",borderRadius:"5px",fontFamily:c.mono,fontSize:p.small?"10px":"12px",fontWeight:600,cursor:p.disabled?"default":"pointer"}}>{p.children}</button>;}
+
+var sigCol={deal:c.gn,partnership:c.ac,product_launch:c.vi,earnings:c.am,regulation:c.rd,opinion:c.txS,research:c.cy,trend:c.vi};
+var sigBg={deal:c.gnS,partnership:c.acS,product_launch:c.viS,earnings:c.amS,regulation:c.rdS,opinion:c.s1,research:c.cyS,trend:c.viS};
+
+// Article row component with delete button
+function ArticleRow(p) {
+  var a = p.article;
+  return (
+    <div style={{padding:"10px 0",borderBottom:p.last?"none":"1px solid "+c.br,position:"relative"}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"8px"}}>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{fontSize:"13px",fontWeight:600,lineHeight:1.4,marginBottom:"3px"}}>{a.url?<a href={a.url} target="_blank" rel="noopener noreferrer" style={{color:c.tx,textDecoration:"none",borderBottom:"1px dotted "+c.txD}}>{a.title}</a>:a.title}</div>
+          <div style={{fontFamily:c.mono,fontSize:"10px",color:c.txD,marginBottom:"5px"}}>{a.source}</div>
+        </div>
+        {p.onDelete && <button onClick={function(){p.onDelete(a.id);}} style={{background:"transparent",border:"none",color:c.txD,cursor:"pointer",fontSize:"14px",padding:"2px 6px",flexShrink:0}} title="Remove article">×</button>}
+      </div>
+      {a.summary && <div style={{fontSize:"12px",color:c.txS,lineHeight:1.6,marginBottom:"5px"}}>{a.summary}</div>}
+      <div style={{display:"flex",flexWrap:"wrap",gap:"3px",marginBottom:"4px"}}>
+        <Tag color={sigCol[a.signal_type]||c.txD} bg={sigBg[a.signal_type]||c.s1}>{a.signal_type}</Tag>
+        <Tag color={a.sentiment==="positive"?c.gn:a.sentiment==="negative"?c.rd:c.txD} bg={a.sentiment==="positive"?c.gnS:a.sentiment==="negative"?c.rdS:c.s1}>{a.sentiment}</Tag>
+        {(a.domains||[]).map(function(d){var dom=DOMAINS[d];return <Tag key={d} color={c[dom?dom.color:"ac"]} bg={c[(dom?dom.color:"ac")+"S"]}>{dom?dom.name:d}</Tag>;})}
+      </div>
+      <div>{(a.themes||[]).map(function(t){return <Tag key={t} color={c.vi} bg={c.viS}>{t}</Tag>;})}</div>
+      <div>{(a.entities||[]).map(function(e){return <Tag key={e} color={c.txS} bg={c.s1}>{e}</Tag>;})}</div>
+      {a.strategic_insight && <div style={{marginTop:"6px",fontSize:"11px",color:c.cy,fontStyle:"italic",paddingLeft:"10px",borderLeft:"2px solid "+c.cy+"33"}}>{a.strategic_insight}</div>}
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════
+// MAIN APP
+// ═══════════════════════════════════════
+
+function App() {
+  var [view, setView] = useState("ingest");
+  var [store, setStoreState] = useState(loadStore);
+  var [input, setInput] = useState("");
+  var [status, setStatus] = useState("");
+  var [busy, setBusy] = useState(false);
+  var [expanded, setExpanded] = useState(null);
+  var [apiKey, setApiKeyState] = useState(function(){return loadSetting(KEY_KEY);});
+  var [trendBusy, setTrendBusy] = useState(false);
+  var [briefingBusy, setBriefingBusy] = useState(false);
+  var [briefingIdx, setBriefingIdx] = useState(0);
+  var [trendIdx, setTrendIdx] = useState(0);
+  var [showAddArticle, setShowAddArticle] = useState(false);
+  var [addUrl, setAddUrl] = useState("");
+  var [addTitle, setAddTitle] = useState("");
+  var [contentDateInput, setContentDateInput] = useState("");
+  var [showDatePicker, setShowDatePicker] = useState(false);
+  var [showImport, setShowImport] = useState(false);
+  var [importTxt, setImportTxt] = useState("");
+  var [gdriveBusy, setGdriveBusy] = useState(false);
+  var [gmailBusy, setGmailBusy] = useState(false);
+  var [emailCount, setEmailCount] = useState(10);
+
+  var hasKey = apiKey.length > 10;
+  var sessions = sortSessions(store.sessions || []);
+  var trendReports = store.trendReports || [];
+  var sCount = sessions.length;
+
+  // Persist store
+  function updateStore(fn) {
+    setStoreState(function(prev) {
+      var next = typeof fn === "function" ? fn(JSON.parse(JSON.stringify(prev))) : fn;
+      saveStore(next);
+      return next;
+    });
+  }
+
+  // ─── Article CRUD ───
+  function deleteArticle(sessionId, articleId) {
+    updateStore(function(s) {
+      var sess = s.sessions.find(function(x){return x.id===sessionId;});
+      if (sess) {
+        sess.articles = sess.articles.filter(function(a){return a.id!==articleId;});
+        if (sess.articles.length === 0) {
+          s.sessions = s.sessions.filter(function(x){return x.id!==sessionId;});
+        }
+      }
+      return s;
+    });
+    setStatus("✓ Article removed");
+  }
+
+  function addArticle() {
+    if (!addUrl && !addTitle) return;
+    // Check for duplicate URL
+    if (addUrl) {
+      var existing = getAllUrls(store);
+      if (existing.has(addUrl)) {
+        setStatus("⚠ URL already exists in your intel.");
+        return;
+      }
+    }
+    var article;
+    if (addUrl) {
+      var analyzed = localAnalyze(addUrl);
+      article = analyzed[0];
+      if (addTitle) article.title = addTitle;
+    } else {
+      article = {id:newId(),title:addTitle,source:"manual",url:"",themes:["retail media"],domains:["retail-media"],signal_type:"trend",sentiment:"neutral",entities:[],significance:1};
+    }
+    // Determine content date: user-set > URL-extracted > today
+    var cDate = null;
+    if (contentDateInput) {
+      cDate = new Date(contentDateInput + "T12:00:00").toISOString();
+    } else if (addUrl) {
+      cDate = extractDateFromUrl(addUrl);
+    }
+    var session = {id:newId(),date:new Date().toISOString(),contentDate:cDate||new Date().toISOString(),articles:[article],synthesis:null,source:"manual"};
+    updateStore(function(s) { s.sessions = [session].concat(s.sessions); s.lastIngestDate = new Date().toISOString(); return s; });
+    setAddUrl(""); setAddTitle(""); setContentDateInput(""); setShowAddArticle(false);
+    setStatus("✓ Article added");
+  }
+
+  // ─── Analyze ───
+  var handleAnalyze = useCallback(async function() {
+    var trimmed = input.trim();
+    if (trimmed.length < 10 || busy) return;
+    setBusy(true); setStatus("Analyzing...");
+
+    var knownUrls = getAllUrls(store);
+    var localArticles = localAnalyze(trimmed);
+    localArticles.forEach(function(a){if(!a.id)a.id=newId();});
+    var session;
+    var skipped = 0;
+    var dedup;
+
+    // Determine content date: user-set > URL-inferred > today
+    var pasteContentDate;
+    if (contentDateInput) {
+      pasteContentDate = new Date(contentDateInput + "T12:00:00").toISOString();
+    } else {
+      var urlDates = inferContentDateFromUrls(extractURLs(trimmed));
+      pasteContentDate = urlDates || new Date().toISOString();
+    }
+
+    if (hasKey) {
+      try {
+        setStatus("Running Claude analysis...");
+        var rawText = await callClaude(apiKey, ANALYSIS_PROMPT + trimmed);
+        var parsed = extractJSON(rawText);
+        if (parsed && parsed.articles && parsed.articles.length > 0) {
+          parsed.articles.forEach(function(a){a.id=newId();});
+          dedup = deduplicateArticles(parsed.articles, knownUrls);
+          skipped = dedup.skipped;
+          if (dedup.kept.length > 0) {
+            session = {id:newId(),date:new Date().toISOString(),contentDate:pasteContentDate,articles:dedup.kept,synthesis:parsed.meta_synthesis||null,source:"claude"};
+          }
+          setStatus("✓ "+dedup.kept.length+" new"+(skipped>0?" · "+skipped+" duplicate"+(skipped>1?"s":"")+" skipped":"")+" (Claude)");
+        } else {
+          dedup = deduplicateArticles(localArticles, knownUrls);
+          skipped = dedup.skipped;
+          if (dedup.kept.length > 0) {
+            session = {id:newId(),date:new Date().toISOString(),contentDate:pasteContentDate,articles:dedup.kept,synthesis:null,source:"local"};
+          }
+          setStatus("✓ "+dedup.kept.length+" new"+(skipped>0?" · "+skipped+" skipped":"")+" (local fallback)");
+        }
+      } catch(e) {
+        dedup = deduplicateArticles(localArticles, knownUrls);
+        skipped = dedup.skipped;
+        if (dedup.kept.length > 0) {
+          session = {id:newId(),date:new Date().toISOString(),contentDate:pasteContentDate,articles:dedup.kept,synthesis:null,source:"local"};
+        }
+        setStatus("✓ "+dedup.kept.length+" new"+(skipped>0?" · "+skipped+" skipped":"")+" (local — "+e.message.slice(0,40)+")");
+      }
+    } else {
+      dedup = deduplicateArticles(localArticles, knownUrls);
+      skipped = dedup.skipped;
+      if (dedup.kept.length > 0) {
+        session = {id:newId(),date:new Date().toISOString(),contentDate:pasteContentDate,articles:dedup.kept,synthesis:null,source:"local"};
+      }
+      setStatus("✓ "+dedup.kept.length+" new article"+(dedup.kept.length!==1?"s":"")+(skipped>0?" · "+skipped+" duplicate"+(skipped>1?"s":"")+" skipped":"")+" (local)");
+    }
+
+    if (session) {
+      updateStore(function(s) { s.sessions = [session].concat(s.sessions); s.lastIngestDate = new Date().toISOString(); return s; });
+      setView("briefing"); setBriefingIdx(0);
+    } else if (skipped > 0) {
+      setStatus("All "+skipped+" article"+(skipped>1?"s":"")+" already in your intel. Nothing new to add.");
+    }
+    setInput(""); setContentDateInput(""); setShowDatePicker(false); setBusy(false);
+  }, [input, busy, apiKey, hasKey, store, contentDateInput]);
+
+  // ─── Gmail Fetch ───
+  var handleGmailFetch = useCallback(async function() {
+    if (gmailBusy) return;
+    setGmailBusy(true); setStatus("Connecting to Gmail...");
+
+    try {
+      var token = await gmailAuth();
+      setStatus("Fetching Google Alerts (" + emailCount + " emails)...");
+      var result = await gmailFetchAlerts(token, emailCount);
+
+      if (result.count === 0) {
+        setStatus("No Google Alert emails found.");
+        setGmailBusy(false);
+        return;
+      }
+
+      setStatus("Processing " + result.count + " emails...");
+
+      // Use email dates for content dating
+      var gmailContentDate = result.contentDate || new Date().toISOString();
+
+      // Run through the same analysis pipeline
+      var knownUrls = getAllUrls(store);
+      var localArticles = localAnalyze(result.content);
+      localArticles.forEach(function(a) { if (!a.id) a.id = newId(); });
+      var session;
+      var dedup;
+
+      if (hasKey) {
+        try {
+          setStatus("Running Claude analysis on " + result.count + " emails...");
+          var rawText = await callClaude(apiKey, ANALYSIS_PROMPT + result.content.slice(0, 12000));
+          var parsed = extractJSON(rawText);
+          if (parsed && parsed.articles && parsed.articles.length > 0) {
+            parsed.articles.forEach(function(a) { a.id = newId(); });
+            dedup = deduplicateArticles(parsed.articles, knownUrls);
+            if (dedup.kept.length > 0) {
+              session = { id: newId(), date: new Date().toISOString(), contentDate: gmailContentDate, articles: dedup.kept, synthesis: parsed.meta_synthesis || null, source: "gmail+claude" };
+            }
+            setStatus("✓ " + dedup.kept.length + " new from " + result.count + " emails" + (dedup.skipped > 0 ? " · " + dedup.skipped + " duplicates skipped" : "") + " (Claude)");
+          } else {
+            dedup = deduplicateArticles(localArticles, knownUrls);
+            if (dedup.kept.length > 0) {
+              session = { id: newId(), date: new Date().toISOString(), contentDate: gmailContentDate, articles: dedup.kept, synthesis: null, source: "gmail+local" };
+            }
+            setStatus("✓ " + dedup.kept.length + " new from " + result.count + " emails" + (dedup.skipped > 0 ? " · " + dedup.skipped + " skipped" : "") + " (local)");
+          }
+        } catch(e) {
+          dedup = deduplicateArticles(localArticles, knownUrls);
+          if (dedup.kept.length > 0) {
+            session = { id: newId(), date: new Date().toISOString(), contentDate: gmailContentDate, articles: dedup.kept, synthesis: null, source: "gmail+local" };
+          }
+          setStatus("✓ " + dedup.kept.length + " new" + (dedup.skipped > 0 ? " · " + dedup.skipped + " skipped" : "") + " (local — " + e.message.slice(0, 40) + ")");
+        }
+      } else {
+        dedup = deduplicateArticles(localArticles, knownUrls);
+        if (dedup.kept.length > 0) {
+          session = { id: newId(), date: new Date().toISOString(), contentDate: gmailContentDate, articles: dedup.kept, synthesis: null, source: "gmail+local" };
+        }
+        setStatus("✓ " + dedup.kept.length + " new from " + result.count + " emails" + (dedup.skipped > 0 ? " · " + dedup.skipped + " skipped" : "") + " (local)");
+      }
+
+      if (session) {
+        updateStore(function(s) { s.sessions = [session].concat(s.sessions); s.lastIngestDate = new Date().toISOString(); return s; });
+        setView("briefing"); setBriefingIdx(0);
+      } else if (dedup && dedup.skipped > 0) {
+        setStatus("All articles from " + result.count + " emails already in your intel.");
+      }
+    } catch(e) {
+      setStatus("Gmail error: " + e.message.slice(0, 80));
+    }
+    setGmailBusy(false);
+  }, [gmailBusy, emailCount, store, hasKey, apiKey]);
+
+  // ─── Trends ───
+  var handleTrends = useCallback(async function() {
+    if (!hasKey || trendBusy || sCount === 0) return;
+    setTrendBusy(true); setStatus("Synthesizing trends...");
+    try {
+      var syn = synthesize(sessions);
+      var payload = JSON.stringify({sessions:sessions.map(function(s){return{date:getContentDate(s),articles:s.articles,synthesis:s.synthesis};}),entities:syn.entityCount,themes:syn.themeCount,domain_breakdown:syn.domainCount});
+      var rawText = await callClaude(apiKey, TREND_PROMPT + payload);
+      var parsed = extractJSON(rawText);
+      if (parsed) {
+        var report = {
+          id:newId(), date:new Date().toISOString(), data:parsed,
+          snapshot:{totalArticles:syn.totalArticles,totalSessions:sCount,topThemes:Object.entries(syn.themeCount).sort(function(a,b){return b[1]-a[1];}).slice(0,5),topEntities:Object.entries(syn.entityCount).sort(function(a,b){return b[1]-a[1];}).slice(0,5)}
+        };
+        updateStore(function(s) { s.trendReports = [report].concat(s.trendReports); return s; });
+        setTrendIdx(0);
+        setStatus("✓ Trend report saved");
+      } else { setStatus("Could not parse trends."); }
+    } catch(e) { setStatus("Trend error: "+e.message.slice(0,60)); }
+    setTrendBusy(false);
+  }, [hasKey, trendBusy, sessions, sCount, apiKey]);
+
+  // ─── Generate Briefing ───
+  var handleBriefing = useCallback(async function() {
+    if (!hasKey || briefingBusy || sCount === 0) return;
+    setBriefingBusy(true); setStatus("Generating briefing...");
+    try {
+      var syn = synthesize(sessions);
+      var payload = JSON.stringify({
+        total_sessions: sCount,
+        total_articles: syn.totalArticles,
+        date_range: { earliest: getContentDate(sessions[sessions.length - 1]), latest: getContentDate(sessions[0]) },
+        sessions: sessions.map(function(s) {
+          return { date: getContentDate(s), source: s.source, articles: s.articles.map(function(a) {
+            return { title: a.title, source: a.source, url: a.url, summary: a.summary || "", themes: a.themes, signal_type: a.signal_type, sentiment: a.sentiment, entities: a.entities, strategic_insight: a.strategic_insight || "" };
+          })};
+        }),
+        accumulated_themes: Object.entries(syn.themeCount).sort(function(a,b){return b[1]-a[1];}),
+        accumulated_entities: Object.entries(syn.entityCount).sort(function(a,b){return b[1]-a[1];}),
+        sentiment_breakdown: syn.sentiments,
+        signal_breakdown: syn.signalCounts,
+        domain_breakdown: syn.domainCount
+      });
+      var rawText = await callClaude(apiKey, BRIEFING_PROMPT + payload);
+      var parsed = extractJSON(rawText);
+      if (parsed) {
+        var report = {
+          id: newId(), date: new Date().toISOString(), data: parsed,
+          snapshot: { totalArticles: syn.totalArticles, totalSessions: sCount, topThemes: Object.entries(syn.themeCount).sort(function(a,b){return b[1]-a[1];}).slice(0,5), topEntities: Object.entries(syn.entityCount).sort(function(a,b){return b[1]-a[1];}).slice(0,5) }
+        };
+        updateStore(function(s) { s.briefingReports = [report].concat(s.briefingReports || []); return s; });
+        setBriefingIdx(0);
+        setStatus("✓ Briefing generated");
+      } else { setStatus("Could not parse briefing."); }
+    } catch(e) { setStatus("Briefing error: " + e.message.slice(0, 60)); }
+    setBriefingBusy(false);
+  }, [hasKey, briefingBusy, sessions, sCount, apiKey]);
+
+  // ─── Google Drive ───
+  var handleGDriveSave = useCallback(async function() {
+    setGdriveBusy(true); setStatus("Saving to Google Drive...");
+    try {
+      await gdriveAuth();
+      await gdriveSave(gdriveState.accessToken, store);
+      setStatus("✓ Saved to Google Drive");
+    } catch(e) { setStatus("Drive error: "+e.message.slice(0,60)); }
+    setGdriveBusy(false);
+  }, [store]);
+
+  var handleGDriveLoad = useCallback(async function() {
+    setGdriveBusy(true); setStatus("Loading from Google Drive...");
+    try {
+      await gdriveAuth();
+      var data = await gdriveLoad(gdriveState.accessToken);
+      if (data && data.sessions) {
+        updateStore(function() { return data; });
+        setStatus("✓ Loaded from Google Drive ("+data.sessions.length+" sessions)");
+      } else { setStatus("No backup found on Drive."); }
+    } catch(e) { setStatus("Drive error: "+e.message.slice(0,60)); }
+    setGdriveBusy(false);
+  }, []);
+
+  // ─── Import/Export ───
+  function handleExport() { downloadBackup(store); setStatus("✓ Downloaded"); }
+  function handleImport() {
+    try {
+      var parsed = JSON.parse(importTxt);
+      if (parsed.sessions) { updateStore(function(){return parsed;}); setStatus("✓ Imported "+parsed.sessions.length+" sessions"); setImportTxt(""); setShowImport(false); }
+    } catch(e) { setStatus("Invalid JSON."); }
+  }
+
+  // ─── Derived ───
+  var syn = synthesize(sessions);
+  var themeEntries = Object.entries(syn.themeCount).sort(function(a,b){return b[1]-a[1];});
+  var entityEntries = Object.entries(syn.entityCount).sort(function(a,b){return b[1]-a[1];});
+  var domainEntries = Object.entries(syn.domainCount).sort(function(a,b){return b[1]-a[1];});
+
+  // Briefing: from persisted cross-session reports
+  var briefingReports = store.briefingReports || [];
+  var currentBriefing = briefingReports[briefingIdx] || null;
+
+  // Trend: from persisted reports
+  var currentTrend = trendReports[trendIdx] || null;
+
+  // ═════════════════ VIEWS ═════════════════
+
+  // Staleness calculation
+  var stalenessDays = daysSinceIngest(store.lastIngestDate);
+  var isStale = stalenessDays >= 3;
+  var lastIngestLabel = store.lastIngestDate ? new Date(store.lastIngestDate).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})+" ("+stalenessDays+"d ago)" : "never";
+
+  var IngestView = (
+    <div style={{maxWidth:640}}>
+      {/* Staleness warning */}
+      {isStale && sCount > 0 && (
+        <div className="fade-in" style={{padding:"12px 14px",background:stalenessDays>=7?c.rdS:c.amS,border:"1px solid "+(stalenessDays>=7?c.rd:c.am)+"33",borderRadius:"6px",marginBottom:"12px",fontSize:"12px",lineHeight:1.6}}>
+          <span style={{fontFamily:c.mono,fontSize:"10px",color:stalenessDays>=7?c.rd:c.am,textTransform:"uppercase",letterSpacing:"0.08em"}}>{stalenessDays >= 7 ? "⚠ Intel is stale" : "📬 Time to refresh"}</span>
+          <div style={{color:c.tx,marginTop:"4px"}}>Last ingest was <strong>{stalenessDays} days ago</strong>. Fetch from Gmail or paste your latest alerts.</div>
+        </div>
+      )}
+      {sCount === 0 && (
+        <div style={{padding:"12px 14px",background:c.acS,border:"1px solid "+c.ac+"22",borderRadius:"6px",marginBottom:"12px",fontSize:"12px",color:c.tx,lineHeight:1.6}}>
+          <span style={{fontFamily:c.mono,fontSize:"10px",color:c.ac}}>Welcome</span>
+          <div style={{marginTop:"4px"}}>Fetch your Google Alert emails directly, or paste content below to start building your retail media intelligence.</div>
+        </div>
+      )}
+
+      {/* Gmail Fetch */}
+      <div style={{marginBottom:"16px",padding:"16px",background:c.s2,border:"1px solid "+c.br,borderRadius:"8px"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:"10px",flexWrap:"wrap"}}>
+          <div>
+            <div style={{fontFamily:c.mono,fontSize:"11px",color:c.ac,fontWeight:600,marginBottom:"4px"}}>📧 Fetch from Gmail</div>
+            <div style={{fontSize:"11px",color:c.txS,lineHeight:1.5}}>Pull latest Google Alert emails directly.</div>
+          </div>
+          <div style={{display:"flex",gap:"8px",alignItems:"center",flexShrink:0}}>
+            <select value={emailCount} onChange={function(e){setEmailCount(Number(e.target.value));}}
+              style={{padding:"6px 8px",background:c.s1,color:c.txS,border:"1px solid "+c.br,borderRadius:"4px",fontFamily:c.mono,fontSize:"10px",outline:"none"}}>
+              <option value={5}>5 emails</option>
+              <option value={10}>10 emails</option>
+              <option value={20}>20 emails</option>
+              <option value={30}>30 emails</option>
+              <option value={50}>50 emails</option>
+            </select>
+            <Btn onClick={handleGmailFetch} disabled={gmailBusy||busy}>{gmailBusy?<span className="pulsing">Fetching...</span>:"Fetch"}</Btn>
+          </div>
+        </div>
+      </div>
+
+      {/* Divider */}
+      <div style={{display:"flex",alignItems:"center",gap:"12px",marginBottom:"12px"}}>
+        <div style={{flex:1,height:"1px",background:c.br}}></div>
+        <span style={{fontFamily:c.mono,fontSize:"9px",color:c.txD,textTransform:"uppercase",letterSpacing:"0.1em"}}>or paste manually</span>
+        <div style={{flex:1,height:"1px",background:c.br}}></div>
+      </div>
+
+      {!hasKey && sCount > 0 && <Card><div style={{fontSize:"11px",color:c.am,fontFamily:c.mono,lineHeight:1.6}}>⚠ No API key — using local analysis. Add key in Settings for Claude synthesis.</div></Card>}
+      <div style={{fontSize:"12px",color:c.txS,marginBottom:"8px",lineHeight:1.6}}>
+        Paste email content or URLs.{hasKey?" Claude will analyze.":""}
+        {store.lastIngestDate && <span style={{fontFamily:c.mono,fontSize:"10px",color:c.txD,marginLeft:"8px"}}>Last: {lastIngestLabel}</span>}
+      </div>
+      <textarea value={input} onChange={function(e){setInput(e.target.value);}} placeholder="Paste email content or URLs..."
+        style={{width:"100%",minHeight:input?"140px":"60px",padding:"14px",background:c.s1,color:c.tx,border:"1px solid "+(input?c.brA:c.br),borderRadius:"6px",fontFamily:c.mono,fontSize:"12px",lineHeight:1.6,resize:"vertical",outline:"none",boxSizing:"border-box"}} />
+      {input.trim().length>9 && (
+        <div style={{marginTop:"10px"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"8px"}}>
+            <span style={{fontFamily:c.mono,fontSize:"10px",color:c.txD}}>{input.length} chars · {extractURLs(input).length} URLs</span>
+            <Btn onClick={handleAnalyze} disabled={busy}>{busy?"Analyzing...":"Analyze →"}</Btn>
+          </div>
+          {/* Date picker for backdating */}
+          <div style={{display:"flex",alignItems:"center",gap:"8px",flexWrap:"wrap"}}>
+            <button onClick={function(){setShowDatePicker(!showDatePicker);}} style={{background:"transparent",border:"none",color:showDatePicker?c.ac:c.txD,fontFamily:c.mono,fontSize:"10px",cursor:"pointer",padding:0}}>
+              {showDatePicker ? "▾ Content date" : "▸ Set content date (for older articles)"}
+            </button>
+            {showDatePicker && (
+              <div className="fade-in" style={{display:"flex",alignItems:"center",gap:"8px"}}>
+                <input type="date" value={contentDateInput} onChange={function(e){setContentDateInput(e.target.value);}}
+                  style={{padding:"4px 8px",background:c.s1,color:c.tx,border:"1px solid "+c.br,borderRadius:"4px",fontFamily:c.mono,fontSize:"11px",outline:"none"}} />
+                {contentDateInput && <span style={{fontFamily:c.mono,fontSize:"10px",color:c.gn}}>✓ Articles will be dated {new Date(contentDateInput+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}</span>}
+                {contentDateInput && <button onClick={function(){setContentDateInput("");}} style={{background:"transparent",border:"none",color:c.txD,cursor:"pointer",fontSize:"12px"}}>×</button>}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+      {/* Add article manually */}
+      <div style={{marginTop:"16px"}}>
+        <button onClick={function(){setShowAddArticle(!showAddArticle);}} style={{background:"transparent",border:"1px dashed "+c.br,borderRadius:"6px",padding:"10px 14px",color:c.txS,fontFamily:c.mono,fontSize:"11px",cursor:"pointer",width:"100%",textAlign:"left"}}>
+          {showAddArticle ? "Cancel" : "+ Add article manually"}
+        </button>
+        {showAddArticle && (
+          <div className="fade-in" style={{marginTop:"10px",padding:"14px",background:c.s1,borderRadius:"6px",border:"1px solid "+c.br}}>
+            <input value={addUrl} onChange={function(e){setAddUrl(e.target.value);}} placeholder="Article URL (optional)" style={{width:"100%",padding:"8px 10px",background:c.bg,color:c.tx,border:"1px solid "+c.br,borderRadius:"4px",fontFamily:c.mono,fontSize:"11px",marginBottom:"8px",outline:"none",boxSizing:"border-box"}} />
+            <input value={addTitle} onChange={function(e){setAddTitle(e.target.value);}} placeholder="Title (optional if URL provided)" style={{width:"100%",padding:"8px 10px",background:c.bg,color:c.tx,border:"1px solid "+c.br,borderRadius:"4px",fontFamily:c.mono,fontSize:"11px",marginBottom:"8px",outline:"none",boxSizing:"border-box"}} />
+            <div style={{display:"flex",alignItems:"center",gap:"8px",marginBottom:"8px"}}>
+              <span style={{fontFamily:c.mono,fontSize:"10px",color:c.txD}}>Published:</span>
+              <input type="date" value={contentDateInput} onChange={function(e){setContentDateInput(e.target.value);}}
+                style={{padding:"4px 8px",background:c.bg,color:c.tx,border:"1px solid "+c.br,borderRadius:"4px",fontFamily:c.mono,fontSize:"11px",outline:"none"}} />
+            </div>
+            <Btn small onClick={addArticle} disabled={!addUrl&&!addTitle}>Add</Btn>
+          </div>
+        )}
+      </div>
+      {sCount>0 && <div style={{marginTop:"16px",padding:"12px 14px",background:c.acG,border:"1px solid "+c.br,borderRadius:"6px",fontFamily:c.mono,fontSize:"11px",color:c.txS}}><span style={{color:c.ac}}>■</span> {sCount} sessions · {syn.totalArticles} articles · {entityEntries.length} entities · {themeEntries.length} themes · {getAllUrls(store).size} unique URLs</div>}
+    </div>
+  );
+
+  // Briefing with navigation
+  var BriefingView = sCount===0 ? <div style={{padding:"48px 0",textAlign:"center",color:c.txD,fontFamily:c.mono,fontSize:"12px"}}>No data yet.</div> : (
+    <div style={{display:"flex",flexDirection:"column",gap:"12px",maxWidth:720}}>
+      {/* Generate button */}
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:"8px"}}>
+        <span style={{fontFamily:c.mono,fontSize:"10px",color:c.txD}}>{briefingReports.length} briefing{briefingReports.length!==1?"s":""} · {syn.totalArticles} articles across {sCount} sessions</span>
+        <Btn onClick={handleBriefing} disabled={briefingBusy||!sCount||!hasKey}>{briefingBusy?<span className="pulsing">Generating...</span>:"Generate Briefing"}</Btn>
+      </div>
+      {!hasKey && <Card><div style={{fontSize:"11px",color:c.am,fontFamily:c.mono,lineHeight:1.6}}>Add API key in Settings to generate briefings. Stats from local analysis shown below.</div></Card>}
+
+      {/* Briefing navigator */}
+      {briefingReports.length > 0 && (
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",fontFamily:c.mono,fontSize:"11px"}}>
+          <button onClick={function(){setBriefingIdx(Math.min(briefingIdx+1,briefingReports.length-1));}} disabled={briefingIdx>=briefingReports.length-1} style={{background:"transparent",border:"none",color:briefingIdx>=briefingReports.length-1?c.txD:c.ac,cursor:"pointer",fontSize:"14px"}}>◀</button>
+          <span style={{color:c.txS}}>Briefing {briefingReports.length-briefingIdx} of {briefingReports.length} · {currentBriefing?new Date(currentBriefing.date).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}):""}
+            {currentBriefing&&currentBriefing.snapshot?" · "+currentBriefing.snapshot.totalArticles+" articles":""}</span>
+          <button onClick={function(){setBriefingIdx(Math.max(briefingIdx-1,0));}} disabled={briefingIdx<=0} style={{background:"transparent",border:"none",color:briefingIdx<=0?c.txD:c.ac,cursor:"pointer",fontSize:"14px"}}>▶</button>
+        </div>
+      )}
+
+      {/* Rich briefing content */}
+      {currentBriefing && currentBriefing.data && <>
+        {currentBriefing.data.executive_summary && (
+          <Card><Lbl>Executive Summary</Lbl><div style={{fontSize:"13.5px",lineHeight:1.85,whiteSpace:"pre-wrap"}}>{currentBriefing.data.executive_summary}</div></Card>
+        )}
+
+        {currentBriefing.data.market_dynamics && (
+          <Card><Lbl color={c.vi}>Market Dynamics</Lbl><div style={{fontSize:"13px",lineHeight:1.8,color:c.txS,whiteSpace:"pre-wrap"}}>{currentBriefing.data.market_dynamics}</div></Card>
+        )}
+
+        {currentBriefing.data.key_developments && currentBriefing.data.key_developments.length > 0 && (
+          <Card><Lbl color={c.am}>Key Developments</Lbl>
+            {currentBriefing.data.key_developments.map(function(d,i){return (
+              <div key={i} style={{padding:"10px 0",borderTop:i>0?"1px solid "+c.br:"none"}}>
+                <div style={{fontSize:"13px",fontWeight:600,marginBottom:"4px"}}>{d.headline}</div>
+                <div style={{fontSize:"12px",color:c.txS,lineHeight:1.6,marginBottom:"4px"}}>{d.analysis}</div>
+                <div>{(d.entities||[]).map(function(e){return <Tag key={e} color={c.txS} bg={c.s1}>{e}</Tag>;})}</div>
+              </div>
+            );})}
+          </Card>
+        )}
+
+        {currentBriefing.data.strategic_implications && (
+          <Card><Lbl color={c.ac}>Strategic Implications (for builders)</Lbl><div style={{fontSize:"13px",lineHeight:1.8,color:c.txS,whiteSpace:"pre-wrap"}}>{currentBriefing.data.strategic_implications}</div></Card>
+        )}
+
+        {currentBriefing.data.competitive_landscape && (
+          <Card><Lbl color={c.gn}>Competitive Landscape</Lbl><div style={{fontSize:"13px",lineHeight:1.8,color:c.txS,whiteSpace:"pre-wrap"}}>{currentBriefing.data.competitive_landscape}</div></Card>
+        )}
+
+        {currentBriefing.data.action_items && currentBriefing.data.action_items.length > 0 && (
+          <div style={{padding:"16px",background:"linear-gradient(135deg,"+c.acG+","+c.viS+")",border:"1px solid "+c.brA,borderRadius:"6px",marginBottom:"12px"}}>
+            <Lbl>⚡ Action Items</Lbl>
+            {currentBriefing.data.action_items.map(function(a,i){return <div key={i} style={{fontSize:"13px",padding:"6px 0",lineHeight:1.6,display:"flex",gap:"10px"}}><span style={{fontFamily:c.mono,color:c.ac,fontSize:"11px",flexShrink:0}}>{String(i+1).padStart(2,"0")}</span><span>{a}</span></div>;})}
+          </div>
+        )}
+
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(260px, 1fr))",gap:"10px"}}>
+          {currentBriefing.data.opportunities && currentBriefing.data.opportunities.length > 0 && (
+            <Card><Lbl color={c.gn}>Opportunities</Lbl>
+              {currentBriefing.data.opportunities.map(function(o,i){return <div key={i} style={{fontSize:"12px",color:c.tx,padding:"5px 0",lineHeight:1.5,borderTop:i>0?"1px solid "+c.br:"none"}}>↗ {o}</div>;})}
+            </Card>
+          )}
+          {currentBriefing.data.risk_factors && currentBriefing.data.risk_factors.length > 0 && (
+            <Card><Lbl color={c.rd}>Risk Factors</Lbl>
+              {currentBriefing.data.risk_factors.map(function(r,i){return <div key={i} style={{fontSize:"12px",color:c.tx,padding:"5px 0",lineHeight:1.5,borderTop:i>0?"1px solid "+c.br:"none"}}>⚠ {r}</div>;})}
+            </Card>
+          )}
+        </div>
+      </>}
+
+      {/* Always show current stats */}
+      <Card>
+        <Lbl>Current Sentiment · {syn.totalArticles} articles</Lbl>
+        <div style={{display:"flex",height:"8px",borderRadius:"4px",overflow:"hidden",background:c.br}}>
+          {syn.sentiments.positive>0&&<div style={{width:(syn.sentiments.positive/syn.totalArticles*100)+"%",background:c.gn}}/>}
+          {syn.sentiments.neutral>0&&<div style={{width:(syn.sentiments.neutral/syn.totalArticles*100)+"%",background:c.txD}}/>}
+          {syn.sentiments.negative>0&&<div style={{width:(syn.sentiments.negative/syn.totalArticles*100)+"%",background:c.rd}}/>}
+        </div>
+        <div style={{display:"flex",justifyContent:"space-between",marginTop:"6px",fontFamily:c.mono,fontSize:"10px"}}>
+          <span style={{color:c.gn}}>pos {syn.sentiments.positive}</span>
+          <span style={{color:c.txD}}>neu {syn.sentiments.neutral}</span>
+          <span style={{color:c.rd}}>neg {syn.sentiments.negative}</span>
+        </div>
+      </Card>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(180px, 1fr))",gap:"10px"}}>
+        <Card><Lbl color={c.vi}>Top Themes</Lbl>{themeEntries.slice(0,6).map(function(p){return <div key={p[0]} style={{fontSize:"12px",padding:"4px 0",display:"flex",justifyContent:"space-between"}}><span>{p[0]}</span><span style={{fontFamily:c.mono,fontSize:"10px",color:c.txD}}>{p[1]}</span></div>;})}</Card>
+        <Card><Lbl color={c.gn}>Top Entities</Lbl>{entityEntries.slice(0,6).map(function(p){return <div key={p[0]} style={{fontSize:"12px",padding:"4px 0",display:"flex",justifyContent:"space-between"}}><span>{p[0]}</span><span style={{fontFamily:c.mono,fontSize:"10px",color:c.txD}}>{p[1]}</span></div>;})}</Card>
+      </div>
+    </div>
+  );
+
+  // Trends with navigation + persistence
+  var TrendsView = (
+    <div style={{display:"flex",flexDirection:"column",gap:"12px",maxWidth:720}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:"8px"}}>
+        <span style={{fontFamily:c.mono,fontSize:"10px",color:c.txD}}>{trendReports.length} report{trendReports.length!==1?"s":""} · {sCount} sessions</span>
+        <Btn onClick={handleTrends} disabled={trendBusy||!sCount||!hasKey}>{trendBusy?"Synthesizing...":"Generate Trends"}</Btn>
+      </div>
+      {!hasKey && <Card><div style={{fontSize:"11px",color:c.am,fontFamily:c.mono}}>Add API key in Settings to enable.</div></Card>}
+      {trendReports.length>0 && (
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",fontFamily:c.mono,fontSize:"11px"}}>
+          <button onClick={function(){setTrendIdx(Math.min(trendIdx+1,trendReports.length-1));}} disabled={trendIdx>=trendReports.length-1} style={{background:"transparent",border:"none",color:trendIdx>=trendReports.length-1?c.txD:c.ac,cursor:"pointer",fontSize:"14px"}}>◀</button>
+          <span style={{color:c.txS}}>Report {trendReports.length-trendIdx} of {trendReports.length} · {currentTrend?new Date(currentTrend.date).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}):""}</span>
+          <button onClick={function(){setTrendIdx(Math.max(trendIdx-1,0));}} disabled={trendIdx<=0} style={{background:"transparent",border:"none",color:trendIdx<=0?c.txD:c.ac,cursor:"pointer",fontSize:"14px"}}>▶</button>
+        </div>
+      )}
+      {currentTrend && currentTrend.snapshot && (
+        <div style={{fontFamily:c.mono,fontSize:"10px",color:c.txD,padding:"6px 0"}}>Snapshot: {currentTrend.snapshot.totalArticles} articles across {currentTrend.snapshot.totalSessions} sessions</div>
+      )}
+      {currentTrend && currentTrend.data ? <>
+        {currentTrend.data.weekly_briefing && <Card><Lbl>Executive Briefing</Lbl><div style={{fontSize:"13px",lineHeight:1.85,whiteSpace:"pre-wrap"}}>{currentTrend.data.weekly_briefing}</div></Card>}
+        {(currentTrend.data.trend_lines||[]).map(function(tr,i){var col=tr.trajectory==="accelerating"?c.gn:tr.trajectory==="emerging"?c.vi:tr.trajectory==="decelerating"?c.rd:c.txS;var bg=tr.trajectory==="accelerating"?c.gnS:tr.trajectory==="emerging"?c.viS:tr.trajectory==="decelerating"?c.rdS:c.s1;return(
+          <Card key={i}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"6px",flexWrap:"wrap",gap:"4px"}}><span style={{fontFamily:c.mono,fontSize:"12px",fontWeight:600}}>{tr.theme}</span><Tag color={col} bg={bg}>{tr.trajectory} · {tr.evidence_count}</Tag></div><div style={{fontSize:"12px",color:c.txS,lineHeight:1.6,marginBottom:"6px"}}>{tr.narrative}</div><div>{(tr.key_players||[]).map(function(p){return <Tag key={p} color={c.txS} bg={c.s1}>{p}</Tag>;})}</div></Card>
+        );})}
+        {currentTrend.data.connections&&currentTrend.data.connections.length>0&&<Card><Lbl color={c.cy}>Connections</Lbl>{currentTrend.data.connections.map(function(x,i){return <div key={i} style={{fontSize:"12px",padding:"3px 0",lineHeight:1.5}}>↔ {x}</div>;})}</Card>}
+        {currentTrend.data.contradictions&&currentTrend.data.contradictions.length>0&&<Card><Lbl color={c.rd}>Contradictions</Lbl>{currentTrend.data.contradictions.map(function(x,i){return <div key={i} style={{fontSize:"12px",padding:"3px 0"}}>⚡ {x}</div>;})}</Card>}
+        {currentTrend.data.blind_spots&&currentTrend.data.blind_spots.length>0&&<Card><Lbl color={c.am}>Blind Spots</Lbl>{currentTrend.data.blind_spots.map(function(x,i){return <div key={i} style={{fontSize:"12px",padding:"3px 0"}}>◌ {x}</div>;})}</Card>}
+      </> : !trendReports.length && sCount>0&&hasKey ? <div style={{padding:"48px 0",textAlign:"center",color:c.txD,fontFamily:c.mono,fontSize:"12px"}}>Tap "Generate Trends" to create a report.</div> : null}
+    </div>
+  );
+
+  // Graph
+  var GraphView = (function(){var mE=entityEntries.length>0?entityEntries[0][1]:1,mT=themeEntries.length>0?themeEntries[0][1]:1,mD=domainEntries.length>0?domainEntries[0][1]:1;return entityEntries.length===0&&themeEntries.length===0?<div style={{padding:"48px 0",textAlign:"center",color:c.txD,fontFamily:c.mono,fontSize:"12px"}}>No data.</div>:(
+    <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
+      {/* Domain breakdown */}
+      {domainEntries.length>0 && <Card><Lbl color={c.am}>Domains · {domainEntries.length}</Lbl><div style={{display:"flex",flexWrap:"wrap",gap:"8px"}}>{domainEntries.map(function(p){var domainDef=DOMAINS[p[0]];var label=domainDef?domainDef.name:p[0];return <div key={p[0]} style={{padding:"10px 14px",background:c.bg,border:"1px solid "+c.br,borderRadius:"6px",flex:"1 1 140px",minWidth:"140px"}}><div style={{fontFamily:c.mono,fontSize:"18px",fontWeight:700,color:c[domainDef?domainDef.color:"ac"],marginBottom:"2px"}}>{p[1]}</div><div style={{fontFamily:c.mono,fontSize:"10px",color:c.txS}}>{label}</div><div style={{fontFamily:c.mono,fontSize:"9px",color:c.txD}}>{syn.totalArticles>0?Math.round(p[1]/syn.totalArticles*100)+"% of articles":""}</div></div>;})}</div></Card>}
+      {/* Themes + Entities */}
+      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(250px, 1fr))",gap:"12px"}}>{[{l:"Entities",d:entityEntries,m:mE,col:c.ac},{l:"Themes",d:themeEntries,m:mT,col:c.vi}].map(function(g){return <Card key={g.l}><Lbl color={g.col}>{g.l} · {g.d.length}</Lbl><div style={{maxHeight:420,overflowY:"auto"}}>{g.d.map(function(p,i){return <div key={i} style={{display:"flex",alignItems:"center",gap:"8px",padding:"4px 0",borderBottom:"1px solid "+c.br}}><span style={{fontSize:"12px",flex:1,minWidth:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{p[0]}</span><div style={{width:60,height:3,background:c.br,borderRadius:2,flexShrink:0}}><div style={{width:(p[1]/g.m*100)+"%",height:"100%",background:g.col,borderRadius:2,opacity:0.7}}/></div><span style={{fontFamily:c.mono,fontSize:"10px",color:c.txD,width:18,textAlign:"right",flexShrink:0}}>{p[1]}</span></div>;})}</div></Card>;})}</div>
+    </div>);})();
+
+  // Raw with delete
+  var RawView = <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>{sCount===0&&<div style={{padding:"48px 0",textAlign:"center",color:c.txD,fontFamily:c.mono,fontSize:"12px"}}>No data.</div>}{sessions.map(function(s){var open=expanded===s.id;return(
+    <div key={s.id} style={{background:c.s2,border:"1px solid "+c.br,borderRadius:"6px",overflow:"hidden"}}>
+      <div onClick={function(){setExpanded(open?null:s.id);}} style={{padding:"12px 14px",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+        <span style={{fontFamily:c.mono,fontSize:"11px",color:c.ac}}>{new Date(getContentDate(s)).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}{s.source==="claude"?" ✦":s.source==="manual"?" ✎":s.source&&s.source.indexOf("gmail")>-1?" 📧":""}{s.contentDate&&s.contentDate!==s.date?<span style={{color:c.txD,fontSize:"9px",marginLeft:"6px"}}>ingested {new Date(s.date).toLocaleDateString("en-US",{month:"short",day:"numeric"})}</span>:""}</span>
+        <div style={{display:"flex",gap:"6px",alignItems:"center"}}><span style={{fontFamily:c.mono,fontSize:"10px",color:c.txD}}>{(s.articles||[]).length} articles</span><span style={{color:c.txD,fontSize:"11px",transform:open?"rotate(90deg)":"none",transition:"transform 0.15s",display:"inline-block"}}>▶</span></div>
+      </div>
+      {open&&<div style={{padding:"0 14px 12px",borderTop:"1px solid "+c.br}}>{(s.articles||[]).map(function(a,ai){return <ArticleRow key={a.id||ai} article={a} last={ai===s.articles.length-1} onDelete={function(aid){deleteArticle(s.id,aid);}}/>;})}</div>}
+    </div>);})}</div>;
+
+  // Settings
+  var SettingsView = (
+    <div style={{maxWidth:500}}>
+      <Card>
+        <Lbl>Anthropic API Key</Lbl>
+        <div style={{fontSize:"12px",color:c.txS,lineHeight:1.6,marginBottom:"10px"}}>For Claude synthesis. Stored locally. <a href="https://console.anthropic.com/" target="_blank" style={{color:c.ac}}>Get one here</a>.</div>
+        <input type="password" value={apiKey} onChange={function(e){var v=e.target.value;setApiKeyState(v);saveSetting(KEY_KEY,v);}} placeholder="sk-ant-..." style={{width:"100%",padding:"10px 12px",background:c.s1,color:c.tx,border:"1px solid "+c.br,borderRadius:"6px",fontFamily:c.mono,fontSize:"12px",outline:"none",boxSizing:"border-box"}} />
+        {hasKey&&<div style={{marginTop:"6px",fontFamily:c.mono,fontSize:"10px",color:c.gn}}>✓ Key saved</div>}
+      </Card>
+      <Card>
+        <Lbl color={c.cy}>Google Drive Backup</Lbl>
+        <div style={{fontSize:"12px",color:c.txS,lineHeight:1.6,marginBottom:"10px"}}>Save and restore your intelligence data to Google Drive.</div>
+        <div style={{display:"flex",gap:"8px",flexWrap:"wrap"}}>
+          <Btn small ghost onClick={handleGDriveSave} disabled={gdriveBusy}>Save to Drive</Btn>
+          <Btn small ghost onClick={handleGDriveLoad} disabled={gdriveBusy}>Load from Drive</Btn>
+        </div>
+      </Card>
+      <Card>
+        <Lbl color={c.am}>Local Backup</Lbl>
+        <div style={{display:"flex",gap:"8px",flexWrap:"wrap"}}>
+          {sCount>0&&<Btn small ghost onClick={handleExport}>Download JSON</Btn>}
+          <Btn small ghost onClick={function(){setShowImport(!showImport);}}>{showImport?"Cancel":"Import JSON"}</Btn>
+          {sCount>0&&<Btn small danger onClick={function(){if(confirm("Clear all data?")){updateStore(function(){return emptyStore();});setStatus("Cleared.");}}}>Clear All</Btn>}
+        </div>
+        {showImport&&<div style={{marginTop:"10px"}}><textarea value={importTxt} onChange={function(e){setImportTxt(e.target.value);}} placeholder="Paste exported JSON..." style={{width:"100%",minHeight:"80px",padding:"12px",background:c.s1,color:c.tx,border:"1px solid "+c.br,borderRadius:"6px",fontFamily:c.mono,fontSize:"11px",resize:"vertical",outline:"none",boxSizing:"border-box"}}/><Btn small onClick={handleImport}>Import</Btn></div>}
+      </Card>
+    </div>
+  );
+
+  // TABS + SHELL
+  var tabs=[{id:"ingest",label:"Ingest",s:"+"},{id:"briefing",label:"Brief",s:"◆"},{id:"trends",label:"Trends",s:"↗"},{id:"graph",label:"Graph",s:"◎"},{id:"raw",label:"Raw",s:"≡"},{id:"settings",label:"Settings",s:"⚙"}];
+
+  return (
+    <div style={{background:c.bg,color:c.tx,minHeight:"100vh",fontFamily:c.sans}}>
+      <div style={{padding:"12px 16px",borderBottom:"1px solid "+c.br,display:"flex",justifyContent:"space-between",alignItems:"center",position:"sticky",top:0,background:c.bg,zIndex:100}}>
+        <div style={{display:"flex",alignItems:"baseline",gap:"8px"}}>
+          <span style={{fontFamily:c.mono,fontSize:"13px",fontWeight:700}}><span style={{color:c.ac}}>▋</span>Retail Media Intel</span>
+        </div>
+        <div style={{display:"flex",gap:"8px",alignItems:"center"}}>
+          {status&&<span style={{fontFamily:c.mono,fontSize:"10px",color:status.charAt(0)==="\u2713"?c.gn:status.indexOf("rror")>-1?c.rd:c.txS,maxWidth:"220px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{status}</span>}
+          {!hasKey&&<span onClick={function(){setView("settings");}} style={{fontFamily:c.mono,fontSize:"9px",color:c.am,cursor:"pointer"}}>⚠ key</span>}
+        </div>
+      </div>
+      <div style={{padding:"0 16px",borderBottom:"1px solid "+c.br,display:"flex",overflowX:"auto",scrollbarWidth:"none",position:"sticky",top:"49px",background:c.bg,zIndex:99}}>
+        {tabs.map(function(tab){return(
+          <button key={tab.id} onClick={function(){setView(tab.id);}} style={{padding:"10px 14px",background:"transparent",border:"none",borderBottom:view===tab.id?"2px solid "+c.ac:"2px solid transparent",color:view===tab.id?c.tx:c.txD,fontFamily:c.mono,fontSize:"11px",fontWeight:view===tab.id?600:400,cursor:"pointer",display:"flex",gap:"5px",alignItems:"center",whiteSpace:"nowrap",flexShrink:0}}>
+            <span style={{fontSize:"9px",opacity:view===tab.id?1:0.4}}>{tab.s}</span>{tab.label}
+          </button>);})}
+      </div>
+      <div style={{padding:"16px",maxWidth:800}}>
+        {view==="ingest"&&IngestView}
+        {view==="briefing"&&BriefingView}
+        {view==="trends"&&TrendsView}
+        {view==="graph"&&GraphView}
+        {view==="raw"&&RawView}
+        {view==="settings"&&SettingsView}
+      </div>
+      {/* Footer */}
+      <div style={{padding:"24px 16px",borderTop:"1px solid "+c.br,marginTop:"40px",fontFamily:c.mono,fontSize:"10px",color:c.txD,lineHeight:2,maxWidth:800}}>
+        <div>Retail Media Intel — Intelligence from your Google Alerts.</div>
+        <div style={{display:"flex",gap:"16px",flexWrap:"wrap",marginTop:"4px"}}>
+          <a href="https://patrickthoffman.com/research/tools/retail-intel-hub/privacy" style={{color:c.txS,textDecoration:"none",borderBottom:"1px solid "+c.br}}>Privacy Policy</a>
+          <a href="https://patrickthoffman.com/research/tools/retail-intel-hub/terms" style={{color:c.txS,textDecoration:"none",borderBottom:"1px solid "+c.br}}>Terms of Service</a>
+          <a href="https://patrickthoffman.com" style={{color:c.txS,textDecoration:"none",borderBottom:"1px solid "+c.br}}>patrickthoffman.com</a>
+        </div>
+        <div style={{marginTop:"4px"}}>&copy; 2026 Patrick Hoffman</div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>

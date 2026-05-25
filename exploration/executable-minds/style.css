@@ -1,0 +1,366 @@
+/* ==========================================================================
+   Executable Minds — patrickthoffman.com/exploration/executable-minds
+   Mirrors the existing PTH site CSS patterns (dark theme, gold accent,
+   DM Sans body, same nav/section/card/footer structure)
+   ========================================================================== */
+
+/* --- Reset & Base (matches PTH site) --- */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --bg:           #0d0b0e;
+    --bg-section:   #111015;
+    --bg-card:      #16141a;
+    --bg-card-hover:#1c1a21;
+    --text:         #e8e4ec;
+    --text-secondary:#9a95a2;
+    --text-muted:   #6b6472;
+    --accent:       #c9a84c;
+    --accent-dim:   rgba(201,168,76,0.15);
+    --border:       #23202a;
+    --border-hover: #35313e;
+    --radius:       8px;
+    --max-width:    1100px;
+    --content-width:720px;
+}
+
+html { scroll-behavior: smooth; }
+body {
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+a { color: var(--accent); text-decoration: none; transition: color .25s; }
+a:hover { color: #dfc06a; }
+img { max-width: 100%; display: block; }
+
+/* --- Nav (matches PTH nav) --- */
+.site-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.1rem 2.5rem;
+    background: rgba(13,11,14,0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid transparent;
+    transition: border-color .3s;
+}
+.site-nav.scrolled { border-bottom-color: var(--border); }
+.site-nav .logo {
+    font-weight: 600; font-size: 1.05rem;
+    color: var(--text); letter-spacing: .04em;
+}
+.site-nav .logo span { color: var(--accent); }
+.site-nav .nav-links { list-style: none; display: flex; gap: 2rem; }
+.site-nav .nav-links a {
+    color: var(--text-secondary); font-size: .82rem;
+    letter-spacing: .03em; transition: color .25s;
+}
+.site-nav .nav-links a:hover { color: var(--text); }
+
+/* --- Section scaffolding (matches PTH sections) --- */
+.section { padding: 5.5rem 2.5rem; }
+.section--alt { background: var(--bg-section); }
+.container { max-width: var(--max-width); margin: 0 auto; }
+.narrow { max-width: var(--content-width); margin: 0 auto; }
+
+/* Section label — small uppercase accent text above headings */
+.section-label {
+    display: block;
+    font-size: .68rem; font-weight: 500;
+    letter-spacing: .18em; text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.2rem;
+}
+
+/* Headings */
+h1, h2, h3, h4 { font-weight: 500; line-height: 1.25; }
+h1 { font-size: clamp(2.2rem, 5vw, 3rem); margin-bottom: 1rem; }
+h2 { font-size: clamp(1.6rem, 3.5vw, 2.2rem); margin-bottom: .8rem; }
+h3 { font-size: 1.15rem; margin-bottom: .5rem; }
+
+.page-subtitle {
+    font-size: 1.05rem; color: var(--text-secondary);
+    line-height: 1.7; margin-bottom: 2.5rem;
+}
+
+/* --- Back link (matches PTH writing pages) --- */
+.back-link {
+    display: inline-block;
+    font-size: .82rem; color: var(--text-muted);
+    margin-bottom: 2.5rem; letter-spacing: .02em;
+    transition: color .25s;
+}
+.back-link:hover { color: var(--accent); }
+.back-link::before { content: '← '; }
+
+/* --- Tag badges (matches PTH writing tag pills) --- */
+.tags { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.5rem; }
+.tag {
+    font-size: .68rem; font-weight: 500;
+    letter-spacing: .06em; text-transform: uppercase;
+    padding: .35rem .8rem;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    color: var(--text-secondary);
+    transition: border-color .3s, color .3s;
+}
+
+/* --- Meta row (matches PTH writing meta) --- */
+.meta-row {
+    font-size: .85rem; color: var(--text-muted);
+    margin-bottom: 1.5rem;
+}
+.meta-row span + span::before { content: ' · '; }
+
+/* --- Divider --- */
+hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2.5rem 0;
+}
+
+/* --- Body prose --- */
+.prose p {
+    font-size: .95rem; color: var(--text-secondary);
+    line-height: 1.8; margin-bottom: 1.3rem;
+}
+.prose p strong { color: var(--text); font-weight: 500; }
+.prose p em { font-style: italic; }
+.prose h2 { margin-top: 2.5rem; margin-bottom: .8rem; color: var(--text); }
+.prose h3 { margin-top: 2rem; margin-bottom: .6rem; color: var(--text); }
+.prose blockquote {
+    border-left: 2px solid var(--accent);
+    padding: .8rem 1.25rem; margin: 1.5rem 0;
+    font-style: italic; color: var(--text-secondary);
+}
+.prose ul, .prose ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); }
+.prose li { margin-bottom: .5rem; font-size: .95rem; }
+
+/* --- Cards (matches PTH card patterns) --- */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.25rem;
+}
+.card-grid--2col {
+    grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
+}
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2rem;
+    transition: border-color .35s, transform .3s, box-shadow .3s;
+}
+.card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0,0,0,.25);
+}
+.card a.card-link {
+    display: block; color: inherit; text-decoration: none;
+}
+.card .card-label {
+    font-size: .65rem; font-weight: 500;
+    letter-spacing: .15em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: .8rem;
+}
+.card h3 { color: var(--text); margin-bottom: .6rem; }
+.card p { font-size: .88rem; color: var(--text-secondary); line-height: 1.65; }
+.card .card-footer {
+    margin-top: 1.2rem; font-size: .82rem; color: var(--accent);
+}
+
+/* --- Story cards (wide format) --- */
+.story-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    transition: border-color .35s;
+}
+.story-card:hover { border-color: var(--border-hover); }
+.story-card__left {
+    padding: 2.25rem;
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; justify-content: center;
+}
+.story-card__left .card-label { margin-bottom: .6rem; }
+.story-card__left h3 { font-size: 1.5rem; margin-bottom: .3rem; }
+.story-card__left .setting {
+    font-size: .88rem; font-style: italic; color: var(--text-muted);
+}
+.story-card__right { padding: 2.25rem; }
+.story-card__right p {
+    font-size: .88rem; color: var(--text-secondary); line-height: 1.7;
+    margin-bottom: 1rem;
+}
+
+/* Cast tags */
+.cast { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .8rem; }
+.cast-tag {
+    font-size: .68rem; letter-spacing: .04em;
+    padding: .25rem .6rem; border-radius: 100px;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+}
+
+/* --- Character cards --- */
+.char-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color .35s, box-shadow .35s;
+}
+.char-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,.3); }
+.char-card__head {
+    padding: 1.5rem 1.75rem 1rem;
+    display: flex; gap: 1rem; align-items: flex-start;
+}
+.freq-dot {
+    width: 9px; height: 9px; border-radius: 50%;
+    margin-top: .45rem; flex-shrink: 0;
+}
+.char-card__head h4 { font-size: 1.2rem; margin-bottom: .15rem; }
+.char-card__head .freq-label {
+    font-size: .82rem; font-style: italic;
+    color: var(--text-secondary); line-height: 1.4;
+}
+.char-card__hint {
+    padding: 0 1.75rem 1.25rem;
+    font-size: .72rem; color: var(--text-muted);
+}
+.char-card.expanded .char-card__hint { display: none; }
+.char-card__body {
+    padding: 0 1.75rem 1.5rem; display: none;
+}
+.char-card.expanded .char-card__body { display: block; }
+.char-card__body p {
+    font-size: .88rem; color: var(--text-secondary);
+    line-height: 1.65; margin-bottom: .8rem;
+}
+.char-card__body .char-quote {
+    font-style: italic; font-size: .95rem;
+    color: var(--text);
+    border-left: 2px solid var(--border);
+    padding: .75rem 1.1rem; margin: 1rem 0;
+    line-height: 1.55;
+}
+.char-card__body .appears {
+    font-size: .68rem; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--text-muted);
+    margin-top: .5rem;
+}
+
+/* --- Group label --- */
+.group-label {
+    font-size: .68rem; font-weight: 500;
+    letter-spacing: .18em; text-transform: uppercase;
+    color: var(--text-muted);
+    padding-bottom: .75rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.5rem;
+}
+.group-label + .group-label,
+.card-grid + .group-label { margin-top: 3rem; }
+
+/* --- Rule cards --- */
+.rule-num {
+    font-size: 2.2rem; font-weight: 300;
+    color: var(--accent); opacity: .45;
+    line-height: 1; margin-bottom: .6rem;
+}
+
+/* --- Stat row (matches PTH stats) --- */
+.stats {
+    display: flex; flex-wrap: wrap; gap: 2.5rem;
+    margin: 2.5rem 0;
+}
+.stat { text-align: center; }
+.stat-num {
+    font-size: 2rem; font-weight: 600;
+    color: var(--accent); line-height: 1.1;
+}
+.stat-label {
+    font-size: .72rem; color: var(--text-muted);
+    letter-spacing: .06em; text-transform: uppercase;
+    margin-top: .3rem;
+}
+
+/* --- Two-col layout --- */
+.two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem; align-items: start;
+}
+
+/* --- Author card (matches PTH writing pages) --- */
+.author-card {
+    display: flex; gap: 1.25rem; align-items: flex-start;
+    padding: 2rem 0; margin-top: 3rem;
+    border-top: 1px solid var(--border);
+}
+.author-card__avatar {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: var(--accent-dim);
+    color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 600; font-size: .85rem;
+    flex-shrink: 0;
+}
+.author-card h4 { font-size: 1rem; margin-bottom: .2rem; }
+.author-card p { font-size: .82rem; color: var(--text-secondary); line-height: 1.5; }
+.author-card .author-links {
+    display: flex; gap: 1rem; margin-top: .5rem;
+}
+.author-card .author-links a {
+    font-size: .78rem; color: var(--text-muted);
+}
+.author-card .author-links a:hover { color: var(--accent); }
+
+/* --- Footer (matches PTH footer) --- */
+.site-footer {
+    padding: 2.5rem 2.5rem;
+    text-align: center;
+    border-top: 1px solid var(--border);
+}
+.site-footer p {
+    font-size: .78rem; color: var(--text-muted);
+}
+.site-footer a {
+    color: var(--text-secondary);
+}
+.site-footer a:hover { color: var(--accent); }
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .section { padding: 3.5rem 1.5rem; }
+    .site-nav { padding: 1rem 1.5rem; }
+    .site-nav .nav-links { gap: 1rem; }
+    .site-nav .nav-links a { font-size: .72rem; }
+    .card-grid { grid-template-columns: 1fr; }
+    .card-grid--2col { grid-template-columns: 1fr; }
+    .story-card { grid-template-columns: 1fr; }
+    .story-card__left { border-right: none; border-bottom: 1px solid var(--border); }
+    .two-col { grid-template-columns: 1fr; }
+    .stats { gap: 1.5rem; }
+}
+
+/* --- Fade-in animation --- */
+.fade-in {
+    opacity: 0; transform: translateY(18px);
+    transition: opacity .7s ease, transform .7s ease;
+}
+.fade-in.visible { opacity: 1; transform: translateY(0); }

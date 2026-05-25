@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2TKMRQXKMJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-2TKMRQXKMJ');
+</script>
+<title>Zone Territories — Mutual Information</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0a0a0f; overflow:hidden; cursor:none; }
+  #ui {
+    position:fixed; top:0; left:0; right:0; bottom:0;
+    pointer-events:none; font-family:'Space Mono',monospace;
+  }
+  .top-bar {
+    position:absolute; top:0; left:0; right:0;
+    padding:1.2rem 2rem;
+    background:linear-gradient(rgba(10,10,15,0.95),transparent);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .title-block h1 {
+    font-family:'Bebas Neue',display; font-size:2.2rem; letter-spacing:0.08em;
+    color:#fff; line-height:1;
+  }
+  .title-block p { font-size:0.65rem; color:rgba(255,255,255,0.35); letter-spacing:0.2em; margin-top:0.2rem; }
+  .mi-block { text-align:right; }
+  .mi-num {
+    font-family:'Bebas Neue',display; font-size:3rem; line-height:1;
+    letter-spacing:0.05em; transition:color 0.4s;
+    color:#fff;
+  }
+  .mi-sub { font-size:0.6rem; color:rgba(255,255,255,0.25); letter-spacing:0.3em; }
+
+.bottom-bar {
+position:absolute; bottom:0; left:0; right:0;
+padding:1rem 2rem;
+background:linear-gradient(transparent, rgba(10,10,15,0.95));
+display:flex; justify-content:space-between; align-items:flex-end;
+}
+.legend { display:flex; gap:2rem; }
+.leg-item { display:flex; align-items:center; gap:0.5rem; font-size:0.65rem; color:rgba(255,255,255,0.4); letter-spacing:0.1em; }
+.leg-dot { width:10px; height:10px; border-radius:50%; }
+.narrative-band {
+position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+text-align:center; pointer-events:none;
+}
+.narrative-band p {
+font-size:0.8rem; font-style:italic; color:rgba(255,255,255,0.2);
+letter-spacing:0.1em; transition:opacity 1s;
+}
+#instruction {
+position:absolute; bottom:4rem; left:50%; transform:translateX(-50%);
+font-size:0.7rem; color:rgba(255,255,255,0.3); letter-spacing:0.2em;
+text-align:center;
+}
+#resetBtn {
+position:absolute; top:1.2rem; right:2rem;
+background:transparent; border:1px solid rgba(255,255,255,0.15);
+color:rgba(255,255,255,0.3); font-family:‘Space Mono’,monospace;
+font-size:0.6rem; letter-spacing:0.2em; cursor:pointer;
+padding:0.35rem 0.8rem; pointer-events:all; transition:all 0.2s;
+}
+#resetBtn:hover { border-color:rgba(255,100,100,0.5); color:rgba(255,100,100,0.7); }
+.heat-legend {
+position:absolute; right:2rem; top:50%; transform:translateY(-50%);
+display:flex; flex-direction:column; gap:0.2rem; align-items:center;
+}
+.heat-legend span { font-size:0.6rem; color:rgba(255,255,255,0.25); }
+.heat-bar {
+width:12px; height:100px;
+background:linear-gradient(to bottom, rgba(255,100,50,0.8), rgba(255,100,50,0));
+border-radius:4px;
+}
+</style>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+  /* Nav overlay adjustments */
+  :root { --nav-h: 54px; }
+
+  .top-nav {
+    background: transparent;
+    z-index: 100 !important;
+    pointer-events: all !important;
+  }
+  .top-nav * {
+    pointer-events: all !important;
+  }
+  .top-nav.scrolled,
+  .top-nav.solid {
+    background: rgba(10,20,40,0.85);
+    backdrop-filter: blur(12px);
+  }
+
+  /* Push the entire UI overlay below the nav so nothing is hidden */
+  #ui {
+    top: var(--nav-h) !important;
+  }
+
+  /* Reset button was at top:1.2rem inside #ui — keep it just below the top-bar */
+  #resetBtn {
+    top: auto !important;
+    bottom: calc(100% - 5.5rem);
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== NAV ========== -->
+<nav class="top-nav solid" id="topNav">
+  <a href="/" class="nav-logo">PTH<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="/#about">About</a></li>
+    <li><a href="/#journey">Journey</a></li>
+    <li><a href="/#passions">Passions</a></li>
+    <li><a href="/#writing">Writing</a></li>
+    <li><a href="/#speaking">Speaking</a></li>
+    <li><a href="/#connect">Connect</a></li>
+  </ul>
+</nav>
+
+<div id="ui">
+  <div class="top-bar">
+    <div class="title-block">
+      <h1>Zone Territories</h1>
+      <p>MOUSE = BEING X · SECOND ORGANISM LEARNS YOUR TERRITORY</p>
+    </div>
+    <div class="mi-block">
+      <div class="mi-num" id="miNum">0.000</div>
+      <div class="mi-sub">I(X;Y) — MUTUAL INFORMATION</div>
+    </div>
+  </div>
+  <div class="bottom-bar">
+    <div class="legend">
+      <div class="leg-item"><div class="leg-dot" style="background:#ff6432"></div>BEING X (you)</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#32c8ff"></div>BEING Y (learner)</div>
+    </div>
+    <div id="sampleCount" style="font-size:0.65rem;color:rgba(255,255,255,0.25);letter-spacing:0.15em">SAMPLES: 0</div>
+  </div>
+  <div id="instruction">HOVER ZONES TO GENERATE DATA · BEING Y LEARNS YOUR TERRITORY PREFERENCES</div>
+  <button id="resetBtn" onclick="doReset()">↺ RESET</button>
+  <div class="heat-legend">
+    <span>HIGH</span>
+    <div class="heat-bar"></div>
+    <span>LOW</span>
+  </div>
+</div>
+
+<script>
+// ─── MI ENGINE ────────────────────────────────────────────────────────────────
+const NZ = 9; // 3x3 = 9 zones
+const jf = Array.from({length:NZ}, ()=>Array(NZ).fill(0));
+let totalS = 0, curMI = 0;
+
+function smpPos(px, py, W, H) {
+  const col = Math.min(Math.floor(px/W*3),2);
+  const row = Math.min(Math.floor(py/H*3),2);
+  return row*3+col;
+}
+
+function addSmp(xi, yi) {
+  jf[xi][yi]++;
+  totalS++;
+  if(totalS % 3 === 0) calcMI();
+}
+
+function calcMI() {
+  const t = totalS; if(t<5) { curMI=0; return; }
+  const joint = jf.map(r=>r.map(v=>v/t));
+  const px = Array(NZ).fill(0), py = Array(NZ).fill(0);
+  for(let i=0;i<NZ;i++) for(let j=0;j<NZ;j++){px[i]+=joint[i][j];py[j]+=joint[i][j];}
+  let mi=0;
+  for(let i=0;i<NZ;i++) for(let j=0;j<NZ;j++){
+    if(joint[i][j]>0&&px[i]>0&&py[j]>0)
+      mi+=joint[i][j]*Math.log(joint[i][j]/(px[i]*py[j]));
+  }
+  curMI=Math.max(0,mi);
+}
+
+function bestY(xi) {
+  const row = jf[xi];
+  const rs = row.reduce((a,b)=>a+b,0);
+  if(rs<3) return Math.floor(Math.random()*NZ);
+  if(Math.random()<0.12) return Math.floor(Math.random()*NZ);
+  return row.reduce((bi,v,i)=>v>row[bi]?i:bi,0);
+}
+
+function zoneToCenterUV(z) {
+  return {u:(z%3+0.5)/3, v:(Math.floor(z/3)+0.5)/3};
+}
+
+function doReset() {
+  for(let i=0;i<NZ;i++) for(let j=0;j<NZ;j++) jf[i][j]=0;
+  totalS=0; curMI=0;
+}
+
+// ─── P5 SKETCH ────────────────────────────────────────────────────────────────
+new p5(function(p) {
+  let W, H;
+  let xZone=-1, yZone=0;
+  let yX=0, yY=0, yTX=0, yTY=0;
+  let yParticles=[], xParticles=[];
+  let sTimer=0;
+  let miSmooth=0;
+
+  // Zone heat maps (how much time spent in each zone)
+  const xHeat = Array(NZ).fill(0);
+  const yHeat = Array(NZ).fill(0);
+  
+  // Zone creature blobs
+  const zones = Array.from({length:NZ}, (_, i) => ({
+    i, 
+    xActivity: 0,
+    yActivity: 0,
+    col: p.color(50,80,120)
+  }));
+
+  // Zone colors - subtle palette
+  const ZONE_COLS = [
+    [255,80,50],   [255,160,60],  [255,220,80],
+    [80,200,100],  [40,180,200],  [60,100,255],
+    [180,60,255],  [255,60,160],  [200,200,200]
+  ];
+
+  class Organism {
+    constructor(x, y, col, size) {
+      this.x=x; this.y=y; this.tx=x; this.ty=y;
+      this.vx=0; this.vy=0;
+      this.col=col; this.size=size;
+      this.tentacles=Array.from({length:6},(_,i)=>({a:i/6*Math.PI*2,len:size*0.7,phase:i}));
+    }
+    moveTo(tx,ty) { this.tx=tx; this.ty=ty; }
+    update() {
+      const dx=this.tx-this.x, dy=this.ty-this.y;
+      this.vx+=dx*0.03; this.vy+=dy*0.03;
+      this.vx*=0.88; this.vy*=0.88;
+      this.x+=this.vx; this.y+=this.vy;
+    }
+    draw(mi) {
+      const pulse = 1+Math.sin(p.frameCount*0.05)*0.1*(1+mi);
+      // Tentacles
+      for(const t of this.tentacles) {
+        t.a += 0.02;
+        const wag = Math.sin(t.phase+p.frameCount*0.04)*15*(1-mi*0.5);
+        const tx = this.x + Math.cos(t.a)*t.len*pulse;
+        const ty = this.y + Math.sin(t.a)*t.len*pulse;
+        p.stroke(p.red(this.col),p.green(this.col),p.blue(this.col),60);
+        p.strokeWeight(2);
+        p.noFill();
+        p.bezier(this.x,this.y,
+          this.x+Math.cos(t.a+0.5)*t.len*0.5,
+          this.y+Math.sin(t.a+0.5)*t.len*0.5,
+          tx+wag,ty+wag, tx,ty);
+      }
+      // Glow rings
+      for(let r=this.size*2.5*pulse;r>0;r-=4) {
+        const a=(1-r/(this.size*2.5))*40;
+        p.noStroke();
+        p.fill(p.red(this.col),p.green(this.col),p.blue(this.col),a);
+        p.ellipse(this.x,this.y,r*2);
+      }
+      // Core
+      p.fill(p.red(this.col),p.green(this.col),p.blue(this.col),200);
+      p.noStroke();
+      p.ellipse(this.x,this.y,this.size*1.5*pulse);
+      p.fill(255,255,255,120);
+      p.ellipse(this.x,this.y,this.size*0.6);
+    }
+  }
+
+  let orgX, orgY;
+
+  p.setup = function() {
+    const cnv = p.createCanvas(p.windowWidth, p.windowHeight);
+    cnv.parent(document.body);
+    cnv.style('position','fixed');
+    cnv.style('top','0');
+    cnv.style('left','0');
+    cnv.style('z-index','-1');
+    W=p.width; H=p.height;
+    orgX = new Organism(W/2, H/2, p.color(255,100,50), 20);
+    orgY = new Organism(W/3, H/2, p.color(50,200,255), 17);
+    yTX=W/3; yTY=H/3;
+    p.colorMode(p.RGB);
+    // Warm up: put some initial randomness in Y zones
+    for(let i=0;i<9;i++) for(let j=0;j<9;j++) jf[i][j]=Math.random()<0.1?1:0;
+    totalS = jf.reduce((s,r)=>s+r.reduce((a,b)=>a+b,0),0);
+  };
+
+  p.draw = function() {
+    p.background(10,10,15);
+    W=p.width; H=p.height;
+
+    // ── DRAW GRID ZONES ──────────────────────────────────────────
+    drawZones();
+
+    // ── UPDATE X ──────────────────────────────────────────────────
+    const mx = p.mouseX, my = p.mouseY;
+    if(mx>0&&mx<W&&my>0&&my<H) {
+      xZone = smpPos(mx,my,W,H);
+      orgX.moveTo(mx,my);
+      xHeat[xZone] = Math.min(xHeat[xZone]+0.05, 1);
+    }
+    orgX.update();
+
+    // ── SAMPLE + UPDATE Y ─────────────────────────────────────────
+    sTimer++;
+    if(sTimer%6===0 && xZone>=0) {
+      const yz = bestY(xZone);
+      yZone = yz;
+      const uv = zoneToCenterUV(yz);
+      yTX = uv.u*W + p.random(-W/6*0.4, W/6*0.4);
+      yTY = uv.v*H + p.random(-H/6*0.4, H/6*0.4);
+      orgY.moveTo(yTX, yTY);
+      yHeat[yz] = Math.min(yHeat[yz]+0.04, 1);
+      addSmp(xZone, yz);
+    }
+    // Cool down heats
+    for(let i=0;i<NZ;i++){xHeat[i]*=0.995; yHeat[i]*=0.995;}
+    orgY.update();
+
+    // ── DRAW HEAT OVERLAYS ────────────────────────────────────────
+    drawHeatOverlays();
+
+    // ── DRAW JOINT DISTRIBUTION LINES ────────────────────────────
+    drawJointLines();
+
+    // ── DRAW ORGANISMS ────────────────────────────────────────────
+    orgX.draw(curMI);
+    orgY.draw(curMI);
+
+    // ── CURSOR ────────────────────────────────────────────────────
+    p.noFill(); p.stroke(255,100,50,150); p.strokeWeight(1);
+    p.ellipse(mx,my,22);
+    p.stroke(255,100,50,60); p.ellipse(mx,my,36);
+
+    // ── UPDATE UI ─────────────────────────────────────────────────
+    miSmooth += (curMI-miSmooth)*0.04;
+    const miEl = document.getElementById('miNum');
+    miEl.textContent = miSmooth.toFixed(4);
+    const r = Math.round(50+curMI*150), g = Math.round(150+curMI*50);
+    miEl.style.color = `rgb(${r},${g},255)`;
+    document.getElementById('sampleCount').textContent = `SAMPLES: ${totalS}`;
+
+    // Narrative
+    drawNarrative();
+  };
+
+  function drawZones() {
+    const zW=W/3, zH=H/3;
+    p.textFont('Bebas Neue');
+    for(let r=0;r<3;r++) for(let c=0;c<3;c++) {
+      const zi=r*3+c;
+      const x=c*zW, y=r*zH;
+      const col=ZONE_COLS[zi];
+      // Zone background (very subtle)
+      p.noStroke();
+      p.fill(col[0],col[1],col[2],6);
+      p.rect(x,y,zW,zH);
+      // Border
+      p.stroke(col[0],col[1],col[2],25);
+      p.strokeWeight(1);
+      p.noFill();
+      p.rect(x,y,zW,zH);
+      // Zone label
+      p.fill(col[0],col[1],col[2],40);
+      p.noStroke();
+      p.textSize(60);
+      p.textAlign(p.CENTER,p.CENTER);
+      p.text(zi+1,x+zW/2,y+zH/2);
+    }
+  }
+
+  function drawHeatOverlays() {
+    const zW=W/3, zH=H/3;
+    for(let i=0;i<NZ;i++) {
+      const c=i%3, r=Math.floor(i/3);
+      const x=c*zW, y=r*zH;
+      const xc=ZONE_COLS[i];
+      // X heat (warm orange tint)
+      if(xHeat[i]>0.01) {
+        p.noStroke();
+        p.fill(255,80,40,xHeat[i]*50);
+        p.rect(x,y,zW,zH);
+        // Border flash
+        p.stroke(255,80,40,xHeat[i]*100);
+        p.strokeWeight(2);
+        p.noFill();
+        p.rect(x,y,zW,zH);
+      }
+      // Y heat (cool blue tint)
+      if(yHeat[i]>0.01) {
+        p.noStroke();
+        p.fill(40,180,255,yHeat[i]*40);
+        p.rect(x+4,y+4,zW-8,zH-8);
+      }
+    }
+  }
+
+  function drawJointLines() {
+    if(totalS < 20) return;
+    // Draw lines between X zone center and Y zone center weighted by joint probability
+    const t = totalS;
+    const zW=W/3, zH=H/3;
+    for(let xi=0;xi<NZ;xi++) {
+      for(let yi=0;yi<NZ;yi++) {
+        const v = jf[xi][yi]/t;
+        if(v < 0.01) continue;
+        const xc=(xi%3+0.5)*zW, xr=(Math.floor(xi/3)+0.5)*zH;
+        const yc=(yi%3+0.5)*zW, yr=(Math.floor(yi/3)+0.5)*zH;
+        // Only draw lines within similar region
+        const alpha = v * 200;
+        p.stroke(200,200,200,Math.min(alpha,60));
+        p.strokeWeight(v*8);
+        p.noFill();
+        p.line(xc,xr,yc,yr);
+      }
+    }
+  }
+
+  function drawNarrative() {
+    const msgs = [
+      "Hover anywhere — you are Being X. Being Y watches.",
+      "Being Y samples your zone preferences...",
+      "Correlation emerging between your territories...",
+      "Being Y anticipates your next zone...",
+      "High mutual information — two organisms, one territory language."
+    ];
+    const idx=Math.min(Math.floor(curMI/0.35),msgs.length-1);
+    p.textFont('Space Mono');
+    p.textSize(11);
+    p.textAlign(p.CENTER,p.CENTER);
+    p.fill(255,255,255,30);
+    p.noStroke();
+    p.text(msgs[idx], W/2, H/2);
+  }
+
+  p.windowResized=function(){ p.resizeCanvas(p.windowWidth,p.windowHeight); W=p.width;H=p.height; };
+});
+
+// ===== NAV SCROLL =====
+const topNav = document.getElementById('topNav');
+window.addEventListener('scroll', () => {
+  topNav.classList.toggle('scrolled', window.scrollY > 80);
+});
+</script>
+
+</body>
+</html>

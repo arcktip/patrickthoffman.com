@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2TKMRQXKMJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-2TKMRQXKMJ');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patrick T. Hoffman — Architect of Products</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --royal: #1a3a8a;
+  --royal-light: #2a5acd;
+  --orange: #E87722;
+  --yellow: #F5C518;
+  --white: #FFFFFF;
+  --grey-light: #F0F2F5;
+  --grey-mid: #D1D5DB;
+  --charcoal: #1C1C1E;
+  --navy-dark: #0a1428;
+  --navy-mid: #101e3a;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  color: var(--charcoal);
+  background: var(--white);
+  overflow-x: hidden;
+}
+
+/* ========== HERO ========== */
+#hero-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,
+    rgba(10,20,40,0.85) 0%,
+    rgba(10,20,40,0.6) 50%,
+    rgba(10,20,40,0.3) 100%
+  );
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: var(--white);
+  max-width: 900px;
+  padding: 0 2rem;
+}
+
+.hero-pre {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--yellow);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeUp 1s 0.3s ease forwards;
+}
+
+.hero-name {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  margin-bottom: 1rem;
+  opacity: 0;
+  animation: fadeUp 1s 0.5s ease forwards;
+}
+
+.hero-name span {
+  color: var(--orange);
+}
+
+.hero-tagline {
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(1rem, 2.5vw, 1.35rem);
+  font-weight: 400;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.6;
+  max-width: 650px;
+  margin: 0 auto 2.5rem;
+  opacity: 0;
+  animation: fadeUp 1s 0.7s ease forwards;
+}
+
+.hero-cta {
+  display: inline-flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  opacity: 0;
+  animation: fadeUp 1s 0.9s ease forwards;
+}
+
+.hero-cta a {
+  padding: 0.85rem 2rem;
+  border-radius: 4px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+}
+
+.cta-primary {
+  background: var(--orange);
+  color: var(--white);
+}
+.cta-primary:hover { background: #d06a1a; transform: translateY(-2px); }
+
+.cta-secondary {
+  border: 1.5px solid rgba(255,255,255,0.35);
+  color: var(--white);
+}
+.cta-secondary:hover { border-color: var(--yellow); color: var(--yellow); transform: translateY(-2px); }
+
+.scroll-hint {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  color: rgba(255,255,255,0.6);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  animation: bounce 2s infinite;
+}
+
+.scroll-hint::after {
+  content: '';
+  display: block;
+  width: 1px;
+  height: 30px;
+  background: rgba(255,255,255,0.3);
+  margin: 0.5rem auto 0;
+}
+
+/* Floating quotes in hero */
+.floating-quote {
+  position: absolute;
+  z-index: 2;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  color: rgba(255,255,255,0.12);
+  font-size: clamp(0.75rem, 1.5vw, 1rem);
+  max-width: 280px;
+  line-height: 1.5;
+  transform: rotate(var(--rot));
+  pointer-events: none;
+  animation: floatQuote 20s infinite ease-in-out;
+}
+
+.fq1 { top: 15%; left: 8%; --rot: -3deg; animation-delay: 0s; }
+.fq2 { top: 25%; right: 6%; --rot: 2deg; animation-delay: -7s; }
+.fq3 { bottom: 20%; left: 12%; --rot: -1.5deg; animation-delay: -13s; }
+
+@keyframes floatQuote {
+  0%, 100% { transform: rotate(var(--rot)) translateY(0); }
+  50% { transform: rotate(var(--rot)) translateY(-15px); }
+}
+
+/* ========== SECTIONS ========== */
+section {
+  position: relative;
+  z-index: 10;
+}
+
+.section-white { background: var(--white); }
+.section-grey { background: var(--grey-light); }
+.section-dark {
+  background: var(--navy-dark);
+  color: var(--white);
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 6rem 2rem;
+}
+
+.section-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #c45e0a;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 900;
+  line-height: 1.15;
+  margin-bottom: 1.5rem;
+}
+
+.section-title span { color: var(--royal-light); }
+
+/* ========== ABOUT ========== */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.about-text p {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #444;
+  margin-bottom: 1.25rem;
+}
+
+.about-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.stat-card {
+  background: var(--grey-light);
+  border-radius: 8px;
+  padding: 1.5rem;
+  border-left: 3px solid var(--royal);
+  transition: transform 0.3s ease;
+}
+.stat-card:hover { transform: translateY(-4px); }
+
+.stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--royal);
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: #636363;
+  margin-top: 0.25rem;
+  letter-spacing: 0.05em;
+}
+
+.about-visual {
+  position: relative;
+}
+
+.blueprint-box {
+  background: var(--navy-dark);
+  border-radius: 12px;
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+  min-height: 400px;
+}
+
+.blueprint-box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(26,58,138,0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26,58,138,0.15) 1px, transparent 1px);
+  background-size: 25px 25px;
+}
+
+.blueprint-shapes {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.bp-shape {
+  margin: 0.75rem 0;
+  opacity: 0.6;
+}
+
+.bp-shape svg {
+  width: 100%;
+  max-width: 300px;
+}
+
+.edu-badge {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 2;
+  background: rgba(232,119,34,0.15);
+  border: 1px solid rgba(232,119,34,0.4);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  backdrop-filter: blur(8px);
+}
+
+.edu-badge p {
+  font-size: 0.75rem;
+  color: #f0a060;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+/* ========== JOURNEY ========== */
+.journey-track {
+  position: relative;
+}
+
+.journey-line {
+  position: absolute;
+  left: 40px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--royal), var(--orange), var(--yellow));
+}
+
+.journey-item {
+  display: flex;
+  gap: 2.5rem;
+  margin-bottom: 3.5rem;
+  position: relative;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.7s ease;
+}
+
+.journey-item.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.journey-dot {
+  width: 80px;
+  min-width: 80px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 0.25rem;
+}
+
+.dot-inner {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 3px solid var(--royal);
+  background: var(--white);
+  position: relative;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+.journey-item:hover .dot-inner {
+  background: var(--orange);
+  border-color: var(--orange);
+  transform: scale(1.3);
+}
+
+.journey-card {
+  background: var(--white);
+  border-radius: 10px;
+  padding: 2rem;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+  flex: 1;
+  border: 1px solid rgba(0,0,0,0.04);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.journey-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--royal), var(--orange));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.journey-item:hover .journey-card::before { transform: scaleX(1); }
+
+.journey-card:hover {
+  transform: translateX(8px);
+  box-shadow: 0 8px 30px rgba(26,58,138,0.1);
+}
+
+.journey-era {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #c45e0a;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.journey-role {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+
+.journey-org {
+  font-size: 0.95rem;
+  color: var(--royal);
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.journey-desc {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: #666;
+}
+
+/* Geometric SVG decorations */
+.geo-decoration {
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.06;
+}
+
+.geo-decoration svg {
+  width: 80px;
+  height: 80px;
+}
+
+/* ========== PASSIONS ========== */
+.passions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.passion-card {
+  background: var(--white);
+  border-radius: 10px;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+  transition: all 0.4s ease;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+.passion-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 100%; height: 3px;
+  background: linear-gradient(90deg, var(--royal), var(--orange), var(--yellow));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s ease;
+}
+
+.passion-card:hover::after { transform: scaleX(1); }
+.passion-card:hover { transform: translateY(-6px); box-shadow: 0 12px 40px rgba(26,58,138,0.1); }
+
+.passion-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: var(--grey-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  font-size: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.passion-card:hover .passion-icon {
+  background: var(--royal);
+  color: var(--white);
+  transform: rotate(-5deg) scale(1.1);
+}
+
+.passion-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.passion-desc {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #666;
+}
+
+/* ========== WRITING ========== */
+.writing-intro {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #444;
+  max-width: 700px;
+  margin-bottom: 3rem;
+}
+
+.posts-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.post-item {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 2rem;
+  padding: 2rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.post-item:first-child { border-top: 1px solid rgba(0,0,0,0.06); }
+
+.post-item:hover {
+  padding-left: 1rem;
+  background: var(--grey-light);
+  border-radius: 8px;
+}
+
+.post-date {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.75rem;
+  color: #636363;
+  letter-spacing: 0.05em;
+  padding-top: 0.35rem;
+}
+
+.post-content h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+  color: var(--charcoal);
+  transition: color 0.3s;
+}
+
+.post-item:hover .post-content h3 { color: var(--royal); }
+
+.post-tag {
+  display: inline-block;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--white);
+  background: var(--royal);
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+  margin-right: 0.4rem;
+  margin-bottom: 0.4rem;
+}
+
+.post-tag.orange { background: #c45e0a; }
+.post-tag.yellow { background: #b8960a; }
+
+.post-excerpt {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #666;
+  margin-top: 0.5rem;
+}
+
+.post-readmore {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--royal);
+  margin-top: 0.5rem;
+  display: inline-block;
+}
+
+.writing-cta {
+  margin-top: 2.5rem;
+  text-align: center;
+}
+
+.writing-cta a {
+  display: inline-block;
+  padding: 0.85rem 2rem;
+  border: 1.5px solid var(--royal);
+  border-radius: 4px;
+  color: var(--royal);
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.writing-cta a:hover {
+  background: var(--royal);
+  color: var(--white);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .post-item {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+}
+
+/* ========== SPEAKING / MENTORSHIP ========== */
+.speaking-intro {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.75);
+  max-width: 700px;
+  margin-bottom: 3rem;
+}
+
+.talks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.talk-card {
+  background: var(--navy-mid);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.talk-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--orange);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+}
+
+.talk-thumbnail {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: var(--navy-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.talk-thumbnail::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(26,58,138,0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26,58,138,0.2) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.play-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--orange);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+.play-btn::after {
+  content: '';
+  width: 0; height: 0;
+  border-style: solid;
+  border-width: 10px 0 10px 18px;
+  border-color: transparent transparent transparent white;
+  margin-left: 3px;
+}
+
+.talk-card:hover .play-btn { transform: scale(1.15); background: var(--yellow); }
+
+.talk-info { padding: 1.5rem; }
+
+.talk-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 0.35rem;
+}
+
+.talk-meta {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.65);
+}
+
+.talk-link {
+  display: inline-block;
+  margin-top: 0.75rem;
+  color: var(--orange);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.talk-link:hover { color: var(--yellow); }
+
+/* ========== QUOTES ========== */
+.quotes-marquee {
+  overflow: hidden;
+  padding: 3rem 0;
+  position: relative;
+}
+
+.quotes-marquee::before,
+.quotes-marquee::after {
+  content: '';
+  position: absolute;
+  top: 0; width: 150px; height: 100%;
+  z-index: 2;
+}
+.quotes-marquee::before { left: 0; background: linear-gradient(90deg, var(--white), transparent); }
+.quotes-marquee::after { right: 0; background: linear-gradient(-90deg, var(--white), transparent); }
+
+.marquee-track {
+  display: flex;
+  gap: 3rem;
+  animation: marquee 45s linear infinite;
+  width: max-content;
+}
+
+.marquee-item {
+  flex-shrink: 0;
+  background: var(--grey-light);
+  border-radius: 8px;
+  padding: 1.5rem 2rem;
+  max-width: 400px;
+  border-left: 3px solid var(--royal);
+}
+
+.marquee-item p {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #555;
+}
+
+.marquee-item .source {
+  font-family: 'DM Sans', sans-serif;
+  font-style: normal;
+  font-size: 0.75rem;
+  color: #c45e0a;
+  margin-top: 0.5rem;
+  font-weight: 700;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ========== CONNECT ========== */
+.connect-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.connect-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(26,58,138,0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26,58,138,0.08) 1px, transparent 1px);
+  background-size: 30px 30px;
+  opacity: 0.5;
+}
+
+.connect-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.connect-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  margin-top: 2.5rem;
+}
+
+.connect-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.9rem 1.5rem;
+  background: var(--white);
+  border: 1.5px solid var(--grey-mid);
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--charcoal);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.connect-link:hover {
+  border-color: var(--royal);
+  color: var(--royal);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(26,58,138,0.12);
+}
+
+.connect-link svg { width: 20px; height: 20px; }
+
+.connect-tagline {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 1.15rem;
+  color: #555;
+  margin-top: 3rem;
+}
+
+/* ========== FOOTER ========== */
+footer {
+  position: relative;
+  z-index: 10;
+  background: var(--navy-dark);
+  color: rgba(255,255,255,0.4);
+  text-align: center;
+  padding: 2.5rem 2rem;
+  font-size: 0.8rem;
+}
+
+footer a { color: var(--orange); text-decoration: none; }
+
+/* ========== ANIMATIONS ========== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(25px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-8px); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ========== REDUCED MOTION ========== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .marquee-track { animation: none !important; }
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .blueprint-box { min-height: 250px; }
+  .container { padding: 4rem 1.5rem; }
+  .journey-item { gap: 1.5rem; }
+  .journey-line { left: 25px; }
+  .journey-dot { width: 50px; min-width: 50px; }
+  .passions-grid { grid-template-columns: 1fr; }
+  .talks-grid { grid-template-columns: 1fr; }
+  .floating-quote { display: none; }
+  .connect-links { flex-direction: column; align-items: center; }
+}
+
+/* Gravity toggle easter egg */
+.gravity-btn {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 100;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.15);
+  background: rgba(10,20,40,0.7);
+  backdrop-filter: blur(10px);
+  color: var(--yellow);
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  opacity: 0.5;
+}
+
+.gravity-btn:hover {
+  opacity: 1;
+  border-color: var(--yellow);
+  transform: scale(1.1);
+}
+
+/* nav */
+.top-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 50;
+  padding: 1.25rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.4s ease;
+}
+
+.top-nav.scrolled {
+  background: rgba(10,20,40,0.92);
+  backdrop-filter: blur(12px);
+  padding: 0.85rem 2rem;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.2);
+}
+
+.nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: 1.15rem;
+  color: var(--white);
+  text-decoration: none;
+  letter-spacing: -0.02em;
+}
+
+.nav-logo span { color: var(--orange); }
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav-links a {
+  color: rgba(255,255,255,0.65);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover { color: var(--white); }
+
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="top-nav" id="topNav">
+  <a href="#" class="nav-logo">PTH<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#journey">Journey</a></li>
+    <li><a href="#passions">Passions</a></li>
+    <li><a href="#writing">Writing</a></li>
+    <li><a href="#speaking">Speaking</a></li>
+    <li><a href="#connect">Connect</a></li>
+  </ul>
+</nav>
+
+<!-- Three.js Canvas -->
+<canvas id="hero-canvas"></canvas>
+
+<!-- Gravity Toggle Easter Egg -->
+<button class="gravity-btn" id="gravityBtn" title="Toggle gravity animation" aria-label="Toggle gravity animation on geometric shapes">⬡</button>
+
+<!-- ========== HERO ========== -->
+<section class="hero" id="hero">
+  <div class="hero-overlay"></div>
+
+  <div class="floating-quote fq1">"Keep a growth mindset. Don't avoid tasks just because you struggle at first."</div>
+  <div class="floating-quote fq2">"My success is measured by my ability to help you focus on the execution."</div>
+  <div class="floating-quote fq3">"Great experiences are how I build a customer base."</div>
+
+  <div class="hero-content">
+    <p class="hero-pre">@arcktip</p>
+    <h1 class="hero-name">Patrick T. <span>Hoffman</span></h1>
+    <p class="hero-tagline">Architect of Products. Builder of Teams. Explorer of Cities.<br>From blueprints to billion-user platforms — designing what moves us forward.</p>
+    <div class="hero-cta">
+      <a href="#journey" class="cta-primary">Explore the Journey</a>
+      <a href="#connect" class="cta-secondary">Get in Touch</a>
+    </div>
+  </div>
+
+  <div class="scroll-hint">Scroll</div>
+</section>
+
+<!-- ========== ABOUT ========== -->
+<section class="section-white" id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p class="section-label">Who I Am</p>
+        <h2 class="section-title">An ex-architect who builds <span>products</span>, teams &amp; companies</h2>
+        <p>I'm Patrick — a product executive, entrepreneur, artist, and writer. I trained as an architect at Drexel, an urban planner at Columbia, and earned an Executive MBA from Quantic with a specialization in strategy and finance. Along the way I pursued graduate work in Science, Technology &amp; Society (STS) — spending an entire summer researching how the advent of television transformed the design of the American home and the social dynamics of family life. That study taught me something I carry into every product I build: technology doesn't just exist in spaces, it fundamentally redefines them.</p>
+        <p>I've helped scale Social Bicycles (which became JUMP, later acquired by Uber), launched Superpedestrian's novel Copenhagen Wheel, led enterprise product and design at Udacity, built commerce experiences at Google that were used by millions of merchants. Now, I'm building ads growth products at Meta. Along the way I co-founded RayHoff, served as a Teaching Fellow at Singularity University, and mentored hundreds of PMs through programs like <a href="https://theproductmentor.com">The Product Mentor</a>.</p>
+        <p>When I'm not shipping products, I'm painting, backpacking, or exploring the dense urban fabric of cities like New York and Shanghai. I believe the best products, like the best cities, emerge from the intersection of structure and serendipity.</p>
+        <div class="about-stats">
+          <div class="stat-card">
+            <div class="stat-num">16+</div>
+            <div class="stat-label">Years in Product</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">6</div>
+            <div class="stat-label">Companies Shaped</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">100+</div>
+            <div class="stat-label">PMs Mentored</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">2</div>
+            <div class="stat-label">Ventures Founded</div>
+          </div>
+        </div>
+      </div>
+      <div class="about-visual reveal" style="transition-delay: 0.2s;">
+        <div class="blueprint-box">
+          <div class="blueprint-shapes" id="blueprintShapes">
+            <svg viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;opacity:0.4;">
+              <!-- Isometric cube wireframe -->
+              <g stroke="rgba(42,90,205,0.6)" stroke-width="1">
+                <polygon points="150,40 260,100 150,160 40,100" fill="none"/>
+                <polygon points="150,160 260,100 260,200 150,260" fill="none"/>
+                <polygon points="150,160 40,100 40,200 150,260" fill="none"/>
+                <line x1="150" y1="40" x2="150" y2="160" stroke-dasharray="4,4"/>
+              </g>
+              <!-- Floating triangles -->
+              <g stroke="rgba(232,119,34,0.4)" stroke-width="0.8">
+                <polygon points="80,50 110,20 140,50" fill="none">
+                  <animateTransform attributeName="transform" type="translate" values="0,0;0,-8;0,0" dur="4s" repeatCount="indefinite"/>
+                </polygon>
+                <polygon points="200,230 230,200 260,230" fill="none">
+                  <animateTransform attributeName="transform" type="translate" values="0,0;0,6;0,0" dur="5s" repeatCount="indefinite"/>
+                </polygon>
+              </g>
+              <!-- Circle -->
+              <circle cx="240" cy="60" r="15" stroke="rgba(245,197,24,0.4)" stroke-width="0.8" fill="none">
+                <animateTransform attributeName="transform" type="translate" values="0,0;-5,5;0,0" dur="6s" repeatCount="indefinite"/>
+              </circle>
+              <circle cx="60" cy="240" r="10" stroke="rgba(245,197,24,0.3)" stroke-width="0.8" fill="none">
+                <animateTransform attributeName="transform" type="translate" values="0,0;5,-5;0,0" dur="7s" repeatCount="indefinite"/>
+              </circle>
+            </svg>
+          </div>
+          <div class="edu-badge">
+            <p>B.Arch — Drexel University</p>
+            <p>STS Studies — Drexel University</p>
+            <p>M.S. Urban Planning — Columbia</p>
+            <p>EMBA, Strategy &amp; Finance — Quantic</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== QUOTES MARQUEE ========== -->
+<section class="section-white">
+  <div class="quotes-marquee">
+    <div class="marquee-track" id="marqueeTrack">
+      <div class="marquee-item"><p>"Patrick was absolutely tireless in driving the success of the team's projects forward."</p><span class="source">— Colleague at Udacity</span></div>
+      <div class="marquee-item"><p>"If you have the opportunity to work with Patrick in any capacity you should do so without hesitation."</p><span class="source">— Former Direct Report</span></div>
+      <div class="marquee-item"><p>"Not thinking ahead deeply is like playing Tetris. Use a systems approach."</p><span class="source">— @arcktip</span></div>
+      <div class="marquee-item"><p>"Software companies should learn from hardware: price to maximize volume regardless of initial cost."</p><span class="source">— @arcktip</span></div>
+      <div class="marquee-item"><p>"Remember to keep a growth mindset. Embrace the opportunity to learn and grow."</p><span class="source">— @arcktip</span></div>
+      <div class="marquee-item"><p>"The last thing you need is another person telling you what to build. I help you focus on execution."</p><span class="source">— @arcktip</span></div>
+      <!-- Duplicate for seamless loop -->
+      <div class="marquee-item"><p>"Patrick was absolutely tireless in driving the success of the team's projects forward."</p><span class="source">— Colleague at Udacity</span></div>
+      <div class="marquee-item"><p>"If you have the opportunity to work with Patrick in any capacity you should do so without hesitation."</p><span class="source">— Former Direct Report</span></div>
+      <div class="marquee-item"><p>"Not thinking ahead deeply is like playing Tetris. Use a systems approach."</p><span class="source">— @arcktip</span></div>
+      <div class="marquee-item"><p>"Software companies should learn from hardware: price to maximize volume regardless of initial cost."</p><span class="source">— @arcktip</span></div>
+      <div class="marquee-item"><p>"Remember to keep a growth mindset. Embrace the opportunity to learn and grow."</p><span class="source">— @arcktip</span></div>
+      <div class="marquee-item"><p>"The last thing you need is another person telling you what to build. I help you focus on execution."</p><span class="source">— @arcktip</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== JOURNEY ========== -->
+<section class="section-grey" id="journey">
+  <div class="container">
+    <p class="section-label reveal">The Path</p>
+    <h2 class="section-title reveal">From drafting tables to <span>global platforms</span></h2>
+
+    <div class="journey-track" style="margin-top: 3rem;">
+      <div class="journey-line"></div>
+
+      <div class="journey-item">
+        <div class="journey-dot"><div class="dot-inner"></div></div>
+        <div class="journey-card">
+          <div class="journey-era">Foundation · 2000–2010</div>
+          <div class="journey-role">Architect & Innovator</div>
+          <div class="journey-org">Drexel University · John Milner Architects · Agoos/Lovera Architects · Drexel Smart House</div>
+          <div class="journey-desc">Earned a B.Architecture degree while working at John Milner Architects — a firm renowned for historic preservation and classically inspired design — and at Agoos/Lovera. Chaired the Design Committee and served as VP of the Drexel Smart House, an interdisciplinary initiative exploring the future of sustainable living. Also pursued graduate studies in Science, Technology &amp; Society (STS), researching how technologies reshape the built environment and social life. Drexel is where the product thinker was born inside the architect.</div>
+          <div class="geo-decoration"><svg aria-hidden="true" viewBox="0 0 80 80"><polygon points="40,5 75,60 5,60" stroke="rgba(26,58,138,0.5)" stroke-width="1" fill="none"/></svg></div>
+        </div>
+      </div>
+
+      <div class="journey-item">
+        <div class="journey-dot"><div class="dot-inner"></div></div>
+        <div class="journey-card">
+          <div class="journey-era">Urban Systems · 2010–2012</div>
+          <div class="journey-role">Urban Planner</div>
+          <div class="journey-org">Columbia University · Harlem CDC · Urban Mapping</div>
+          <div class="journey-desc">Moved to New York City for a Master's in Urban Planning at Columbia. Worked in Harlem's community development and transit research — learning how cities function as complex systems and how data can improve the lives of millions of people in dense urban environments.</div>
+          <div class="geo-decoration"><svg aria-hidden="true" viewBox="0 0 80 80"><rect x="15" y="15" width="50" height="50" stroke="rgba(232,119,34,0.5)" stroke-width="1" fill="none" transform="rotate(15 40 40)"/></svg></div>
+        </div>
+      </div>
+
+      <div class="journey-item">
+        <div class="journey-dot"><div class="dot-inner"></div></div>
+        <div class="journey-card">
+          <div class="journey-era">Micromobility · 2012–2017</div>
+          <div class="journey-role">Group Product Manager</div>
+          <div class="journey-org">Social Bicycles (SoBi) · Superpedestrian</div>
+          <div class="journey-desc">Joined the dockless bikeshare revolution at Social Bicycles, building and scaling GPS-enabled smart-bike technology that deployed across cities from Boise to San Francisco. SoBi later rebranded as JUMP and was acquired by Uber. Also led product at Superpedestrian, pushing the boundaries of e-mobility hardware and software.</div>
+          <div class="geo-decoration"><svg aria-hidden="true" viewBox="0 0 80 80"><circle cx="40" cy="40" r="30" stroke="rgba(245,197,24,0.5)" stroke-width="1" fill="none"/><circle cx="40" cy="40" r="10" stroke="rgba(245,197,24,0.3)" stroke-width="1" fill="none"/></svg></div>
+        </div>
+      </div>
+
+      <div class="journey-item">
+        <div class="journey-dot"><div class="dot-inner"></div></div>
+        <div class="journey-card">
+          <div class="journey-era">Entrepreneurship · 2016–2018</div>
+          <div class="journey-role">Co-Founder & Lead PM</div>
+          <div class="journey-org">RayHoff · BookMore Fitness</div>
+          <div class="journey-desc">Co-founded RayHoff (consulting) and BookMore Fitness, channeling all the lessons from architecture, urban planning, and mobility into building something new from zero. These ventures honed entrepreneurial skills that empowered everything that followed.</div>
+          <div class="geo-decoration"><svg aria-hidden="true" viewBox="0 0 80 80"><polygon points="40,5 75,30 65,70 15,70 5,30" stroke="rgba(26,58,138,0.4)" stroke-width="1" fill="none"/></svg></div>
+        </div>
+      </div>
+
+      <div class="journey-item">
+        <div class="journey-dot"><div class="dot-inner"></div></div>
+        <div class="journey-card">
+          <div class="journey-era">Education Tech · 2017–2019</div>
+          <div class="journey-role">Head of Product, Enterprise</div>
+          <div class="journey-org">Udacity</div>
+          <div class="journey-desc">Led the enterprise product and design teams at Udacity, driving workforce transformation for Fortune 500 companies. Built and scaled products and programs that helped organizations upskill their teams in AI, data science, and cloud computing. Earned deep respect from both peers and executive leadership.</div>
+          <div class="geo-decoration"><svg aria-hidden="true" viewBox="0 0 80 80"><rect x="10" y="20" width="60" height="40" rx="3" stroke="rgba(232,119,34,0.4)" stroke-width="1" fill="none"/><line x1="10" y1="35" x2="70" y2="35" stroke="rgba(232,119,34,0.2)" stroke-width="1"/></svg></div>
+        </div>
+      </div>
+
+      <div class="journey-item">
+        <div class="journey-dot"><div class="dot-inner"></div></div>
+        <div class="journey-card">
+          <div class="journey-era">Big Tech · 2019–Present</div>
+          <div class="journey-role">Product Manager → PM Lead</div>
+          <div class="journey-org">Google · Meta</div>
+          <div class="journey-desc">Built commerce experiences at Google, then moved to Meta where I now lead the development of core ads growth solutions for Media Networks. Continuing to build products at massive scale — applying the same spatial thinking, customer centricity and systems mindset that started at the drafting table.</div>
+          <div class="geo-decoration"><svg aria-hidden="true" viewBox="0 0 80 80"><polygon points="40,5 55,35 80,35 60,55 68,80 40,65 12,80 20,55 0,35 25,35" stroke="rgba(245,197,24,0.4)" stroke-width="1" fill="none"/></svg></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ========== PASSIONS ========== -->
+<section class="section-white" id="passions">
+  <div class="container">
+    <p class="section-label reveal">Beyond the Screen</p>
+    <h2 class="section-title reveal">The things that <span>fuel</span> the work</h2>
+
+    <div class="passions-grid">
+      <div class="passion-card reveal">
+        <div class="passion-icon">🏙️</div>
+        <div class="passion-title">Connected Cities</div>
+        <div class="passion-desc">From New York's grid to Shanghai's layered metropolis, I am fascinated by how urban systems shape human behavior — and how technology can make cities more livable, equitable, and connected.</div>
+      </div>
+
+      <div class="passion-card reveal" style="transition-delay:0.1s">
+        <div class="passion-icon">🚲</div>
+        <div class="passion-title">Micromobility</div>
+        <div class="passion-desc">A bike rider at heart and a micromobility pioneer by trade. From building the bikes at Social Bicycles to riding through city streets, two wheels have always been central to how I navigate new urban environments.</div>
+      </div>
+
+      <div class="passion-card reveal" style="transition-delay:0.2s">
+        <div class="passion-icon">🎨</div>
+        <div class="passion-title">Painting & Drawing</div>
+        <div class="passion-desc">Still an artist and architect at the core. I paint and draw — the spatial thinking, geometry, and compositional eye that architecture trained never left. It just found new canvases.</div>
+      </div>
+
+      <div class="passion-card reveal" style="transition-delay:0.1s">
+        <div class="passion-icon">🏔️</div>
+        <div class="passion-title">Backpacking</div>
+        <div class="passion-desc">On the far end of the density spectrum from Manhattan: small group backcountry trips into wilderness. The silence, the physics of moving through terrain, the extreme self-reliance — a counterbalance to the connected world.</div>
+      </div>
+
+      <div class="passion-card reveal" style="transition-delay:0.2s">
+        <div class="passion-icon">🧗</div>
+        <div class="passion-title">Climbing</div>
+        <div class="passion-desc">Problem-solving with your body. Every route is a product challenge — constraints, creative solutions, and the physics of weight, friction, and momentum. Architecture for the vertical plane.</div>
+      </div>
+
+      <div class="passion-card reveal" style="transition-delay:0.3s">
+        <div class="passion-icon">📐</div>
+        <div class="passion-title">Geometry & Physics</div>
+        <div class="passion-desc">The underlying language that connects architecture, product design, and the natural world. I see geometric patterns everywhere — from crystal structures to city grids to product interfaces.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== WRITING ========== -->
+<section class="section-grey" id="writing">
+  <div class="container">
+    <p class="section-label reveal">Writing</p>
+    <h2 class="section-title reveal">Long-form <span>thinking</span></h2>
+    <p class="writing-intro reveal">Essays, reflections, and frameworks on product, cities, technology, and the spaces in between.</p>
+
+    <div class="posts-grid">
+      <a href="writing/rule-of-seven.html" class="post-item reveal">
+        <div class="post-date">Feb 2026</div>
+        <div class="post-content">
+          <div><span class="post-tag">Product</span><span class="post-tag orange">Teams</span></div>
+          <h3>The Rule of Seven: Architecting Teams for the Agentic Era</h3>
+          <p class="post-excerpt">Whether you're the first PM or one of hundreds, the way you structure your teams determines your ceiling. A framework for organizational design drawn from years of scaling product teams from startup to enterprise.</p>
+          <span class="post-readmore">Read essay →</span>
+        </div>
+      </a>
+
+      <a href="writing/television-american-home.html" class="post-item reveal">
+        <div class="post-date">Coming Soon</div>
+        <div class="post-content">
+          <div><span class="post-tag yellow">STS</span><span class="post-tag">Cities</span></div>
+          <h3>How Television Redesigned the American Home</h3>
+          <p class="post-excerpt">A summer spent researching the advent of television revealed something unexpected: new technology doesn't just occupy space — it restructures the architecture of daily life, from living room layouts to family social dynamics.</p>
+          <span class="post-readmore">Read essay →</span>
+        </div>
+      </a>
+
+      <a href="writing/dockless-jump.html" class="post-item reveal">
+        <div class="post-date">Coming Soon</div>
+        <div class="post-content">
+          <div><span class="post-tag">Mobility</span><span class="post-tag orange">Urbanism</span></div>
+          <h3>Dockless: What We Learned Building the Bike That Became JUMP</h3>
+          <p class="post-excerpt">The inside story of building GPS-enabled smart bikes at Social Bicycles — the decisions that shaped an industry, the mistakes that taught us the most, and why the best urban products work with the city, not against it.</p>
+          <span class="post-readmore">Read essay →</span>
+        </div>
+      </a>
+
+      <a href="writing/better-pms.html" class="post-item reveal">
+        <div class="post-date">Coming Soon</div>
+        <div class="post-content">
+          <div><span class="post-tag">Product</span><span class="post-tag yellow">Mentorship</span></div>
+          <h3>Better PMs Build Better PMs</h3>
+          <p class="post-excerpt">Why mentoring other product managers is the highest-leverage thing you can do for your own career — lessons from a decade with The Product Mentor program.</p>
+          <span class="post-readmore">Read essay →</span>
+        </div>
+      </a>
+    </div>
+
+    <div class="writing-cta reveal">
+      <a href="https://arcktip.com/" target="_blank" rel="noopener noreferrer">View Archive on arcktip.com →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SPEAKING & MENTORSHIP ========== -->
+<section class="section-dark" id="speaking">
+  <div class="container">
+    <p class="section-label reveal">Mentorship & Speaking</p>
+    <h2 class="section-title reveal" style="color:var(--white);">Giving back to the <span>product community</span></h2>
+    <p class="speaking-intro reveal">As a long-time mentor with The Product Mentor program, I guided dozens of PMs and delivered talks on product organization, career growth, and the science of execution.</p>
+
+    <div class="talks-grid">
+      <div class="talk-card reveal">
+        <div class="talk-thumbnail"><div class="play-btn"></div></div>
+        <div class="talk-info">
+          <div class="talk-title">The Rule of Seven: How to Structure Your Product Org</div>
+          <div class="talk-meta">The Product Mentor · 2019</div>
+          <a href="https://www.youtube.com/watch?v=AERccJ8w7pk" target="_blank" rel="noopener noreferrer" class="talk-link">Watch on The Product Mentor →</a>
+        </div>
+      </div>
+
+      <div class="talk-card reveal" style="transition-delay:0.1s">
+        <div class="talk-thumbnail"><div class="play-btn"></div></div>
+        <div class="talk-info">
+          <div class="talk-title">What is CORE to Product Management</div>
+          <div class="talk-meta">The Product Mentor · 2018</div>
+          <a href="https://www.youtube.com/watch?v=nUf74krPv9o&t=973s" target="_blank" rel="noopener noreferrer" class="talk-link">Watch on The Product Mentor →</a>
+        </div>
+      </div>
+
+      <div class="talk-card reveal" style="transition-delay:0.2s">
+        <div class="talk-thumbnail"><div class="play-btn"></div></div>
+        <div class="talk-info">
+          <div class="talk-title">How to Become a Better PM by Mentoring Others</div>
+          <div class="talk-meta">The Product Mentor · 2020</div>
+          <a href="https://www.youtube.com/watch?v=70QbITjX5Ok" target="_blank" rel="noopener noreferrer" class="talk-link">Watch on The Product Mentor →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CONNECT ========== -->
+<section class="section-grey connect-section" id="connect">
+  <div class="container connect-content">
+    <p class="section-label reveal">Let's Connect</p>
+    <h2 class="section-title reveal">Find Patrick <span>across the web</span></h2>
+
+    <div class="connect-links reveal">
+      <a href="http://threads.net/arcktip" target="_blank" rel="noopener noreferrer" class="connect-link">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.692 11.124C17.589 11.074 17.484 11.026 17.377 10.981C17.192 7.567 15.327 5.613 12.195 5.593C12.181 5.593 12.167 5.593 12.153 5.593C10.28 5.593 8.722 6.393 7.763 7.848L9.485 9.029C10.201 7.942 11.326 7.711 12.154 7.711C12.163 7.711 12.173 7.711 12.182 7.711C13.213 7.717 13.992 8.017 14.495 8.602C14.862 9.027 15.107 9.616 15.228 10.358C14.314 10.203 13.325 10.155 12.268 10.215C9.291 10.387 7.376 12.123 7.505 14.537C7.57 15.761 8.18 16.814 9.222 17.501C10.103 18.083 11.237 18.367 12.417 18.303C13.974 18.218 15.195 17.623 16.048 16.537C16.695 15.712 17.104 14.643 17.285 13.296C18.027 13.744 18.577 14.333 18.881 15.041C19.397 16.246 19.427 18.225 17.813 19.838C16.398 21.252 14.697 21.863 12.127 21.882C9.276 21.861 7.119 20.947 5.717 19.165C4.404 17.496 3.726 15.085 3.701 12C3.726 8.915 4.404 6.504 5.717 4.835C7.119 3.053 9.275 2.139 12.127 2.118C14.998 2.139 17.192 3.058 18.648 4.848C19.362 5.727 19.9 6.831 20.255 8.119L22.273 7.58C21.843 5.995 21.166 4.629 20.246 3.497C18.38 1.201 15.65 0.024 12.134 0H12.12C8.61 0.024 5.912 1.205 4.099 3.51C2.485 5.561 1.653 8.414 1.625 11.992L1.625 12L1.625 12.008C1.653 15.585 2.485 18.439 4.099 20.49C5.912 22.795 8.61 23.976 12.12 24H12.134C15.254 23.978 17.453 23.162 19.265 21.351C21.635 18.983 21.564 16.015 20.782 14.193C20.222 12.886 19.153 11.825 17.692 11.124ZM12.305 16.188C11 16.262 9.644 15.676 9.577 14.421C9.528 13.491 10.239 12.453 12.385 12.33C12.631 12.315 12.872 12.309 13.109 12.309C13.888 12.309 14.617 12.384 15.28 12.529C15.033 15.617 13.583 16.118 12.305 16.188Z"/></svg>
+        arcktip
+      </a>
+      <a href="https://www.linkedin.com/in/pth/" target="_blank" rel="noopener noreferrer" class="connect-link">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        LinkedIn
+      </a>
+      <a href="https://www.patrickthoffman.com/" target="_blank" rel="noopener noreferrer" class="connect-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        patrickthoffman.com
+      </a>
+      <a href="https://arcktip.com/" target="_blank" rel="noopener noreferrer" class="connect-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+        arcktip.com
+      </a>
+      <a href="https://www.theproductmentor.com/patrick-hoffman.html" target="_blank" rel="noopener noreferrer" class="connect-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        The Product Mentor
+      </a>
+    </div>
+
+    <p class="connect-tagline reveal">"I love to create value for my customers and capture value for my companies."</p>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  <p>© 2026 Patrick T. Hoffman · Built with geometry, gravity, and good intentions · <a href="https://www.threads.com/@arcktip" target="_blank" rel="noopener noreferrer">@arcktip</a></p>
+</footer>
+
+<script>
+// ===== THREE.JS HERO =====
+const canvas = document.getElementById('hero-canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setClearColor(0x0a1428, 1);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.set(0, 2, 18);
+
+// Fog for depth
+scene.fog = new THREE.Fog(0x0a1428, 15, 45);
+
+// Grid floor (blueprint aesthetic)
+const gridHelper = new THREE.GridHelper(80, 80, 0x1a3a8a, 0x0f1e3a);
+gridHelper.position.y = -6;
+gridHelper.material.forEach ? gridHelper.material.forEach(m => { m.opacity = 0.3; m.transparent = true; }) : (function() { gridHelper.material.opacity = 0.3; gridHelper.material.transparent = true; })();
+scene.add(gridHelper);
+
+// Materials
+const matBlue = new THREE.MeshBasicMaterial({ color: 0x2a5acd, wireframe: true, transparent: true, opacity: 0.5 });
+const matOrange = new THREE.MeshBasicMaterial({ color: 0xE87722, wireframe: true, transparent: true, opacity: 0.45 });
+const matYellow = new THREE.MeshBasicMaterial({ color: 0xF5C518, wireframe: true, transparent: true, opacity: 0.35 });
+
+const geometries = [
+  new THREE.IcosahedronGeometry(1, 0),
+  new THREE.OctahedronGeometry(0.9, 0),
+  new THREE.TetrahedronGeometry(0.8, 0),
+  new THREE.BoxGeometry(1, 1, 1),
+  new THREE.DodecahedronGeometry(0.85, 0),
+  new THREE.IcosahedronGeometry(0.6, 1),
+  new THREE.CylinderGeometry(0, 0.8, 1.4, 4), // pyramid
+  new THREE.TorusGeometry(0.6, 0.15, 8, 12),
+];
+
+const materials = [matBlue, matOrange, matYellow];
+const shapes = [];
+let gravityOn = false;
+
+for (let i = 0; i < 35; i++) {
+  const geo = geometries[Math.floor(Math.random() * geometries.length)];
+  const mat = materials[Math.floor(Math.random() * materials.length)].clone();
+  mat.opacity = 0.15 + Math.random() * 0.35;
+  const mesh = new THREE.Mesh(geo, mat);
+
+  mesh.position.set(
+    (Math.random() - 0.5) * 30,
+    (Math.random() - 0.5) * 16,
+    (Math.random() - 0.5) * 20 - 5
+  );
+
+  const s = 0.3 + Math.random() * 1.2;
+  mesh.scale.set(s, s, s);
+
+  mesh.userData = {
+    origY: mesh.position.y,
+    floatSpeed: 0.2 + Math.random() * 0.5,
+    floatAmp: 0.3 + Math.random() * 1.0,
+    rotSpeed: new THREE.Vector3(
+      (Math.random() - 0.5) * 0.008,
+      (Math.random() - 0.5) * 0.008,
+      (Math.random() - 0.5) * 0.005
+    ),
+    breatheSpeed: 0.5 + Math.random() * 1,
+    breatheAmp: 0.02 + Math.random() * 0.04,
+    baseScale: s,
+    velY: 0,
+    phase: Math.random() * Math.PI * 2,
+  };
+
+  scene.add(mesh);
+  shapes.push(mesh);
+}
+
+// Mouse tracking
+const mouse = { x: 0, y: 0, worldX: 0, worldY: 0 };
+document.addEventListener('mousemove', (e) => {
+  mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+  mouse.worldX = mouse.x * 15;
+  mouse.worldY = mouse.y * 10;
+});
+
+// Scroll tracking
+let scrollY = 0;
+window.addEventListener('scroll', () => { scrollY = window.scrollY; });
+
+// Gravity toggle
+const gravityBtn = document.getElementById('gravityBtn');
+gravityBtn.addEventListener('click', () => {
+  gravityOn = !gravityOn;
+  gravityBtn.textContent = gravityOn ? '⬢' : '⬡';
+  gravityBtn.style.color = gravityOn ? '#E87722' : '#F5C518';
+  if (!gravityOn) {
+    shapes.forEach(s => { s.userData.velY = 0; });
+  }
+});
+
+// Animation loop
+const clock = new THREE.Clock();
+
+function animate() {
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
+  const scrollFactor = Math.min(scrollY / window.innerHeight, 1);
+
+  // Fade grid with scroll
+  const gridOpacity = 0.3 * (1 - scrollFactor);
+  if (gridHelper.material.forEach) {
+    gridHelper.material.forEach(m => { m.opacity = gridOpacity; });
+  } else {
+    gridHelper.material.opacity = gridOpacity;
+  }
+
+  // Camera slight movement with mouse
+  camera.position.x += (mouse.x * 2 - camera.position.x) * 0.02;
+  camera.position.y += (2 + mouse.y * 1.5 - camera.position.y) * 0.02;
+  camera.lookAt(0, 0, -3);
+
+  shapes.forEach((mesh) => {
+    const ud = mesh.userData;
+
+    // Rotation
+    mesh.rotation.x += ud.rotSpeed.x;
+    mesh.rotation.y += ud.rotSpeed.y;
+    mesh.rotation.z += ud.rotSpeed.z;
+
+    // Breathing (scale pulse)
+    const breathe = 1 + Math.sin(t * ud.breatheSpeed + ud.phase) * ud.breatheAmp;
+    mesh.scale.setScalar(ud.baseScale * breathe);
+
+    if (gravityOn) {
+      // Gravity mode — shapes fall
+      ud.velY -= 0.003;
+      mesh.position.y += ud.velY;
+      if (mesh.position.y < -6 + ud.baseScale * 0.5) {
+        mesh.position.y = -6 + ud.baseScale * 0.5;
+        ud.velY *= -0.5; // bounce
+      }
+    } else {
+      // Anti-gravity float
+      const floatOffset = Math.sin(t * ud.floatSpeed + ud.phase) * ud.floatAmp;
+      mesh.position.y = ud.origY + floatOffset + scrollFactor * 3;
+    }
+
+    // Mouse repulsion
+    const dx = mesh.position.x - mouse.worldX;
+    const dy = mesh.position.y - mouse.worldY;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < 5) {
+      const force = (5 - dist) * 0.003;
+      mesh.position.x += dx * force;
+      mesh.position.y += dy * force;
+      if (!gravityOn) {
+        // Slowly return
+        mesh.position.x += (mesh.position.x > 0 ? -0.002 : 0.002);
+      }
+    }
+  });
+
+  // Fade renderer with scroll
+  if (scrollFactor > 0.8) {
+    canvas.style.opacity = Math.max(0, 1 - (scrollFactor - 0.8) * 5);
+  } else {
+    canvas.style.opacity = 1;
+  }
+
+  renderer.render(scene, camera);
+}
+
+animate();
+
+// Resize
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// ===== SCROLL REVEAL =====
+const revealEls = document.querySelectorAll('.reveal, .journey-item');
+const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, observerOptions);
+
+revealEls.forEach(el => revealObserver.observe(el));
+
+// ===== NAV SCROLL =====
+const topNav = document.getElementById('topNav');
+window.addEventListener('scroll', () => {
+  topNav.classList.toggle('scrolled', window.scrollY > 80);
+});
+
+// ===== SMOOTH SCROLL FOR NAV LINKS =====
+document.querySelectorAll('a[href^="#"]:not([href="#"])').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+</script>
+
+</body>
+</html>

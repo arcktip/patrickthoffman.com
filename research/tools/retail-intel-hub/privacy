@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy — Retail Media Intel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #07070b; --surface: #101018; --border: #1e1e2e;
+  --text: #d0d0de; --text-soft: #8888a0; --text-dim: #555568;
+  --accent: #5b8def; --accent-soft: rgba(91,141,239,0.08);
+  --mono: 'JetBrains Mono','SF Mono',monospace;
+  --sans: 'DM Sans',system-ui,sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--bg); color: var(--text); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+body { max-width: 720px; margin: 0 auto; padding: 40px 24px 80px; }
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.header { margin-bottom: 48px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+.logo { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.logo span { color: var(--accent); }
+.page-title { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; color: #fff; }
+.effective { font-family: var(--mono); font-size: 11px; color: var(--text-dim); letter-spacing: 0.06em; text-transform: uppercase; }
+
+h2 { font-size: 18px; font-weight: 600; color: #fff; margin: 36px 0 14px; padding-top: 20px; border-top: 1px solid var(--border); }
+h2:first-of-type { border-top: none; padding-top: 0; }
+h3 { font-size: 14px; font-weight: 600; color: var(--text); margin: 20px 0 8px; }
+
+p { font-size: 14.5px; line-height: 1.75; color: var(--text); margin-bottom: 14px; }
+ul { margin: 0 0 14px 20px; }
+li { font-size: 14.5px; line-height: 1.75; color: var(--text); margin-bottom: 6px; }
+
+.callout { padding: 16px 18px; background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 6px; margin: 20px 0; font-size: 13.5px; line-height: 1.7; }
+.callout strong { color: #fff; }
+
+.data-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+.data-table th { text-align: left; font-family: var(--mono); font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+.data-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.6; }
+.data-table td:first-child { font-weight: 500; color: #fff; white-space: nowrap; }
+
+.footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 11px; color: var(--text-dim); line-height: 1.8; }
+
+@media (max-width: 600px) {
+  body { padding: 24px 16px 60px; }
+  .page-title { font-size: 22px; }
+  h2 { font-size: 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo"><span>▋</span>RMI</div>
+  <div class="page-title">Privacy Policy</div>
+  <div class="effective">Effective Date: March 22, 2026</div>
+</div>
+
+<p>Retail Media Intel ("RMI," "the Application," "we," or "our") is a personal intelligence tool operated by Patrick Hoffman ("Operator") at patrickthoffman.com. This Privacy Policy describes how RMI accesses, uses, stores, and protects your data, including data obtained through Google APIs.</p>
+
+<div class="callout">
+  <strong>Google API Services User Data Policy Compliance:</strong> RMI's use and transfer of information received from Google APIs adheres to the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank">Google API Services User Data Policy</a>, including the Limited Use requirements.
+</div>
+
+<h2>1. Information We Access</h2>
+
+<h3>1.1 Google Account Data</h3>
+<p>When you connect your Google account, RMI requests access to the following scopes:</p>
+
+<table class="data-table">
+  <tr><th>Scope</th><th>Purpose</th><th>Data accessed</th></tr>
+  <tr>
+    <td>gmail.readonly</td>
+    <td>Fetch Google Alert emails for analysis</td>
+    <td>Email messages from <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="87e0e8e8e0ebe2e6ebe2f5f3f4aae9e8f5e2f7ebfec7e0e8e8e0ebe2a9e4e8ea">[email&#160;protected]</a> only. RMI searches exclusively for emails from this sender. No other emails are accessed, read, or stored.</td>
+  </tr>
+  <tr>
+    <td>drive.file</td>
+    <td>Save and load backup data</td>
+    <td>Only files created by RMI (rmi-backup.json). RMI cannot access any other files in your Google Drive.</td>
+  </tr>
+</table>
+
+<h3>1.2 Anthropic API Key</h3>
+<p>If you optionally provide an Anthropic API key for AI-powered analysis, the key is stored locally in your browser's localStorage. The key is sent directly from your browser to Anthropic's API servers. RMI's servers never receive, transmit, or store your API key.</p>
+
+<h3>1.3 Article and Analysis Data</h3>
+<p>RMI extracts article URLs, titles, publication sources, and text snippets from your Google Alert emails. This content is analyzed locally in your browser and, if an API key is configured, sent to Anthropic's API for enhanced analysis. The resulting intelligence data (themes, entities, sentiment, briefings) is stored locally in your browser.</p>
+
+<h2>2. How We Use Your Data</h2>
+
+<p>RMI uses your data solely to provide the intelligence analysis functionality you have requested:</p>
+<ul>
+  <li><strong>Gmail data</strong> is used exclusively to extract article links and text snippets from Google Alert emails for analysis. Email content is processed in your browser and is not transmitted to any server operated by RMI.</li>
+  <li><strong>Google Drive data</strong> is used exclusively to save and restore your RMI intelligence data as a backup file you control.</li>
+  <li><strong>Extracted article data</strong> is analyzed locally and optionally sent to Anthropic's Claude API for enhanced natural language analysis, at your explicit direction.</li>
+</ul>
+
+<div class="callout">
+  <strong>Limited Use Disclosure:</strong> RMI's use of Google user data is limited to providing and improving the Application's user-facing features that are visible and prominent in the Application's user interface. RMI does not use Google user data for any other purpose.
+</div>
+
+<h2>3. Data Storage and Security</h2>
+
+<h3>3.1 Client-Side Architecture</h3>
+<p>RMI is a client-side application. All data processing occurs in your web browser. RMI does not operate backend servers that receive, store, or process your Google user data. Specifically:</p>
+<ul>
+  <li>All session data, analysis results, briefings, and trend reports are stored in your browser's localStorage.</li>
+  <li>Google OAuth tokens are managed by Google's Identity Services library and are stored only in browser memory during your active session.</li>
+  <li>Your Anthropic API key, if provided, is stored in your browser's localStorage and is only transmitted directly to Anthropic's servers.</li>
+</ul>
+
+<h3>3.2 Data Transmission</h3>
+<p>When you use the Application, the following network transmissions occur:</p>
+<ul>
+  <li><strong>Your browser → Gmail API:</strong> To fetch Google Alert emails, authenticated with your OAuth token.</li>
+  <li><strong>Your browser → Google Drive API:</strong> To save or load backup data, authenticated with your OAuth token.</li>
+  <li><strong>Your browser → Anthropic API:</strong> To perform AI-powered analysis, authenticated with your API key. Article text and extracted content may be included in these requests.</li>
+</ul>
+<p>All transmissions use HTTPS encryption. No data is transmitted to any server owned or operated by RMI.</p>
+
+<h3>3.3 Data Retention</h3>
+<p>Your data persists in your browser's localStorage until you explicitly clear it using the Application's "Clear All" function, or until you clear your browser's site data. RMI does not retain any of your data on any server.</p>
+
+<h2>4. Data Sharing</h2>
+
+<p>RMI does not share your Google user data with any third parties, except as follows:</p>
+<ul>
+  <li><strong>Anthropic:</strong> If you choose to enable AI-powered analysis by providing an API key, extracted article content (not raw email content) is sent to Anthropic's Claude API for processing. This is done at your explicit direction, using your own API key and account. Anthropic's use of this data is governed by <a href="https://www.anthropic.com/privacy" target="_blank">Anthropic's Privacy Policy</a>.</li>
+</ul>
+
+<p>RMI does not:</p>
+<ul>
+  <li>Sell, rent, or lease your data to any party.</li>
+  <li>Use your data for advertising, marketing, or profiling purposes.</li>
+  <li>Transfer your data to any data broker or information reseller.</li>
+  <li>Use your data to determine creditworthiness or for lending purposes.</li>
+  <li>Use your Google user data for serving advertisements, including retargeting or interest-based advertising.</li>
+</ul>
+
+<h2>5. Google API Services — Limited Use</h2>
+
+<p>RMI's use and transfer to any other app of information received from Google APIs will adhere to the <a href="https://developers.google.com/terms/api-services-user-data-policy#additional_requirements_for_specific_api_scopes" target="_blank">Google API Services User Data Policy</a>, including the Limited Use requirements. Specifically:</p>
+
+<ul>
+  <li>RMI only uses Google user data to provide and improve the Application's user-facing features.</li>
+  <li>RMI does not transfer Google user data to third parties unless necessary to provide or improve user-facing features, to comply with applicable law, or as part of a merger or acquisition with notice to users.</li>
+  <li>RMI does not use Google user data for serving advertisements.</li>
+  <li>RMI does not allow humans to read Google user data unless the user has provided affirmative consent, it is necessary for security purposes, to comply with law, or the data is aggregated and anonymized for internal operations.</li>
+</ul>
+
+<h2>6. Your Rights and Controls</h2>
+
+<p>You have full control over your data at all times:</p>
+<ul>
+  <li><strong>Revoke access:</strong> You can revoke RMI's access to your Google account at any time by visiting <a href="https://myaccount.google.com/permissions" target="_blank">Google Account Permissions</a>.</li>
+  <li><strong>Delete data:</strong> You can delete all stored intelligence data using the "Clear All" button in the Application's Settings tab.</li>
+  <li><strong>Export data:</strong> You can export all stored data as a JSON file at any time using the "Download JSON" button in Settings.</li>
+  <li><strong>Clear browser data:</strong> Clearing your browser's site data for patrickthoffman.com will remove all Application data.</li>
+</ul>
+
+<h2>7. Children's Privacy</h2>
+
+<p>RMI is not directed at children under the age of 13. We do not knowingly collect personal information from children under 13. If you believe a child has provided data to RMI, please contact us and we will take steps to remove such information.</p>
+
+<h2>8. Changes to This Policy</h2>
+
+<p>We may update this Privacy Policy to reflect changes in the Application or legal requirements. The "Effective Date" at the top of this page will be updated accordingly. Continued use of the Application after changes constitutes acceptance of the revised policy.</p>
+
+<h2>9. Contact</h2>
+
+<p>For questions about this Privacy Policy or RMI's data practices, contact:</p>
+<p>Patrick Hoffman<br>
+Email: <a href="/cdn-cgi/l/email-protection#64340510160d070f4a304a2c0b020209050a240309050d084a070b09"><span class="__cf_email__" data-cfemail="ca9aabbeb8a3a9a1e49ee482a5acaca7aba48aada7aba3a6e4a9a5a7">[email&#160;protected]</span></a><br>
+Web: <a href="https://patrickthoffman.com">patrickthoffman.com</a></p>
+
+<div class="footer">
+  <a href="https://patrickthoffman.com/research/tools/retail-intel-hub">Retail Media Intel

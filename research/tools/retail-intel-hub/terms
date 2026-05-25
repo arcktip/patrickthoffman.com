@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terms of Service — Retail Media Intel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #07070b; --surface: #101018; --border: #1e1e2e;
+  --text: #d0d0de; --text-soft: #8888a0; --text-dim: #555568;
+  --accent: #5b8def; --accent-soft: rgba(91,141,239,0.08);
+  --mono: 'JetBrains Mono','SF Mono',monospace;
+  --sans: 'DM Sans',system-ui,sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--bg); color: var(--text); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+body { max-width: 720px; margin: 0 auto; padding: 40px 24px 80px; }
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.header { margin-bottom: 48px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+.logo { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.logo span { color: var(--accent); }
+.page-title { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; color: #fff; }
+.effective { font-family: var(--mono); font-size: 11px; color: var(--text-dim); letter-spacing: 0.06em; text-transform: uppercase; }
+
+h2 { font-size: 18px; font-weight: 600; color: #fff; margin: 36px 0 14px; padding-top: 20px; border-top: 1px solid var(--border); }
+h2:first-of-type { border-top: none; padding-top: 0; }
+
+p { font-size: 14.5px; line-height: 1.75; color: var(--text); margin-bottom: 14px; }
+ul { margin: 0 0 14px 20px; }
+li { font-size: 14.5px; line-height: 1.75; color: var(--text); margin-bottom: 6px; }
+
+.callout { padding: 16px 18px; background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 6px; margin: 20px 0; font-size: 13.5px; line-height: 1.7; }
+.callout strong { color: #fff; }
+
+.footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 11px; color: var(--text-dim); line-height: 1.8; }
+
+@media (max-width: 600px) {
+  body { padding: 24px 16px 60px; }
+  .page-title { font-size: 22px; }
+  h2 { font-size: 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo"><span>▋</span>RMI</div>
+  <div class="page-title">Terms of Service</div>
+  <div class="effective">Effective Date: March 22, 2026</div>
+</div>
+
+<p>These Terms of Service ("Terms") govern your access to and use of Retail Media Intel ("RMI," "the Application"), operated by Patrick Hoffman ("Operator," "we," "our") and available at patrickthoffman.com/research/tools/retail-intel-hub. By using the Application, you agree to be bound by these Terms. If you do not agree, do not use the Application.</p>
+
+<h2>1. Description of Service</h2>
+
+<p>RMI is a client-side web application that helps users analyze and synthesize retail media industry signals from Google Alert emails. The Application extracts article links from Google Alert emails, classifies them by theme and entity, and optionally uses Anthropic's Claude AI to generate strategic intelligence briefings.</p>
+
+<p>RMI is a personal productivity tool. It runs entirely in your web browser. The Application does not operate backend servers that process or store your data.</p>
+
+<h2>2. Eligibility</h2>
+
+<p>You must be at least 18 years old and have the legal capacity to enter into these Terms. By using RMI, you represent that you meet these requirements. The Application is not intended for use by children under 13.</p>
+
+<h2>3. Account and Access</h2>
+
+<p>To use certain features of RMI, you may connect the following third-party accounts:</p>
+<ul>
+  <li><strong>Google Account:</strong> Required for the Gmail fetch feature (to retrieve Google Alert emails) and the Google Drive backup feature. You authorize access through Google's OAuth 2.0 consent flow.</li>
+  <li><strong>Anthropic API Account:</strong> Optional. Required for AI-powered analysis features. You provide your own API key, which is stored locally in your browser.</li>
+</ul>
+
+<p>You are responsible for maintaining the security of your accounts, API keys, and any credentials used with the Application. You are solely responsible for all activity that occurs through your use of the Application.</p>
+
+<h2>4. Permitted Use</h2>
+
+<p>RMI is provided for your personal or internal business use for the purpose of analyzing retail media industry intelligence. You agree not to:</p>
+<ul>
+  <li>Use the Application for any unlawful purpose or in violation of any applicable law or regulation.</li>
+  <li>Attempt to interfere with, compromise, or disrupt the Application or any connected third-party service.</li>
+  <li>Reverse-engineer, decompile, or attempt to extract the source code of the Application, except as permitted by applicable law.</li>
+  <li>Redistribute, sublicense, or commercially resell the Application or its output without prior written consent from the Operator.</li>
+  <li>Use the Application to access, collect, or store email content beyond Google Alert notification emails from <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3d5a52525a51585c51584f494e1053524f584d51447d5a52525a5158135e5250">[email&#160;protected]</a>.</li>
+</ul>
+
+<h2>5. Google User Data</h2>
+
+<p>RMI accesses Google user data (Gmail messages and Google Drive files) solely as described in our <a href="https://patrickthoffman.com/research/tools/retail-intel-hub/privacy">Privacy Policy</a>. Our use of Google user data complies with the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank">Google API Services User Data Policy</a>, including the Limited Use requirements.</p>
+
+<p>You may revoke RMI's access to your Google account at any time by visiting <a href="https://myaccount.google.com/permissions" target="_blank">Google Account Permissions</a>.</p>
+
+<h2>6. Third-Party Services</h2>
+
+<p>RMI integrates with third-party services that are governed by their own terms and policies:</p>
+<ul>
+  <li><strong>Google APIs</strong> (Gmail, Google Drive): Subject to <a href="https://policies.google.com/terms" target="_blank">Google's Terms of Service</a> and <a href="https://policies.google.com/privacy" target="_blank">Google's Privacy Policy</a>.</li>
+  <li><strong>Anthropic API</strong> (Claude): Subject to <a href="https://www.anthropic.com/terms" target="_blank">Anthropic's Terms of Service</a> and <a href="https://www.anthropic.com/privacy" target="_blank">Anthropic's Privacy Policy</a>. Use of Anthropic's API is optional and requires your own API key and account. You are responsible for any costs incurred through your use of the Anthropic API.</li>
+</ul>
+
+<p>The Operator is not responsible for the availability, performance, or policies of these third-party services. Outages or changes to these services may affect the functionality of RMI.</p>
+
+<h2>7. Data Ownership and Responsibility</h2>
+
+<p>You retain ownership of all data you provide to or generate through the Application, including extracted article data, analysis results, briefings, and trend reports. The Operator claims no ownership interest in your data.</p>
+
+<p>You are solely responsible for the content you analyze through RMI and for ensuring your use of the Application complies with any applicable intellectual property rights, confidentiality obligations, and terms of service of content sources.</p>
+
+<h2>8. Disclaimers</h2>
+
+<div class="callout">
+  <strong>THE APPLICATION IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND</strong>, either express or implied, including but not limited to implied warranties of merchantability, fitness for a particular purpose, and non-infringement.
+</div>
+
+<p>The Operator does not warrant that:</p>
+<ul>
+  <li>The Application will be uninterrupted, error-free, or secure.</li>
+  <li>Analysis results, briefings, trend reports, or any AI-generated content will be accurate, complete, or reliable.</li>
+  <li>The Application will meet your specific requirements.</li>
+  <li>Any data stored in your browser's localStorage will be preserved indefinitely.</li>
+</ul>
+
+<p>AI-generated analysis and briefings are produced by Anthropic's Claude AI and are provided for informational purposes only. They should not be relied upon as the sole basis for business, investment, or strategic decisions. You are responsible for independently verifying any information or insights provided by the Application.</p>
+
+<h2>9. Limitation of Liability</h2>
+
+<p>To the maximum extent permitted by applicable law, the Operator shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits, revenue, data, or use, arising out of or related to your use of the Application, whether based on warranty, contract, tort (including negligence), or any other legal theory, even if the Operator has been advised of the possibility of such damages.</p>
+
+<p>The Operator's total cumulative liability for all claims arising out of or related to these Terms or the Application shall not exceed the amount you have paid to the Operator for use of the Application in the twelve (12) months preceding the claim, or $100 USD, whichever is less.</p>
+
+<h2>10. Indemnification</h2>
+
+<p>You agree to indemnify, defend, and hold harmless the Operator from any claims, losses, damages, liabilities, and expenses (including reasonable attorney's fees) arising out of your use of the Application, your violation of these Terms, or your violation of any third-party rights.</p>
+
+<h2>11. Modifications to the Service</h2>
+
+<p>The Operator reserves the right to modify, suspend, or discontinue the Application (or any part thereof) at any time, with or without notice. The Operator shall not be liable to you or any third party for any modification, suspension, or discontinuation of the Application.</p>
+
+<h2>12. Changes to These Terms</h2>
+
+<p>The Operator may update these Terms from time to time. The "Effective Date" at the top of this page will be updated accordingly. Your continued use of the Application after any changes constitutes your acceptance of the revised Terms. If you do not agree to the revised Terms, you should stop using the Application.</p>
+
+<h2>13. Termination</h2>
+
+<p>You may stop using the Application at any time. You may revoke Google account access and delete all stored data as described in our Privacy Policy. The Operator may terminate or suspend your access to the Application at any time for any reason, including for violation of these Terms.</p>
+
+<h2>14. Governing Law</h2>
+
+<p>These Terms shall be governed by and construed in accordance with the laws of the State of California, United States, without regard to its conflict of law provisions. Any disputes arising under these Terms shall be resolved in the state or federal courts located in San Francisco County, California.</p>
+
+<h2>15. Severability</h2>
+
+<p>If any provision of these Terms is found to be unenforceable or invalid, that provision shall be limited or eliminated to the minimum extent necessary so that these Terms shall otherwise remain in full force and effect.</p>
+
+<h2>16. Entire Agreement</h2>
+
+<p>These Terms, together with the <a href="https://patrickthoffman.com/research/tools/retail-intel-hub/privacy">Privacy Policy</a>, constitute the entire agreement between you and the Operator regarding the Application, and supersede all prior agreements, understandings, and communications.</p>
+
+<h2>17. Contact</h2>
+
+<p>For questions about these Terms of Service, contact:</p>
+<p>Patrick Hoffman<br>
+Email: <a href="/cdn-cgi/l/email-protection#0a5a6b7e78636961245e2442656c6c676b644a6d676b636624696567"><span class="__cf_email__" data-cfemail="6b3b0a1f19020800453f4523040d0d060a052b0c060a020745080406">[email&#160;protected]</span></a><br>
+Web: <a href="https://patrickthoffman.com">patrickthoffman.com</a></p>
+
+<div class="footer">
+  <a href="https://patrickthoffman.com/research/tools/retail-intel-hub">Retail Media Intel
