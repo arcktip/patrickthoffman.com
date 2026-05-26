@@ -1,6 +1,8 @@
 # BEGIN Error Handlers for Wordpress mod_rewrite and Zotero WebDAV compatibility
-ErrorDocument 401 /misc/myerror.html
-ErrorDocument 403 /misc/myerror.html
+ErrorDocument 401 /401.html
+ErrorDocument 403 /403.html
+ErrorDocument 404 /404.html
+
 # END Error Handlers
 
 # BEGIN WordPress
