@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2TKMRQXKMJ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-2TKMRQXKMJ');
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Writing — Patrick T. Hoffman</title>
+  <meta name="description" content="Essays, reflections, and frameworks on product, cities, technology, and the spaces in between. Long-form thinking by Patrick T. Hoffman.">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/shared.css">
+
+  <style>
+    /* ── Page-specific overrides & additions ── */
+
+    /* Header: wider, shorter than article header */
+    .writing-index-header {
+      background: var(--navy-dark);
+      padding: 7rem 2rem 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .writing-index-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(rgba(26,58,138,0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(26,58,138,0.12) 1px, transparent 1px);
+      background-size: 30px 30px;
+      opacity: 0.4;
+    }
+
+    .writing-index-header-content {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .writing-index-header .article-back {
+      margin-bottom: 1.5rem;
+    }
+
+    .writing-index-eyebrow {
+      font-size: 0.72rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--yellow);
+      margin-bottom: 0.75rem;
+    }
+
+    .writing-index-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.1;
+      margin-bottom: 0.85rem;
+    }
+
+    .writing-index-title span { color: var(--orange); }
+
+    .writing-index-desc {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.7;
+      max-width: 560px;
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── Search + Filter bar ── */
+    .writing-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .search-wrap {
+      position: relative;
+      max-width: 440px;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255,255,255,0.35);
+      pointer-events: none;
+      width: 16px;
+      height: 16px;
+    }
+
+    #search-input {
+      width: 100%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 6px;
+      padding: 0.65rem 1rem 0.65rem 2.75rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      color: var(--white);
+      outline: none;
+      transition: border-color 0.3s, background 0.3s;
+    }
+
+    #search-input::placeholder { color: rgba(255,255,255,0.35); }
+
+    #search-input:focus {
+      border-color: rgba(255,255,255,0.4);
+      background: rgba(255,255,255,0.12);
+    }
+
+    .filter-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .filter-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-right: 0.25rem;
+    }
+
+    .filter-btn {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 20px;
+      padding: 0.3rem 0.85rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover {
+      border-color: rgba(255,255,255,0.45);
+      color: var(--white);
+    }
+
+    .filter-btn.active {
+      background: var(--royal);
+      border-color: var(--royal);
+      color: var(--white);
+    }
+
+    .filter-btn.active.tag-orange { background: #c45e0a; border-color: #c45e0a; }
+    .filter-btn.active.tag-yellow { background: #b8960a; border-color: #b8960a; }
+
+    /* ── Main content area ── */
+    .writing-index-body {
+      background: #f8f7f4;
+      min-height: 60vh;
+    }
+
+    .writing-index-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+    }
+
+    /* ── Results meta row ── */
+    .results-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+    }
+
+    .results-count {
+      font-size: 0.82rem;
+      color: #888;
+      letter-spacing: 0.02em;
+    }
+
+    .results-count strong {
+      color: var(--charcoal);
+      font-weight: 700;
+    }
+
+    .sort-select {
+      background: var(--white);
+      border: 1px solid rgba(0,0,0,0.12);
+      border-radius: 4px;
+      padding: 0.35rem 0.75rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      color: #555;
+      cursor: pointer;
+      outline: none;
+    }
+
+    /* ── Post list ── */
+    #posts-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .post-row {
+      display: grid;
+      grid-template-columns: 110px 1fr auto;
+      gap: 2rem;
+      padding: 1.85rem 1rem;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      transition: all 0.25s ease;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      border-radius: 6px;
+      align-items: start;
+    }
+
+    #posts-list .post-row:first-of-type {
+      border-top: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .post-row:hover {
+      background: var(--white);
+      box-shadow: 0 2px 16px rgba(26,58,138,0.07);
+      padding-left: 1.5rem;
+    }
+
+    .post-row.coming-soon {
+      opacity: 0.55;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .post-row-date {
+      font-size: 0.75rem;
+      color: #888;
+      letter-spacing: 0.04em;
+      padding-top: 0.3rem;
+      line-height: 1.4;
+    }
+
+    .post-row-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .post-row-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    .post-row-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.18rem;
+      font-weight: 700;
+      color: var(--charcoal);
+      line-height: 1.3;
+      transition: color 0.25s;
+      margin: 0;
+    }
+
+    .post-row:hover .post-row-title { color: var(--royal); }
+
+    .post-row-excerpt {
+      font-size: 0.88rem;
+      line-height: 1.65;
+      color: #666;
+      max-width: 680px;
+    }
+
+    .post-row-readmore {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--royal);
+      letter-spacing: 0.02em;
+    }
+
+    .post-row-status {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.5rem;
+      padding-top: 0.3rem;
+      min-width: 90px;
+      text-align: right;
+    }
+
+    .status-badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.22rem 0.55rem;
+      border-radius: 20px;
+    }
+
+    .status-badge.live {
+      background: rgba(16,185,129,0.12);
+      color: #0a7a54;
+      border: 1px solid rgba(16,185,129,0.3);
+    }
+
+    .status-badge.soon {
+      background: rgba(0,0,0,0.05);
+      color: #999;
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .read-time {
+      font-size: 0.72rem;
+      color: #aaa;
+    }
+
+    /* ── No results state ── */
+    .no-results {
+      display: none;
+      text-align: center;
+      padding: 5rem 2rem;
+    }
+
+    .no-results p {
+      font-size: 1rem;
+      color: #999;
+      margin-bottom: 1rem;
+    }
+
+    .no-results button {
+      background: none;
+      border: 1.5px solid var(--royal);
+      border-radius: 4px;
+      padding: 0.6rem 1.5rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--royal);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .no-results button:hover { background: var(--royal); color: var(--white); }
+
+    /* ── Pagination ── */
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(0,0,0,0.07);
+    }
+
+    .page-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 6px;
+      border: 1px solid rgba(0,0,0,0.12);
+      background: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #666;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .page-btn:hover:not(:disabled):not(.disabled) {
+      border-color: var(--royal);
+      color: var(--royal);
+    }
+
+    .page-btn.active {
+      background: var(--royal);
+      border-color: var(--royal);
+      color: var(--white);
+    }
+
+    .page-btn.disabled,
+    .page-btn:disabled {
+      opacity: 0.3;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .page-info {
+      font-size: 0.78rem;
+      color: #aaa;
+      padding: 0 0.5rem;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .writing-index-header { padding: 6.5rem 1.5rem 3rem; }
+      .writing-index-container { padding: 2rem 1.25rem 4rem; }
+
+      .post-row {
+        grid-template-columns: 1fr;
+        gap: 0.6rem;
+        padding: 1.5rem 0.75rem;
+      }
+
+      .post-row-status {
+        flex-direction: row;
+        align-items: center;
+        min-width: auto;
+        text-align: left;
+      }
+
+      .results-meta { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+    }
+
+    @media (max-width: 480px) {
+      .filter-tags { gap: 0.35rem; }
+      .filter-btn { font-size: 0.68rem; padding: 0.25rem 0.65rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="top-nav solid" id="topNav">
+  <a href="../index.html" class="nav-logo">PTH<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="../index.html#about">About</a></li>
+    <li><a href="../index.html#journey">Journey</a></li>
+    <li><a href="../index.html#writing">Writing</a></li>
+    <li><a href="../index.html#speaking">Speaking</a></li>
+    <li><a href="../index.html#connect">Connect</a></li>
+  </ul>
+</nav>
+
+<!-- Page Header -->
+<header class="writing-index-header">
+  <div class="writing-index-header-content">
+    <a href="../index.html" class="article-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+      Back to Home
+    </a>
+
+    <p class="writing-index-eyebrow">Writing</p>
+    <h1 class="writing-index-title">Long-form <span>thinking</span></h1>
+    <p class="writing-index-desc">Essays, reflections, and frameworks on product, cities, technology, and the spaces in between.</p>
+
+    <!-- Search + Filters -->
+    <div class="writing-controls">
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+        </svg>
+        <input
+          type="search"
+          id="search-input"
+          placeholder="Search essays…"
+          autocomplete="off"
+          spellcheck="false"
+        >
+      </div>
+
+      <div class="filter-tags" id="filter-tags">
+        <span class="filter-label">Filter:</span>
+        <button class="filter-btn active" data-tag="all">All</button>
+        <button class="filter-btn" data-tag="Product">Product</button>
+        <button class="filter-btn tag-orange" data-tag="Teams">Teams</button>
+        <button class="filter-btn" data-tag="Cities">Cities</button>
+        <button class="filter-btn tag-yellow" data-tag="History">History</button>
+        <button class="filter-btn tag-yellow" data-tag="STS">STS</button>
+        <button class="filter-btn tag-orange" data-tag="Urbanism">Urbanism</button>
+        <button class="filter-btn" data-tag="Mobility">Mobility</button>
+        <button class="filter-btn tag-yellow" data-tag="Mentorship">Mentorship</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Writing Index Body -->
+<main class="writing-index-body">
+  <div class="writing-index-container">
+
+    <!-- Results meta -->
+    <div class="results-meta">
+      <p class="results-count" id="results-count">
+        Showing <strong id="count-shown">5</strong> of <strong id="count-total">5</strong> essays
+      </p>
+      <select class="sort-select" id="sort-select" aria-label="Sort essays">
+        <option value="newest">Newest first</option>
+        <option value="oldest">Oldest first</option>
+        <option value="az">A → Z</option>
+      </select>
+    </div>
+
+    <!-- Post list -->
+    <div id="posts-list" role="list">
+      <!-- Populated by JS -->
+    </div>
+
+    <!-- No results -->
+    <div class="no-results" id="no-results">
+      <p>No essays match your search.</p>
+      <button onclick="resetFilters()">Clear filters</button>
+    </div>
+
+    <!-- Pagination -->
+    <nav class="pagination" id="pagination" aria-label="Pagination">
+      <!-- Populated by JS -->
+    </nav>
+
+  </div>
+</main>
+
+<!-- Footer -->
+<footer>
+  <p>© 2026 Patrick T. Hoffman · <a href="../index.html">Home</a> · <a href="https://www.threads.com/@arcktip" target="_blank" rel="noopener noreferrer">@arcktip</a></p>
+</footer>
+
+<script>
+/* ================================================================
+   DATA — all essays, live and upcoming
+   Add new entries here as pieces are published.
+================================================================ */
+const ESSAYS = [
+  {
+    slug:    'rule-of-seven',
+    href:    'rule-of-seven.html',
+    title:   'The Rule of Seven: Architecting Teams for the Agentic Era',
+    excerpt: 'Whether you\'re the first PM or one of hundreds, the way you structure your teams determines your ceiling. A framework for organizational design drawn from years of scaling product teams from startup to enterprise.',
+    tags:    ['Product', 'Teams'],
+    date:    '2026-02',
+    dateLabel: 'Feb 2026',
+    readTime: '~10 min',
+    status:  'live',
+  },
+  {
+    slug:    'co-op-city',
+    href:    'co-op-city.html',
+    title:   'Integrating Co-op City',
+    excerpt: 'America\'s largest cooperative housing complex was built on a failed amusement park, attacked by architects, and held together by its residents. The story of what ambitious social engineering can — and can\'t — accomplish.',
+    tags:    ['Cities', 'History'],
+    date:    '2026-05',
+    dateLabel: 'May 2026',
+    readTime: '~15 min',
+    status:  'live',
+  },
+  {
+    slug:    'television-american-home',
+    href:    'television-american-home.html',
+    title:   'How Television Redesigned the American Home',
+    excerpt: 'A summer spent researching the advent of television revealed something unexpected: new technology doesn\'t just occupy space — it restructures the architecture of daily life, from living room layouts to family social dynamics.',
+    tags:    ['STS', 'Cities'],
+    date:    '2026-00',
+    dateLabel: 'Coming Soon',
+    readTime: null,
+    status:  'soon',
+  },
+  {
+    slug:    'dockless-jump',
+    href:    'dockless-jump.html',
+    title:   'Dockless: What We Learned Building the Bike That Became JUMP',
+    excerpt: 'The inside story of building GPS-enabled smart bikes at Social Bicycles — the decisions that shaped an industry, the mistakes that taught us the most, and why the best urban products work with the city, not against it.',
+    tags:    ['Mobility', 'Urbanism'],
+    date:    '2026-00',
+    dateLabel: 'Coming Soon',
+    readTime: null,
+    status:  'soon',
+  },
+  {
+    slug:    'better-pms',
+    href:    'better-pms.html',
+    title:   'Better PMs Build Better PMs',
+    excerpt: 'Why mentoring other product managers is the highest-leverage thing you can do for your own career — lessons from a decade with The Product Mentor program.',
+    tags:    ['Product', 'Mentorship'],
+    date:    '2026-00',
+    dateLabel: 'Coming Soon',
+    readTime: null,
+    status:  'soon',
+  },
+];
+
+/* ================================================================
+   TAG COLOR MAPPING
+================================================================ */
+const TAG_COLORS = {
+  'Product':    '',
+  'Teams':      'orange',
+  'Cities':     '',
+  'History':    'yellow',
+  'STS':        'yellow',
+  'Urbanism':   'orange',
+  'Mobility':   '',
+  'Mentorship': 'yellow',
+};
+
+/* ================================================================
+   STATE
+================================================================ */
+const PAGE_SIZE = 8; // articles per page
+let state = {
+  query:  '',
+  tag:    'all',
+  sort:   'newest',
+  page:   1,
+};
+
+/* ================================================================
+   HELPERS
+================================================================ */
+function tagBadge(tag) {
+  const cls = TAG_COLORS[tag] ? `post-tag ${TAG_COLORS[tag]}` : 'post-tag';
+  return `<span class="${cls}">${tag}</span>`;
+}
+
+function filterAndSort(essays) {
+  let result = essays.slice();
+
+  /* Filter by tag */
+  if (state.tag !== 'all') {
+    result = result.filter(e => e.tags.includes(state.tag));
+  }
+
+  /* Filter by search query */
+  if (state.query.trim()) {
+    const q = state.query.trim().toLowerCase();
+    result = result.filter(e =>
+      e.title.toLowerCase().includes(q) ||
+      e.excerpt.toLowerCase().includes(q) ||
+      e.tags.some(t => t.toLowerCase().includes(q))
+    );
+  }
+
+  /* Sort */
+  if (state.sort === 'newest') {
+    result.sort((a, b) => b.date.localeCompare(a.date));
+  } else if (state.sort === 'oldest') {
+    result.sort((a, b) => a.date.localeCompare(b.date));
+  } else if (state.sort === 'az') {
+    result.sort((a, b) => a.title.localeCompare(b.title));
+  }
+
+  return result;
+}
+
+function buildRow(essay) {
+  const isLive = essay.status === 'live';
+  const rowTag = isLive ? 'a' : 'div';
+  const hrefAttr = isLive ? `href="${essay.href}"` : '';
+  const comingClass = isLive ? '' : ' coming-soon';
+  const tags = essay.tags.map(tagBadge).join('');
+  const statusBadge = isLive
+    ? `<span class="status-badge live">Live</span>`
+    : `<span class="status-badge soon">Coming Soon</span>`;
+  const rt = essay.readTime ? `<span class="read-time">${essay.readTime}</span>` : '';
+  const readMore = isLive
+    ? `<span class="post-readmore">Read essay →</span>`
+    : '';
+
+  return `
+    <${rowTag} ${hrefAttr} class="post-row${comingClass}" role="listitem" aria-label="${essay.title}${isLive ? '' : ' (coming soon)'}">
+      <div class="post-row-date">${essay.dateLabel}</div>
+      <div class="post-row-meta">
+        <div class="post-row-tags">${tags}</div>
+        <h2 class="post-row-title">${essay.title}</h2>
+        <p class="post-row-excerpt">${essay.excerpt}</p>
+        ${readMore}
+      </div>
+      <div class="post-row-status">
+        ${statusBadge}
+        ${rt}
+      </div>
+    </${rowTag}>
+  `;
+}
+
+function buildPagination(total, page, pageSize) {
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const pag = document.getElementById('pagination');
+  if (totalPages <= 1) {
+    pag.innerHTML = '';
+    return;
+  }
+
+  let html = '';
+  // Prev
+  html += `<button class="page-btn${page === 1 ? ' disabled' : ''}" onclick="goPage(${page - 1})" aria-label="Previous page">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>`;
+
+  for (let i = 1; i <= totalPages; i++) {
+    html += `<button class="page-btn${i === page ? ' active' : ''}" onclick="goPage(${i})">${i}</button>`;
+  }
+
+  // Next
+  html += `<button class="page-btn${page === totalPages ? ' disabled' : ''}" onclick="goPage(${page + 1})" aria-label="Next page">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+  </button>`;
+
+  html += `<span class="page-info">Page ${page} of ${totalPages}</span>`;
+  pag.innerHTML = html;
+}
+
+function render() {
+  const filtered = filterAndSort(ESSAYS);
+  const total    = filtered.length;
+  const start    = (state.page - 1) * PAGE_SIZE;
+  const slice    = filtered.slice(start, start + PAGE_SIZE);
+
+  /* Count */
+  document.getElementById('count-shown').textContent = slice.length;
+  document.getElementById('count-total').textContent = total;
+
+  /* List */
+  const list = document.getElementById('posts-list');
+  const noResults = document.getElementById('no-results');
+
+  if (slice.length === 0) {
+    list.innerHTML = '';
+    noResults.style.display = 'block';
+  } else {
+    list.innerHTML = slice.map(buildRow).join('');
+    noResults.style.display = 'none';
+  }
+
+  buildPagination(total, state.page, PAGE_SIZE);
+}
+
+function goPage(p) {
+  const filtered = filterAndSort(ESSAYS);
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  state.page = Math.min(Math.max(1, p), totalPages || 1);
+  render();
+  window.scrollTo({ top: document.querySelector('.writing-index-body').offsetTop - 60, behavior: 'smooth' });
+}
+
+function resetFilters() {
+  state.query = '';
+  state.tag   = 'all';
+  state.page  = 1;
+  document.getElementById('search-input').value = '';
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.tag === 'all');
+  });
+  render();
+}
+
+/* ================================================================
+   EVENTS
+================================================================ */
+document.getElementById('search-input').addEventListener('input', function () {
+  state.query = this.value;
+  state.page  = 1;
+  render();
+});
+
+document.getElementById('filter-tags').addEventListener('click', function (e) {
+  const btn = e.target.closest('.filter-btn');
+  if (!btn) return;
+  const tag = btn.dataset.tag;
+  state.tag  = tag;
+  state.page = 1;
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.tag === tag);
+  });
+  render();
+});
+
+document.getElementById('sort-select').addEventListener('change', function () {
+  state.sort = this.value;
+  state.page = 1;
+  render();
+});
+
+/* ================================================================
+   INIT
+================================================================ */
+render();
+</script>
+
+</body>
+</html>
