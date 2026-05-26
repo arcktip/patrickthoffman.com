@@ -45,6 +45,7 @@ echo "Deploying to DreamHost..."
 lftp -c "
   set sftp:auto-confirm yes
   set net:max-retries 3
+  set mirror:set-permissions off
   open sftp://$DH_USER:$DH_PASS@$DH_HOST
   mirror --reverse --verbose \
     --exclude-glob .git \
@@ -57,4 +58,16 @@ lftp -c "
     $SCRIPT_DIR/ $DH_DIR
   quit
 "
+
+# Fix permissions on the server:
+#   files → 644 (owner rw, group/world r)
+#   dirs  → 755 (owner rwx, group/world rx)
+# Apache runs as a different user and needs read access.
+echo "Setting file permissions on server..."
+sshpass -p "$DH_PASS" ssh -o StrictHostKeyChecking=no "$DH_USER@$DH_HOST" \
+  "find '$DH_DIR' -type f -not -path '*/zotero/*' -not -path '*/webdav/*' -exec chmod 644 {} \; && find '$DH_DIR' -type d -not -path '*/zotero*' -not -path '*/webdav*' -exec chmod 755 {} \;" \
+  2>/dev/null \
+  || ssh -o StrictHostKeyChecking=no "$DH_USER@$DH_HOST" \
+       "find '$DH_DIR' -type f -not -path '*/zotero/*' -not -path '*/webdav/*' -exec chmod 644 {} \; && find '$DH_DIR' -type d -not -path '*/zotero*' -not -path '*/webdav*' -exec chmod 755 {} \;"
+
 echo "Done. Site is live."
