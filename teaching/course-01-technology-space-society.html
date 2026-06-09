@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2TKMRQXKMJ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-2TKMRQXKMJ');
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Technology, Space & Society — Course 01 — Patrick T. Hoffman</title>
+  <meta name="description" content="How do technologies reshape the spaces we inhabit? A 15-week seminar tracing the television, automobile, smartphone, and AI through the built environment.">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/shared.css">
+  <style>
+    /* ── Course header ── */
+    .course-header {
+      background: var(--navy-dark);
+      padding: 7rem 2rem 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .course-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(rgba(26,58,138,0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(26,58,138,0.12) 1px, transparent 1px);
+      background-size: 30px 30px;
+      opacity: 0.4;
+    }
+    .course-header-content {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .course-number-pill {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--yellow);
+      background: rgba(245,197,24,0.12);
+      border: 1px solid rgba(245,197,24,0.3);
+      padding: 0.3em 0.85em;
+      border-radius: 20px;
+      margin-bottom: 1.25rem;
+    }
+    .course-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.1;
+      margin-bottom: 0.6rem;
+    }
+    .course-subtitle {
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 1.5rem;
+      font-style: italic;
+    }
+    .course-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .chip {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 0.3em 0.85em;
+    }
+    .course-description {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.72);
+      max-width: 640px;
+    }
+
+    /* ── Sections ── */
+    .course-section { padding: 4rem 2rem; }
+    .course-section-inner { max-width: 900px; margin: 0 auto; }
+    .course-section-inner h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+      color: var(--charcoal);
+    }
+
+    /* ── Logistics table ── */
+    .logistics-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin-bottom: 2rem;
+    }
+    .logistics-table td {
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid var(--grey-mid);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .logistics-table td:first-child {
+      font-weight: 600;
+      color: var(--text-secondary);
+      width: 180px;
+      white-space: nowrap;
+    }
+
+    /* ── Schedule ── */
+    .schedule-list { list-style: none; margin: 0; padding: 0; }
+    .week-item {
+      border-bottom: 1px solid var(--grey-mid);
+    }
+    .week-item:last-child { border-bottom: none; }
+    .week-summary {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.25rem;
+      padding: 1.1rem 0;
+      cursor: pointer;
+      list-style: none;
+      user-select: none;
+    }
+    .week-summary::-webkit-details-marker { display: none; }
+    .week-num {
+      flex-shrink: 0;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      width: 52px;
+      padding-top: 0.15rem;
+    }
+    .week-info { flex-grow: 1; }
+    .week-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--charcoal);
+      margin-bottom: 0.2rem;
+    }
+    .week-focus {
+      font-size: 0.83rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .week-chevron {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      color: var(--grey-mid);
+      transition: transform 0.2s;
+      margin-top: 0.2rem;
+    }
+    details[open] .week-chevron { transform: rotate(180deg); }
+    .week-readings {
+      padding: 0 0 1.25rem 68px;
+    }
+    .week-readings-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 0.6rem;
+    }
+
+    /* ── Reading list tabs ── */
+    .reading-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 2px solid var(--grey-mid);
+      margin-bottom: 1.5rem;
+    }
+    .reading-tab {
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 0.6rem 1.25rem;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--text-muted);
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .reading-tab.active {
+      color: var(--royal-light);
+      border-bottom-color: var(--royal-light);
+    }
+    .reading-panel { display: none; }
+    .reading-panel.active { display: block; }
+
+    /* Full reading list table */
+    .reading-week-block { margin-bottom: 2.5rem; }
+    .reading-week-header {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--grey-mid);
+      padding-bottom: 0.4rem;
+      margin-bottom: 0.75rem;
+    }
+    .reading-entry {
+      font-size: 0.86rem;
+      line-height: 1.7;
+      color: var(--text-body);
+      padding: 0.3rem 0;
+      border-bottom: 1px solid rgba(209,213,219,0.4);
+    }
+    .reading-entry:last-child { border-bottom: none; }
+    .reading-entry em { font-style: italic; }
+
+    /* ── Instructor guide callout ── */
+    .ig-callout {
+      background: var(--navy-dark);
+      border-radius: 8px;
+      padding: 2rem 2.5rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .ig-callout-text { flex-grow: 1; color: rgba(255,255,255,0.85); line-height: 1.65; font-size: 0.9rem; }
+    .ig-callout-text strong { color: var(--white); }
+    .ig-callout-links { display: flex; gap: 0.75rem; flex-wrap: wrap; flex-shrink: 0; }
+    .ig-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .ig-btn:hover { opacity: 0.85; }
+    .ig-btn-primary { background: var(--orange); color: var(--white); }
+    .ig-btn-secondary { background: rgba(255,255,255,0.1); color: var(--white); }
+
+    /* ── Print styles ── */
+    @media print {
+      .top-nav, footer, .ig-callout, .reading-tabs { display: none !important; }
+      .reading-panel { display: block !important; }
+      .course-header { background: none; color: black; padding: 1rem 0; }
+      .course-header::before { display: none; }
+      .course-title, .course-description { color: black; }
+    }
+
+    @media (max-width: 600px) {
+      .week-readings { padding-left: 0; }
+      .logistics-table td:first-child { width: 120px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="top-nav solid" id="topNav">
+  <a href="../index.html" class="nav-logo">PTH<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="../index.html#about">About</a></li>
+    <li><a href="../index.html#journey">Journey</a></li>
+    <li><a href="../writing/">Writing</a></li>
+    <li><a href="./">Teaching</a></li>
+    <li><a href="../index.html#speaking">Speaking</a></li>
+    <li><a href="../index.html#connect">Connect</a></li>
+  </ul>
+</nav>
+
+<!-- Course Header -->
+<header class="course-header">
+  <div class="course-header-content">
+    <a href="./" class="article-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+      All Courses
+    </a>
+    <div class="course-number-pill">Course 01</div>
+    <h1 class="course-title">Technology, Space &amp; Society</h1>
+    <p class="course-subtitle">A 15-week seminar for undergraduate and graduate students</p>
+    <div class="course-chips">
+      <span class="chip">STS</span>
+      <span class="chip">Cities</span>
+      <span class="chip">15 Weeks</span>
+      <span class="chip">UG + Graduate</span>
+      <span class="chip">Seminar</span>
+    </div>
+    <p class="course-description">How do technologies reshape the spaces we inhabit? This course asks that question across fifteen case studies — from the postwar television to ambient AI — using the analytical tools of Science and Technology Studies. Students leave able to apply STS frameworks to new cases, trace the spatial consequences of design decisions, and ask who benefits and who bears the cost of technological change.</p>
+  </div>
+</header>
+
+<!-- Overview -->
+<section class="course-section" style="background:var(--white);">
+  <div class="course-section-inner">
+    <h2>Course Overview</h2>
+    <p style="font-size:0.95rem;line-height:1.75;color:var(--text-body);margin-bottom:2rem;">The course's central question — <em>How do technologies reshape the spaces we inhabit?</em> — is written on the board in Week 1 and stays there for fifteen weeks. Each session returns to it through a different case: the television, the automobile, the telephone, the personal computer, the smartphone, platform urbanism, micromobility, ambient AI, and remote work. By Week 15, students should be able to look at any technology-space relationship and produce a rigorous account of what happened, why, and for whom.</p>
+
+    <h2>Three Analytical Moves</h2>
+    <p style="font-size:0.95rem;line-height:1.75;color:var(--text-body);margin-bottom:1rem;">The method draws on Science and Technology Studies (STS) and compresses into three moves that are applied across every case study:</p>
+    <ul style="font-size:0.9rem;line-height:1.8;color:var(--text-body);padding-left:1.25rem;margin-bottom:2rem;">
+      <li><strong>Defamiliarization</strong> — making the background foreground; looking again at technologies so embedded they have become invisible.</li>
+      <li><strong>Tracing consequences</strong> — following the ripple effects of design decisions outward from the room to the city to the policy regime.</li>
+      <li><strong>Asking who</strong> — identifying who designed, who benefits, who bears the cost, and who was not in the room when the decision was made.</li>
+    </ul>
+
+    <h2>Logistics</h2>
+    <table class="logistics-table">
+      <tr><td>Format</td><td>15-week seminar, 75–90 min sessions</td></tr>
+      <tr><td>Audience</td><td>Dual-listed: upper-division undergraduate + master's</td></tr>
+      <tr><td>Prerequisites</td><td>None; open to all majors</td></tr>
+      <tr><td>Undergraduate deliverables</td><td>Research proposal (Week 7) · Final research paper + 10-min presentation (Week 15)</td></tr>
+      <tr><td>Graduate deliverables</td><td>Research proposal + annotated bibliography (Week 7) · Final paper + 15-min presentation (Week 15)</td></tr>
+      <tr><td>Reading load</td><td>Undergrad: 1–3 texts per session · Graduate: 6–10 texts per session</td></tr>
+      <tr><td>Instructor guide</td><td><a href="assets/PTH_Course1_InstructorGuide.pdf" download style="color:var(--royal-light);font-weight:600;">Download PDF ↓</a></td></tr>
+    </table>
+
+    <p style="font-size:0.88rem;color:var(--text-secondary);line-height:1.6;">A full introductory essay on the course method — including the three analytical moves and the arc of the fifteen weeks — is available in the <a href="../writing/technology-space-society-intro.html" style="color:var(--royal-light);font-weight:600;">Writing section</a>.</p>
+  </div>
+</section>
+
+<!-- Schedule -->
+<section class="course-section" style="background:var(--grey-light);">
+  <div class="course-section-inner">
+    <h2>Week-by-Week Schedule</h2>
+    <p style="font-size:0.88rem;color:var(--text-secondary);margin-bottom:1.5rem;">Click any week to expand anchor readings. Full reading lists for both tracks are in the Reading List section below.</p>
+
+    <ul class="schedule-list" id="scheduleList">
+
+      <li class="week-item"><details>
+        <summary class="week-summary">
+          <span class="week-num">Wk 1</span>
+          <div class="week-info"><div class="week-title">Introduction: Technology Redefines Space</div><div class="week-focus">What does it mean for a technology to 'redefine' a space? Course framing and methodology.</div></div>
+          <svg class="week-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="week-readings">
+          <div class="week-readings-label">Anchor Readings (Undergraduate)</div>
+          <div class="reading-entry">Hoffman, Patrick T., <em>Technology, Space &amp; Society — Course Introduction</em> (2026) — @arcktip framing essay</div>
+          <div class="reading-entry">Winner, Langdon, "Do Artifacts Have Politics?" <em>Daedalus</em> (1980) — foundational &amp; accessible</div>
+          <div class="reading-entry">Petroski, Henry, <em>The Evolution of Useful Things,</em> Ch. 1 (1992) — how objects embed decisions</div>
+        </div>
+      </details></li>
+
+      <li class="week-item"><details>
+        <summary class="week-summary">
+          <span class="week-num">Wk 2</span>
+          <div class="week-info"><div class="week-title">Hearth → Television</div><div class="week-focus">How TV migrated the center of domestic life, reshaped living room geometry, and altered family rituals.</div></div>
+          <svg class="week-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="week-readings">
+          <div class="week-readings-label">Anchor Readings (Undergraduate)</div>
+          <div class="reading-entry">Spigel, Lynn, <em>Make Room for TV,</em> Introduction &amp; Ch. 1 (1992) — the core text — essential</div>
+          <div class="reading-entry">Spigel, Lynn, "Installing the Television Set" (1988) — shorter article version</div>
+          <div class="reading-entry">Hayden, Dolores, <em>The Grand Domestic Revolution,</em> Ch. 1 (1981) — domestic space before television</div>
+        </div>
+      </details></li>
+
+      <li class="week-item"><details>
+        <summary class="week-summary">
+          <span class="week-num">Wk 3</span>
+          <div class="week-info"><div class="week-title">STS Frameworks</div><div class="week-focus">Actor-Network Theory, domestication theory, and the social construction of technology.</div></div>
+          <svg class="week-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="week-readings">
+          <div class="week-readings-label">Anchor Readings (Undergraduate)</div>
+          <div class="reading-entry">Latour, Bruno, <em>We Have Never Been Modern,</em> Ch. 1 (1993) — most approachable Latour entry point</div>
+          <div class="reading-entry">Silverstone, Roger &amp; Hirsch, Eric, <em>Consuming Technologies,</em> Introduction (1992) — domestication theory primer</div>
+          <div class="reading-entry">Pinch, Trevor &amp; Bijker, Wiebe, "The Social Construction of Facts and Artefacts," <em>Social Studies of Science</em> (1984) — SCOT framework</div>
+        </div>
+      </details></li>
+
+      <li class="week-item"><details>
+        <summary class="week-summary">
+          <span class="week-num">Wk 4</span>
+          <div class="week-info"><div class="week-title">The Automobile &amp; the City</div><div class="week-focus">How personal mobility technology remade urban morphology: zoning, suburbia, the parking minimum.</div></div>
+          <svg class="week-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="week-readings">
+          <div class="week-readings-label">Anchor Readings (Undergraduate)</div>
+          <div class="reading-entry">Hayden, Dolores, <em>Building Suburbia,</em> Ch. 1 &amp; 5 (2003) — accessible suburban history</div>
+          <div class="reading-entry">Kunstler, James Howard, <em>The Geography of Nowhere,</em> Ch. 4–5 (1993) — polemical but vivid</div>
+          <div class="reading-entry">Shoup, Donald, <em>The High Cost of Free Parking,</em> Ch. 1 (2005) — the parking minimum argument</div>
+        </div>
+      </details></li>
+
+      <li class="week-item"><details>
+        <summary class="week-summary">
+          <span class="week-num">Wk 5</span>
+          <div class="week-info"><div class="week-title">The Telephone &amp; the Threshold</div><div class="week-focus">Privacy, the front porch, the home office — how communication technology reshapes the public/private boundary.</div></div>
+          <svg class="week-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="week-readings">
+          <div class="week-readings-label">Anchor Readings (Undergraduate)</div>
+          <div class="reading-entry">Fischer, Claude S., <em>America Calling,</em> Ch. 1 &amp; 5 (1992) — social history of the telephone</div>
+          <div class="reading-entry">Goffman, Erving, <em>The Presentation of Self in Everyday Life,</em> Introduction (1959) — front/backstage framework</div>
+          <div class="reading-entry">Schwartz Cowan, Ruth, <em>More Work for Mother,</em> Introduction (1983) — labor perspective on household technology</div>
+        </div>
+      </details></li>
+
+      <li class="week-item"><details>
+        <summary class="week-summary">
+          <span class="week-num">Wk 6</span>
+          <div class="week-info"><div class="week-title">The PC &amp; Domestic Labor</div><div class="week-focus">The home computer, domestic space, and the blurring of work and rest.</div></div>
+          <svg class="week-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="week-readings">
+          <div class="week-readings-label">Anchor Readings (Undergraduate)</div>
+          <div class="reading-entry">Turkle, Sherry, <em>The Second Self,</em> Introduction &amp; Ch. 1 (1984) — how computers provoke self-reflection</div>
+          <div class="reading-entry">Wajcman, Judy, <em>Feminism Confronts Technology,</em> Ch. 4 (1991) — gendered dimensions of domestic tech</div>
+          <div class="reading-entry">Nilles, Jack, <em>The Telecommunications-Transportation Tradeoff</em> (1976) — the original telecommuting concept</div>
+        </div>
+      </details></li>
+
+      <li class="week-item"><details>
+        <summary class="week-summary">
+          <span class="week-num">Wk 7</span>
+          <div class="week-info"><div class="week-title">Midterm Presentations</div><div class="week-focus">Students present research proposals with primary sources and a clear spatial thesis.</div></div>
+          <svg class="week-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="week-readings">
+          <div class="week-readings-label">Note</div>
+          <div class="reading-entry">No assigned reading — preparation week. Students present research proposals. Undergrad: 5 min + 5 min Q&amp;A. Graduate: 8 min + 7 min Q&amp;A.</div>
+        </div>
+      </details></li>
+
+      <li class="week-item"><details>
+        <summary class="week-summary">
+          <span class="week-num">Wk 8</span>
+          <div class="week-info"><div class="week-title">The Smartphone &amp; Third Places</div><div class="week-focus">Coffee shops as offices, airports as living rooms — how mobile tech displaced and virtualized the third place.</div></div>
+          <svg class="week-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="week-readings">
+          <div class="week-readings-label">Anchor Readings (Undergraduate)</div>
+          <div class="reading-entry">Oldenburg, Ray, <em>The Great Good Place,</em> Introduction &amp; Ch. 2 (1989) — coins 'third place' — essential</div>
+          <div class="reading-entry">Turkle, Sherry, <em>Alone Together,</em> Introduction (2011) — accessible and widely read</div>
+          <div class="reading-entry">Carr, Nicholas, <em>The Shallows,</em> Introduction &amp; Ch. 1 (2010) — spatial metaphors of digital attention</div>
+        </div>
+      </details></li>
+
+      <li class="week-item"><details>
+        <summary class="week-summary">
+          <span class="week-num">Wk 9</span>
+          <div class="week-info"><div class="week-title">Platform Urbanism</div><div class="week-focus">Airbnb, Uber, DoorDash: how platform products restructure neighborhood economies and spatial use.</div></div>
+          <svg class="week-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="week-readings">
+          <div class="week-readings-label">Anchor Readings (Undergraduate)</div>
+          <div class="reading-entry">Srnicek, Nick, <em>Platform Capitalism,</em> Ch. 1–2 (2017) — concise — essential framing</div>
+          <div class="reading-entry">Wachsmuth, David &amp; Weisler, Alexander, "Airbnb and the Rent Gap" (2018) — <em>Environment and Planning A</em> — empirical</div>
+          <div class="reading-entry">Davis, Mike, <em>Planet of Slums,</em> Introduction (2006) — housing scarcity as platform substrate</div>
+        </div>
+      </details></li>
+
+      <li class="week-item"><details>
+        <summary class="week-summary">
+          <span class="week-num">Wk 10</span>
+          <div class="week-info"><div class="week-title">Micromobility &amp; Street Design</div><div class="week-focus">Dockless bikes, scooters, and the contested politics of curb space. Practitioner perspective on urban mobility.</div></div>
+          <svg class="week-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="week-readings">
+          <div class="week-readings-label">Anchor Readings (Undergraduate)</div>
+          <div class="reading-entry">Hoffman, Patrick T., <em>Dockless: What We Learned Building the Bike That Became JUMP</em> (forthcoming) — @arcktip — primary practitioner source</div>
+          <div class="reading-entry">NACTO, <em>Urban Street Design Guide</em> (selected chapters) (2013) — professional design standards</div>
+          <div class="reading-entry">Sheller, Mimi, <em>Mobility Justice,</em> Ch. 1 (2018) — mobility as a justice issue</div>
+        </div>
+      </details></li>
+
+      <li class="week-item"><details>
+        <summary class="week-summary">
+          <span class="week-num">Wk 11</span>
+          <div class="week-info"><div class="week-title">AI &amp; the Intelligent Home</div><div class="week-focus">Smart speakers, ambient computing, surveillance capitalism, and the erosion of domestic privacy.</div></div>
+          <svg class="week-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="week-readings">
+          <div class="week-readings-label">Anchor Readings (Undergraduate)</div>
+          <div class="reading-entry">Zuboff, Shoshana, <em>The Age of Surveillance Capitalism,</em> Introduction (2019) — essential — start here</div>
+          <div class="reading-entry">Mattern, Shannon, "A City Is Not a Computer" (2017) — <em>Places Journal</em> — free, brief, widely cited</div>
+          <div class="reading-entry">Sadowski, Jathan, <em>Too Smart,</em> Introduction (2020) — MIT Press — smart home critique</div>
+        </div>
+      </details></li>
+
+      <li class="week-item"><details>
+        <summary class="week-summary">
+          <span class="week-num">Wk 12</span>
+          <div class="week-info"><div class="week-title">Remote Work &amp; the Office</div><div class="week-focus">Post-pandemic spatial reckoning: what happens to downtowns, transit systems, and home square footage?</div></div>
+          <svg class="week-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="week-readings">
+          <div class="week-readings-label">Anchor Readings (Undergraduate)</div>
+          <div class="reading-entry">Sennett, Richard, <em>Building and Dwelling,</em> Ch. 1 (2018) — ethics of city and dwelling</div>
+          <div class="reading-entry">Saval, Nikil, <em>Cubed: A Secret History of the Workplace,</em> Introduction (2014) — office history from desk to cubicle</div>
+          <div class="reading-entry">Florida, Richard, <em>The Rise of the Creative Class Revisited,</em> Introduction (2012) — talent and urban geography</div>
+        </div>
+      </details></li>
+
+      <li class="week-item"><details>
+        <summary class="week-summary">
+          <span class="week-num">Wk 13</span>
+          <div class="week-info"><div class="week-title">Studio Critique I</div><div class="week-focus">Draft paper workshop and peer critique. Written feedback required from each student on two peers' drafts.</div></div>
+          <svg class="week-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="week-readings">
+          <div class="week-readings-label">Anchor Readings (Undergraduate)</div>
+          <div class="reading-entry">Graff, Gerald &amp; Birkenstein, Cathy, <em>They Say / I Say,</em> Ch. 1–2 (2006) — academic argumentation primer</div>
+          <div class="reading-entry">Silvia, Paul, <em>How to Write a Lot,</em> Ch. 1 (2007) — writing as practice — brief and practical</div>
+        </div>
+      </details></li>
+
+      <li class="week-item"><details>
+        <summary class="week-summary">
+          <span class="week-num">Wk 14</span>
+          <div class="week-info"><div class="week-title">Designing the Response</div><div class="week-focus">How might architects and planners proactively design for technological transition rather than react to it?</div></div>
+          <svg class="week-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="week-readings">
+          <div class="week-readings-label">Anchor Readings (Undergraduate)</div>
+          <div class="reading-entry">Brand, Stewart, <em>How Buildings Learn,</em> Introduction &amp; Ch. 1 (1994) — buildings adapt to change over time — key text</div>
+          <div class="reading-entry">Duany, Plater-Zyberk &amp; Speck, <em>The Smart Growth Manual,</em> Part I (2010) — applied design response</div>
+          <div class="reading-entry">Aureli, Pier Vittorio, <em>The Possibility of an Absolute Architecture,</em> Introduction (2011) — formal response to spatial crisis</div>
+        </div>
+      </details></li>
+
+      <li class="week-item"><details>
+        <summary class="week-summary">
+          <span class="week-num">Wk 15</span>
+          <div class="week-info"><div class="week-title">Final Presentations</div><div class="week-focus">Public exhibition of final research papers and design responses. Invited guests from practice and academia.</div></div>
+          <svg class="week-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="week-readings">
+          <div class="week-readings-label">Note</div>
+          <div class="reading-entry">No assigned reading — final presentations week. Undergrad: 10 min + 5 min Q&amp;A. Graduate: 15 min + 10 min Q&amp;A.</div>
+        </div>
+      </details></li>
+
+    </ul>
+  </div>
+</section>
+
+<!-- Full Reading List -->
+<section class="course-section" style="background:var(--white);" id="readings">
+  <div class="course-section-inner">
+    <h2>Full Reading List</h2>
+    <p style="font-size:0.88rem;color:var(--text-secondary);margin-bottom:1.5rem;">All readings available via university library or open access unless noted. @arcktip sources are primary practitioner readings drawn from Patrick's professional experience.</p>
+
+    <div class="reading-tabs">
+      <button class="reading-tab active" onclick="switchTab(event,'ug')">Undergraduate Track</button>
+      <button class="reading-tab" onclick="switchTab(event,'grad')">Graduate Track</button>
+    </div>
+
+    <!-- Undergraduate Panel -->
+    <div class="reading-panel active" id="panel-ug">
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 1 · Introduction: Technology Redefines Space</div>
+        <div class="reading-entry">Hoffman, Patrick T., <em>Technology, Space &amp; Society — Course Introduction</em> (2026) — @arcktip framing essay</div>
+        <div class="reading-entry">Winner, Langdon, "Do Artifacts Have Politics?" <em>Daedalus</em> 109, no. 1 (1980): 121–36 — foundational &amp; accessible</div>
+        <div class="reading-entry">Petroski, Henry, <em>The Evolution of Useful Things,</em> Ch. 1 (1992) — how objects embed decisions</div>
+      </div>
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 2 · Hearth → Television</div>
+        <div class="reading-entry">Spigel, Lynn, <em>Make Room for TV: Television and the Family Ideal in Postwar America,</em> Introduction &amp; Ch. 1 (1992) — the core text — essential</div>
+        <div class="reading-entry">Spigel, Lynn, "Installing the Television Set: Popular Discourses on Television and Domestic Space, 1948–1955" (1988)</div>
+        <div class="reading-entry">Hayden, Dolores, <em>The Grand Domestic Revolution,</em> Ch. 1 (1981) — domestic space before television</div>
+      </div>
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 3 · STS Frameworks</div>
+        <div class="reading-entry">Latour, Bruno, <em>We Have Never Been Modern,</em> Ch. 1 (1993) — most approachable Latour entry point</div>
+        <div class="reading-entry">Silverstone, Roger &amp; Hirsch, Eric (eds.), <em>Consuming Technologies: Media and Information in Domestic Spaces,</em> Introduction (1992)</div>
+        <div class="reading-entry">Pinch, Trevor J. &amp; Bijker, Wiebe E., "The Social Construction of Facts and Artefacts," <em>Social Studies of Science</em> 14, no. 3 (1984): 399–441 — SCOT framework</div>
+      </div>
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 4 · The Automobile &amp; the City</div>
+        <div class="reading-entry">Hayden, Dolores, <em>Building Suburbia: Green Fields and Urban Growth, 1820–2000,</em> Ch. 1 &amp; 5 (2003)</div>
+        <div class="reading-entry">Kunstler, James Howard, <em>The Geography of Nowhere: The Rise and Decline of America's Man-Made Landscape,</em> Ch. 4–5 (1993)</div>
+        <div class="reading-entry">Shoup, Donald, <em>The High Cost of Free Parking,</em> Ch. 1 (2005) — the parking minimum argument</div>
+      </div>
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 5 · The Telephone &amp; the Threshold</div>
+        <div class="reading-entry">Fischer, Claude S., <em>America Calling: A Social History of the Telephone to 1940,</em> Ch. 1 &amp; 5 (1992)</div>
+        <div class="reading-entry">Goffman, Erving, <em>The Presentation of Self in Everyday Life,</em> Introduction (1959) — front/backstage framework</div>
+        <div class="reading-entry">Schwartz Cowan, Ruth, <em>More Work for Mother,</em> Introduction (1983)</div>
+      </div>
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 6 · The PC &amp; Domestic Labor</div>
+        <div class="reading-entry">Turkle, Sherry, <em>The Second Self: Computers and the Human Spirit,</em> Introduction &amp; Ch. 1 (1984)</div>
+        <div class="reading-entry">Wajcman, Judy, <em>Feminism Confronts Technology,</em> Ch. 4 (1991)</div>
+        <div class="reading-entry">Nilles, Jack, <em>The Telecommunications-Transportation Tradeoff</em> (1976) — the original telecommuting concept</div>
+      </div>
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 7 · Midterm Presentations</div>
+        <div class="reading-entry">No assigned reading — preparation week. Students present research proposals.</div>
+      </div>
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 8 · The Smartphone &amp; Third Places</div>
+        <div class="reading-entry">Oldenburg, Ray, <em>The Great Good Place: Cafés, Coffee Shops, Bookstores, Bars, Hair Salons and Other Hangouts at the Heart of a Community,</em> Introduction &amp; Ch. 2 (1989)</div>
+        <div class="reading-entry">Turkle, Sherry, <em>Alone Together: Why We Expect More from Technology and Less from Each Other,</em> Introduction (2011)</div>
+        <div class="reading-entry">Carr, Nicholas, <em>The Shallows: What the Internet Is Doing to Our Brains,</em> Introduction &amp; Ch. 1 (2010)</div>
+      </div>
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 9 · Platform Urbanism</div>
+        <div class="reading-entry">Srnicek, Nick, <em>Platform Capitalism,</em> Ch. 1–2 (2017) — concise — essential framing</div>
+        <div class="reading-entry">Wachsmuth, David &amp; Weisler, Alexander, "Airbnb and the Rent Gap: Gentrification Through the Sharing Economy," <em>Environment and Planning A</em> 50, no. 6 (2018)</div>
+        <div class="reading-entry">Davis, Mike, <em>Planet of Slums,</em> Introduction (2006)</div>
+      </div>
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 10 · Micromobility &amp; Street Design</div>
+        <div class="reading-entry">Hoffman, Patrick T., <em>Dockless: What We Learned Building the Bike That Became JUMP</em> (forthcoming) — @arcktip — primary practitioner source</div>
+        <div class="reading-entry">NACTO, <em>Urban Street Design Guide</em> (selected chapters) (2013) — professional design standards</div>
+        <div class="reading-entry">Sheller, Mimi, <em>Mobility Justice: The Politics of Movement in an Age of Extremes,</em> Ch. 1 (2018)</div>
+      </div>
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 11 · AI &amp; the Intelligent Home</div>
+        <div class="reading-entry">Zuboff, Shoshana, <em>The Age of Surveillance Capitalism: The Fight for a Human Future at the New Frontier of Power,</em> Introduction (2019)</div>
+        <div class="reading-entry">Mattern, Shannon, "A City Is Not a Computer," <em>Places Journal</em> (February 2017) — open access</div>
+        <div class="reading-entry">Sadowski, Jathan, <em>Too Smart: How Digital Capitalism Is Extracting Data, Controlling Our Lives, and Taking Over the World,</em> Introduction (2020)</div>
+      </div>
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 12 · Remote Work &amp; the Office</div>
+        <div class="reading-entry">Sennett, Richard, <em>Building and Dwelling: Ethics for the City,</em> Ch. 1 (2018)</div>
+        <div class="reading-entry">Saval, Nikil, <em>Cubed: A Secret History of the Workplace,</em> Introduction (2014)</div>
+        <div class="reading-entry">Florida, Richard, <em>The Rise of the Creative Class Revisited,</em> Introduction (2012)</div>
+      </div>
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 13 · Studio Critique I</div>
+        <div class="reading-entry">Graff, Gerald &amp; Birkenstein, Cathy, <em>They Say / I Say: The Moves That Matter in Academic Writing,</em> Ch. 1–2 (2006)</div>
+        <div class="reading-entry">Silvia, Paul, <em>How to Write a Lot: A Practical Guide to Productive Academic Writing,</em> Ch. 1 (2007)</div>
+      </div>
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 14 · Designing the Response</div>
+        <div class="reading-entry">Brand, Stewart, <em>How Buildings Learn: What Happens After They're Built,</em> Introduction &amp; Ch. 1 (1994)</div>
+        <div class="reading-entry">Duany, Andrés, Plater-Zyberk, Elizabeth &amp; Speck, Jeff, <em>The Smart Growth Manual,</em> Part I (2010)</div>
+        <div class="reading-entry">Aureli, Pier Vittorio, <em>The Possibility of an Absolute Architecture,</em> Introduction (2011)</div>
+      </div>
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 15 · Final Presentations</div>
+        <div class="reading-entry">No assigned reading — final presentations week.</div>
+      </div>
+
+    </div><!-- /panel-ug -->
+
+    <!-- Graduate Panel -->
+    <div class="reading-panel" id="panel-grad">
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 1 · Introduction: Technology Redefines Space</div>
+        <div class="reading-entry">Hoffman, Patrick T., <em>Technology, Space &amp; Society — Course Introduction</em> (2026) — @arcktip framing essay</div>
+        <div class="reading-entry">Winner, Langdon, "Do Artifacts Have Politics?" <em>Daedalus</em> 109, no. 1 (1980): 121–36</div>
+        <div class="reading-entry">MacKenzie, Donald &amp; Wajcman, Judy (eds.), <em>The Social Shaping of Technology,</em> Introduction (1985) — foundational STS anthology</div>
+        <div class="reading-entry">Bijker, Wiebe E., Hughes, Thomas P. &amp; Pinch, Trevor (eds.), <em>The Social Construction of Technological Systems,</em> Preface (1987) — SCOT framework origins</div>
+        <div class="reading-entry">Petroski, Henry, <em>The Evolution of Useful Things,</em> Ch. 1 (1992)</div>
+        <div class="reading-entry">Mumford, Lewis, <em>Technics and Civilization,</em> Ch. 1 (1934) — canonical long arc</div>
+        <div class="reading-entry">Jasanoff, Sheila, <em>The Ethics of Invention: Technology and the Human Future,</em> Introduction (2016) — technology and democratic governance</div>
+      </div>
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 2 · Hearth → Television</div>
+        <div class="reading-entry">Spigel, Lynn, <em>Make Room for TV,</em> Introduction &amp; Ch. 1–2 (1992) — full scholarly apparatus</div>
+        <div class="reading-entry">Spigel, Lynn, <em>Welcome to the Dreamhouse: Popular Media and Postwar Suburbs,</em> Ch. 1–2 (2001)</div>
+        <div class="reading-entry">Boddy, William, <em>Fifties Television: The Industry and Its Critics,</em> Ch. 1 (1990)</div>
+        <div class="reading-entry">Hayden, Dolores, <em>The Grand Domestic Revolution,</em> Ch. 1–2 (1981)</div>
+        <div class="reading-entry">Spigel, Lynn, "Installing the Television Set" (1988)</div>
+        <div class="reading-entry">McCarthy, Anna, <em>Ambient Television: Visual Culture and Public Space,</em> Introduction (2001)</div>
+      </div>
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 3 · STS Frameworks</div>
+        <div class="reading-entry">Latour, Bruno, <em>Reassembling the Social: An Introduction to Actor-Network Theory,</em> Introduction &amp; Part I (2005) — ANT primary text — dense, required</div>
+        <div class="reading-entry">Callon, Michel, "Some Elements of a Sociology of Translation: Domestication of the Scallops and the Fishermen of St Brieuc Bay" (1984/1986) — the 'scallops' paper</div>
+        <div class="reading-entry">Silverstone, Roger &amp; Hirsch, Eric (eds.), <em>Consuming Technologies,</em> Introduction &amp; Ch. 1 (1992)</div>
+        <div class="reading-entry">Pinch, Trevor J. &amp; Bijker, Wiebe E., "The Social Construction of Facts and Artefacts," <em>Social Studies of Science</em> 14, no. 3 (1984)</div>
+        <div class="reading-entry">Law, John, "Notes on the Theory of the Actor-Network: Ordering, Strategy, and Heterogeneity," <em>Systems Practice</em> 5, no. 4 (1992)</div>
+        <div class="reading-entry">Woolgar, Steve, "Configuring the User: The Case of Usability Trials," in <em>A Sociology of Monsters,</em> ed. Law (1991)</div>
+      </div>
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 4 · The Automobile &amp; the City</div>
+        <div class="reading-entry">Hayden, Dolores, <em>Building Suburbia,</em> Ch. 1, 4–6 (2003)</div>
+        <div class="reading-entry">Jackson, Kenneth T., <em>Crabgrass Frontier: The Suburbanization of the United States,</em> Ch. 11–12 (1985) — definitive U.S. suburban history — FHA, highways</div>
+        <div class="reading-entry">Kunstler, James Howard, <em>The Geography of Nowhere,</em> Ch. 4–6 (1993)</div>
+        <div class="reading-entry">Shoup, Donald, <em>The High Cost of Free Parking,</em> Ch. 1–2 (2005)</div>
+        <div class="reading-entry">Rome, Adam, <em>The Bulldozer in the Countryside: Suburban Sprawl and the Rise of American Environmentalism,</em> Ch. 1 (2001)</div>
+        <div class="reading-entry">Fogelson, Robert M., <em>Downtown: Its Rise and Fall, 1880–1950,</em> Introduction (2001) — Harvard UP</div>
+      </div>
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 5 · The Telephone &amp; the Threshold</div>
+        <div class="reading-entry">Fischer, Claude S., <em>America Calling,</em> Ch. 1, 4–5 (1992)</div>
+        <div class="reading-entry">Goffman, Erving, <em>The Presentation of Self in Everyday Life,</em> Introduction &amp; Ch. 1 (1959)</div>
+        <div class="reading-entry">Schwartz Cowan, Ruth, <em>More Work for Mother: The Ironies of Household Technology from the Open Hearth to the Microwave,</em> Ch. 1–2 (1983)</div>
+        <div class="reading-entry">Marvin, Carolyn, <em>When Old Technologies Were New,</em> Ch. 1 (1988) — Oxford UP — historical perspective on communication technology</div>
+        <div class="reading-entry">Aronson, Sidney H., "The Sociology of the Telephone," <em>International Journal of Comparative Sociology</em> 12, no. 3 (1971)</div>
+        <div class="reading-entry">Hochschild, Arlie, <em>The Second Shift,</em> Introduction (1989) — labor and domestic technology</div>
+      </div>
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 6 · The PC &amp; Domestic Labor</div>
+        <div class="reading-entry">Turkle, Sherry, <em>The Second Self,</em> Introduction &amp; Ch. 1–2 (1984)</div>
+        <div class="reading-entry">Wajcman, Judy, <em>Feminism Confronts Technology,</em> Ch. 3–4 (1991)</div>
+        <div class="reading-entry">Ceruzzi, Paul, <em>A History of Modern Computing,</em> Ch. 8–9 (2003) — PC's emergence as a consumer product</div>
+        <div class="reading-entry">Nilles, Jack, <em>The Telecommunications-Transportation Tradeoff</em> (1976)</div>
+        <div class="reading-entry">Schwartz Cowan, Ruth, "The Consumption Junction: A Proposal for Research Strategies in the Sociology of Technology," in <em>The Social Construction of Technological Systems</em> (1987)</div>
+        <div class="reading-entry">Hochschild, Arlie, <em>The Second Shift,</em> Ch. 1–2 (1989)</div>
+      </div>
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 7 · Midterm Presentations</div>
+        <div class="reading-entry">No assigned reading — proposal presentation week. Students present proposals + annotated bibliographies.</div>
+        <div class="reading-entry">Eco, Umberto, <em>How to Write a Thesis,</em> Ch. 3–4 (1977/2015) — optional — MIT Press translation</div>
+      </div>
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 8 · The Smartphone &amp; Third Places</div>
+        <div class="reading-entry">Oldenburg, Ray, <em>The Great Good Place,</em> Introduction &amp; Ch. 2–3 (1989)</div>
+        <div class="reading-entry">Turkle, Sherry, <em>Alone Together,</em> Introduction &amp; Part II (2011)</div>
+        <div class="reading-entry">Wellman, Barry, "Little Boxes, Glocalization, and Networked Individualism," in <em>Digital Cities II</em> (2002)</div>
+        <div class="reading-entry">Carr, Nicholas, <em>The Shallows,</em> Introduction &amp; Ch. 1–2 (2010)</div>
+        <div class="reading-entry">Hampton, Keith, "Neighborhoods in the Network Society: The e-Neighbors Study," <em>Information, Communication &amp; Society</em> (2007)</div>
+        <div class="reading-entry">Ito, Mizuko et al., <em>Hanging Out, Messing Around, and Geeking Out,</em> Introduction (2010) — MIT Press</div>
+      </div>
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 9 · Platform Urbanism</div>
+        <div class="reading-entry">Srnicek, Nick, <em>Platform Capitalism,</em> Ch. 1–3 (2017)</div>
+        <div class="reading-entry">Wachsmuth, David &amp; Weisler, Alexander, "Airbnb and the Rent Gap," <em>Environment and Planning A</em> 50, no. 6 (2018)</div>
+        <div class="reading-entry">Zuboff, Shoshana, <em>The Age of Surveillance Capitalism,</em> Introduction &amp; Ch. 1 (2019) — platform logic as surveillance</div>
+        <div class="reading-entry">Davis, Mike, <em>Planet of Slums,</em> Introduction &amp; Ch. 1 (2006)</div>
+        <div class="reading-entry">Rosenblat, Alex, <em>Uberland: How Algorithms Are Rewriting the Rules of Work,</em> Introduction (2018)</div>
+        <div class="reading-entry">Graham, Stephen &amp; Marvin, Simon, <em>Splintering Urbanism,</em> Introduction (2001) — networked infrastructure and urban fragmentation</div>
+      </div>
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 10 · Micromobility &amp; Street Design</div>
+        <div class="reading-entry">Hoffman, Patrick T., <em>Dockless: What We Learned Building the Bike That Became JUMP</em> (forthcoming) — @arcktip — primary practitioner source</div>
+        <div class="reading-entry">NACTO, <em>Urban Street Design Guide</em> (selected chapters) (2013)</div>
+        <div class="reading-entry">Furness, Zack, <em>One Less Car: Bicycling and the Politics of Automobility,</em> Introduction (2010)</div>
+        <div class="reading-entry">Sheller, Mimi, <em>Mobility Justice,</em> Ch. 1–2 (2018)</div>
+        <div class="reading-entry">Pucher, John &amp; Buehler, Ralph (eds.), <em>City Cycling,</em> Introduction &amp; Ch. 1 (2012) — MIT Press — comparative infrastructure politics</div>
+        <div class="reading-entry">Adkins, Arlie et al., "Bicycle Commuting and Its Relationship to Infrastructure," <em>Transportation Research Record</em> (2012)</div>
+      </div>
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 11 · AI &amp; the Intelligent Home</div>
+        <div class="reading-entry">Zuboff, Shoshana, <em>The Age of Surveillance Capitalism,</em> Introduction &amp; Ch. 1–2 (2019)</div>
+        <div class="reading-entry">Mattern, Shannon, "A City Is Not a Computer," <em>Places Journal</em> (February 2017)</div>
+        <div class="reading-entry">Mattern, Shannon, <em>Code and Clay, Data and Dirt,</em> Introduction (2017) — infrastructure and urban intelligence</div>
+        <div class="reading-entry">Sadowski, Jathan, <em>Too Smart,</em> Introduction &amp; Ch. 1 (2020)</div>
+        <div class="reading-entry">Andrejevic, Mark &amp; Burdon, Mark, "Defining the Sensor Society," <em>Television &amp; New Media</em> 16, no. 1 (2015)</div>
+        <div class="reading-entry">Rosenblat, Alex, <em>Uberland,</em> Ch. 3–4 (2018) — algorithmic management as spatial control</div>
+      </div>
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 12 · Remote Work &amp; the Office</div>
+        <div class="reading-entry">Sennett, Richard, <em>Building and Dwelling: Ethics for the City,</em> Ch. 1–2 (2018)</div>
+        <div class="reading-entry">Saval, Nikil, <em>Cubed,</em> Introduction &amp; Ch. 1 (2014)</div>
+        <div class="reading-entry">Florida, Richard, <em>The Rise of the Creative Class Revisited,</em> Introduction (2012)</div>
+        <div class="reading-entry">Glaeser, Edward, <em>Triumph of the City,</em> Introduction &amp; Ch. 1 (2011) — density as innovation engine</div>
+        <div class="reading-entry">Wajcman, Judy, <em>Pressed for Time: The Acceleration of Life in Digital Capitalism,</em> Introduction &amp; Ch. 1 (2015) — Chicago</div>
+        <div class="reading-entry">Hoffman, Patrick T., @arcktip Practitioner Essay: Remote Work and the Future of Urban Density (2026) — @arcktip</div>
+      </div>
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 13 · Studio Critique I</div>
+        <div class="reading-entry">Graff, Gerald &amp; Birkenstein, Cathy, <em>They Say / I Say,</em> Ch. 1–3 (2006)</div>
+        <div class="reading-entry">Sword, Helen, <em>Stylish Academic Writing,</em> Introduction &amp; Ch. 1 (2012) — Harvard — scholarly voice</div>
+        <div class="reading-entry">Hayot, Eric, <em>The Elements of Academic Style: Writing for the Humanities,</em> Introduction &amp; Ch. 1 (2014) — Columbia UP</div>
+        <div class="reading-entry">Silvia, Paul, <em>How to Write a Lot,</em> Ch. 1 (2007)</div>
+      </div>
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 14 · Designing the Response</div>
+        <div class="reading-entry">Brand, Stewart, <em>How Buildings Learn,</em> Introduction &amp; Ch. 1–2 (1994)</div>
+        <div class="reading-entry">Duany, Andrés, Plater-Zyberk, Elizabeth &amp; Speck, Jeff, <em>The Smart Growth Manual,</em> Parts I–II (2010)</div>
+        <div class="reading-entry">Hoffman, Patrick T., @arcktip Practitioner Essay: Design at the Intersection of Technology and Space (2026) — @arcktip</div>
+        <div class="reading-entry">Aureli, Pier Vittorio, <em>The Possibility of an Absolute Architecture,</em> Introduction (2011)</div>
+        <div class="reading-entry">Koolhaas, Rem, <em>S,M,L,XL,</em> "Generic City" essay (1995) — architecture's response to technological urbanism</div>
+        <div class="reading-entry">Picon, Antoine, <em>Smart Cities: A Spatialised Intelligence,</em> Introduction (2015) — Wiley</div>
+      </div>
+
+      <div class="reading-week-block">
+        <div class="reading-week-header">Week 15 · Final Presentations</div>
+        <div class="reading-entry">No assigned reading — final presentations and external critic responses.</div>
+      </div>
+
+    </div><!-- /panel-grad -->
+
+  </div>
+</section>
+
+<!-- Instructor Guide Download -->
+<section class="course-section" style="background:var(--grey-light);">
+  <div class="course-section-inner">
+    <div class="ig-callout">
+      <div class="ig-callout-text">
+        <strong>For instructors and teaching assistants</strong><br>
+        The full facilitation guide — including session overviews, theoretical frames, suggested discussion arcs with timing, numbered discussion questions (with separate graduate-level questions), common misconceptions, and cross-session connections — is available as a PDF download.
+      </div>
+      <div class="ig-callout-links">
+        <a href="assets/PTH_Course1_InstructorGuide.pdf" download class="ig-btn ig-btn-primary">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Instructor Guide PDF
+        </a>
+        <a href="assets/PTH_Course1_Readings.pdf" download class="ig-btn ig-btn-secondary">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Reading List PDF
+        </a>
+        <a href="javascript:window.print()" class="ig-btn ig-btn-secondary">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Print-Friendly
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p>© 2026 Patrick T. Hoffman · <a href="../index.html">Home</a> · <a href="https://www.threads.net/@arcktip" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true" style="vertical-align:-2px;margin-right:2px"><path d="M 18.263,11.097 C 18.233,7.611 16.344,5.511 13.152,5.511 C 11.021,5.511 9.23,6.474 8.289,8.01 L 10.351,9.448 C 10.886,8.605 11.623,7.905 12.979,7.905 C 14.507,7.905 15.297,8.755 15.523,10.336 C 14.785,10.223 14.047,10.163 13.287,10.163 C 9.162,10.163 7.219,12.03 7.219,14.499 C 7.219,16.968 9.162,18.489 12.023,18.489 C 15.162,18.489 17.036,16.374 17.804,13.754 C 18.602,14.115 19.152,14.958 19.152,16.223 C 19.152,19.611 15.245,21.456 11.932,21.456 C 7.047,21.456 3.855,18.248 3.855,13.032 C 3.855,6.64 8.078,2.545 13.754,2.545 C 17.563,2.545 19.445,4.216 20.725,6.459 L 22.833,4.984 C 21.44,2.078 18.331,-6.217e-15 13.664,-7.105e-15 C 6.226,-7.105e-15 1.167,5.277 1.167,12.934 C 1.167,19.935 6.12,24 12.023,24 C 16.901,24 21.832,21.154 21.832,16.284 C 21.832,13.739 20.371,12.053 18.263,11.097 L 18.263,11.097 M 11.932,15.952 C 10.856,15.952 9.907,15.44 9.907,14.499 C 9.907,13.016 11.729,12.565 13.513,12.565 C 14.191,12.565 14.853,12.61 15.44,12.738 C 15.019,14.665 13.769,15.952 11.932,15.952 L 11.932,15.952 L 11.932,15.952"/></svg>@arcktip</a></p>
+</footer>
+
+<script>
+function switchTab(e, track) {
+  document.querySelectorAll('.reading-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.reading-panel').forEach(p => p.classList.remove('active'));
+  e.target.classList.add('active');
+  document.getElementById('panel-' + track).classList.add('active');
+}
+</script>
+
+</body>
+</html>

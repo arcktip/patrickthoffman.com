@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2TKMRQXKMJ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-2TKMRQXKMJ');
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Organizational Design for Product Teams — Course 04 — Patrick T. Hoffman</title>
+  <meta name="description" content="Organizations are products. A seminar applying Conway's Law, the Rule of Seven, and platform team theory to real product org design. Coming soon.">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/shared.css">
+  <style>
+    .course-header {
+      background: var(--navy-dark);
+      padding: 7rem 2rem 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .course-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(rgba(26,58,138,0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(26,58,138,0.12) 1px, transparent 1px);
+      background-size: 30px 30px;
+      opacity: 0.4;
+    }
+    .course-header-content {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .course-number-pill {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--yellow);
+      background: rgba(245,197,24,0.12);
+      border: 1px solid rgba(245,197,24,0.3);
+      padding: 0.3em 0.85em;
+      border-radius: 20px;
+      margin-bottom: 1.25rem;
+    }
+    .course-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.1;
+      margin-bottom: 0.6rem;
+    }
+    .course-subtitle {
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 1.5rem;
+      font-style: italic;
+    }
+    .course-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .chip {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 0.3em 0.85em;
+    }
+    .course-description {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.72);
+      max-width: 640px;
+    }
+    .coming-soon-section {
+      padding: 5rem 2rem;
+      text-align: center;
+    }
+    .coming-soon-inner {
+      max-width: 520px;
+      margin: 0 auto;
+    }
+    .coming-soon-badge {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      background: var(--grey-light);
+      border-radius: 4px;
+      padding: 0.3em 0.85em;
+      margin-bottom: 1.5rem;
+    }
+    .coming-soon-inner h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--charcoal);
+    }
+    .coming-soon-inner p {
+      font-size: 0.95rem;
+      line-height: 1.75;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--royal-light);
+      text-decoration: none;
+    }
+    .back-btn:hover { opacity: 0.8; }
+  </style>
+</head>
+<body>
+
+<nav class="top-nav solid" id="topNav">
+  <a href="../index.html" class="nav-logo">PTH<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="../index.html#about">About</a></li>
+    <li><a href="../index.html#journey">Journey</a></li>
+    <li><a href="../writing/">Writing</a></li>
+    <li><a href="./">Teaching</a></li>
+    <li><a href="../index.html#speaking">Speaking</a></li>
+    <li><a href="../index.html#connect">Connect</a></li>
+  </ul>
+</nav>
+
+<header class="course-header">
+  <div class="course-header-content">
+    <a href="./" class="article-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+      All Courses
+    </a>
+    <div class="course-number-pill">Course 04</div>
+    <h1 class="course-title">Organizational Design for Product Teams</h1>
+    <p class="course-subtitle">A seminar on Conway's Law, team topology, and the agentic era</p>
+    <div class="course-chips">
+      <span class="chip">Teams</span>
+      <span class="chip">Strategy</span>
+      <span class="chip">15 Weeks</span>
+      <span class="chip">UG + Graduate</span>
+    </div>
+    <p class="course-description">Organizations are products. This course applies Conway's Law, the Rule of Seven, and platform team theory to real product org design — from four-person startups to four-hundred-person enterprises to the emerging challenge of designing organizations that include AI agents as collaborators. Students produce an original org design proposal and defend it in a mock board review.</p>
+  </div>
+</header>
+
+<section class="coming-soon-section">
+  <div class="coming-soon-inner">
+    <div class="coming-soon-badge">Coming Soon</div>
+    <h2>Course 04 is in preparation</h2>
+    <p>The full reading list, week-by-week schedule, and instructor guide for Organizational Design for Product Teams will be published here. Course 01 — Technology, Space &amp; Society — is available now.</p>
+    <a href="course-01-technology-space-society.html" class="back-btn">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+      View Course 01 →
+    </a>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Patrick T. Hoffman · <a href="../index.html">Home</a> · <a href="https://www.threads.net/@arcktip" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true" style="vertical-align:-2px;margin-right:2px"><path d="M 18.263,11.097 C 18.233,7.611 16.344,5.511 13.152,5.511 C 11.021,5.511 9.23,6.474 8.289,8.01 L 10.351,9.448 C 10.886,8.605 11.623,7.905 12.979,7.905 C 14.507,7.905 15.297,8.755 15.523,10.336 C 14.785,10.223 14.047,10.163 13.287,10.163 C 9.162,10.163 7.219,12.03 7.219,14.499 C 7.219,16.968 9.162,18.489 12.023,18.489 C 15.162,18.489 17.036,16.374 17.804,13.754 C 18.602,14.115 19.152,14.958 19.152,16.223 C 19.152,19.611 15.245,21.456 11.932,21.456 C 7.047,21.456 3.855,18.248 3.855,13.032 C 3.855,6.64 8.078,2.545 13.754,2.545 C 17.563,2.545 19.445,4.216 20.725,6.459 L 22.833,4.984 C 21.44,2.078 18.331,-6.217e-15 13.664,-7.105e-15 C 6.226,-7.105e-15 1.167,5.277 1.167,12.934 C 1.167,19.935 6.12,24 12.023,24 C 16.901,24 21.832,21.154 21.832,16.284 C 21.832,13.739 20.371,12.053 18.263,11.097 L 18.263,11.097 M 11.932,15.952 C 10.856,15.952 9.907,15.44 9.907,14.499 C 9.907,13.016 11.729,12.565 13.513,12.565 C 14.191,12.565 14.853,12.61 15.44,12.738 C 15.019,14.665 13.769,15.952 11.932,15.952 L 11.932,15.952 L 11.932,15.952"/></svg>@arcktip</a></p>
+</footer>
+
+</body>
+</html>

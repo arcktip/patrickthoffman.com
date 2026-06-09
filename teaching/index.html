@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2TKMRQXKMJ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-2TKMRQXKMJ');
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teaching — Patrick T. Hoffman</title>
+  <meta name="description" content="Courses on technology & space, urban systems, hardware product management, and organizational design. Designed for dual-listed undergraduate and graduate audiences.">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/shared.css">
+  <style>
+    /* ── Teaching index header (mirrors writing-index-header) ── */
+    .teaching-index-header {
+      background: var(--navy-dark);
+      padding: 7rem 2rem 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .teaching-index-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(rgba(26,58,138,0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(26,58,138,0.12) 1px, transparent 1px);
+      background-size: 30px 30px;
+      opacity: 0.4;
+    }
+    .teaching-index-header-content {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .teaching-index-header .article-back { margin-bottom: 1.5rem; }
+    .teaching-index-eyebrow {
+      font-size: 0.72rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--yellow);
+      margin-bottom: 0.75rem;
+    }
+    .teaching-index-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.1;
+      margin-bottom: 0.85rem;
+    }
+    .teaching-index-title span { color: var(--orange); }
+    .teaching-index-desc {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.7;
+      max-width: 580px;
+    }
+
+    /* ── Course cards ── */
+    .courses-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+    .course-card {
+      display: flex;
+      flex-direction: column;
+      background: var(--white);
+      border: 1px solid var(--grey-mid);
+      border-radius: 8px;
+      padding: 1.75rem;
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.25s, transform 0.25s;
+    }
+    .course-card:hover {
+      box-shadow: 0 8px 30px rgba(0,0,0,0.10);
+      transform: translateY(-3px);
+    }
+    .course-card.coming-soon {
+      opacity: 0.6;
+      cursor: default;
+      pointer-events: none;
+    }
+    .course-card.coming-soon:hover { transform: none; box-shadow: none; }
+    .course-number {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 0.6rem;
+    }
+    .course-card h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 0.85rem;
+      color: var(--charcoal);
+    }
+    .course-card p {
+      font-size: 0.88rem;
+      line-height: 1.65;
+      color: var(--text-secondary);
+      flex-grow: 1;
+      margin-bottom: 1.25rem;
+    }
+    .course-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+    }
+    .course-card-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .course-card-link {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--royal-light);
+      white-space: nowrap;
+    }
+    .coming-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      background: var(--grey-light);
+      border-radius: 4px;
+      padding: 0.2em 0.6em;
+    }
+
+    /* ── About-teaching strip ── */
+    .teaching-about {
+      background: var(--grey-light);
+      padding: 4rem 2rem;
+    }
+    .teaching-about-content {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .teaching-about h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .teaching-about p {
+      font-size: 0.95rem;
+      line-height: 1.75;
+      color: var(--text-body);
+      margin-bottom: 1rem;
+    }
+    .teaching-about p:last-child { margin-bottom: 0; }
+
+    .courses-section { padding: 4rem 2rem; }
+    .courses-section-inner { max-width: 1100px; margin: 0 auto; }
+    .courses-section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+    .courses-section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 900;
+      margin-bottom: 0.5rem;
+    }
+    .courses-section-title span { color: var(--royal-light); }
+    .courses-section-sub {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      max-width: 560px;
+      line-height: 1.65;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="top-nav solid" id="topNav">
+  <a href="../index.html" class="nav-logo">PTH<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="../index.html#about">About</a></li>
+    <li><a href="../index.html#journey">Journey</a></li>
+    <li><a href="../writing/">Writing</a></li>
+    <li><a href="./">Teaching</a></li>
+    <li><a href="../index.html#speaking">Speaking</a></li>
+    <li><a href="../index.html#connect">Connect</a></li>
+  </ul>
+</nav>
+
+<!-- Page Header -->
+<header class="teaching-index-header">
+  <div class="teaching-index-header-content">
+    <a href="../index.html" class="article-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+      Back to Home
+    </a>
+    <div class="teaching-index-eyebrow">Teaching</div>
+    <h1 class="teaching-index-title">Courses in product, cities, <span>and systems</span></h1>
+    <p class="teaching-index-desc">Four seminars for dual-listed undergraduate and graduate audiences — drawing on fifteen years building products at Social Bicycles, JUMP, Google, and Meta. Each course ships with a session-by-session reading list, instructor guide, and practitioner perspective.</p>
+  </div>
+</header>
+
+<!-- Courses Grid -->
+<section class="courses-section">
+  <div class="courses-section-inner">
+    <p class="courses-section-label">The Series</p>
+    <h2 class="courses-section-title">Four courses. One <span>through-line.</span></h2>
+    <p class="courses-section-sub">Technology shapes space. Space shapes behavior. Behavior shapes products. These courses trace that chain — from the living room to the city to the org chart.</p>
+
+    <div class="courses-grid">
+
+      <!-- Course 01 — live -->
+      <a href="course-01-technology-space-society.html" class="course-card">
+        <div class="course-number">Course 01</div>
+        <h2>Technology, Space &amp; Society</h2>
+        <p>How do technologies reshape the spaces we inhabit? A 15-week seminar tracing the television, the automobile, the smartphone, and ambient AI through the built environment using STS frameworks.</p>
+        <div class="course-card-footer">
+          <div class="course-card-tags">
+            <span class="post-tag yellow">STS</span>
+            <span class="post-tag">Cities</span>
+          </div>
+          <span class="course-card-link">View course →</span>
+        </div>
+      </a>
+
+      <!-- Course 02 — coming soon -->
+      <div class="course-card coming-soon">
+        <div class="course-number">Course 02</div>
+        <h2>Urban Systems &amp; Product Design</h2>
+        <p>Cities as complex systems; products as interventions. A seminar for planners, MBAs, and engineers building technology for urban environments. Includes a half-day field session.</p>
+        <div class="course-card-footer">
+          <div class="course-card-tags">
+            <span class="post-tag">Urbanism</span>
+            <span class="post-tag orange">Product</span>
+          </div>
+          <span class="coming-badge">Coming Soon</span>
+        </div>
+      </div>
+
+      <!-- Course 03 — coming soon -->
+      <div class="course-card coming-soon">
+        <div class="course-number">Course 03</div>
+        <h2>Product Management for Physical + Digital Systems</h2>
+        <p>Why hardware is different. A skills-first course covering BOM modeling, firmware strategy, supply chain, and the full arc of a physical-digital product lifecycle.</p>
+        <div class="course-card-footer">
+          <div class="course-card-tags">
+            <span class="post-tag orange">Hardware</span>
+            <span class="post-tag">Product</span>
+          </div>
+          <span class="coming-badge">Coming Soon</span>
+        </div>
+      </div>
+
+      <!-- Course 04 — coming soon -->
+      <div class="course-card coming-soon">
+        <div class="course-number">Course 04</div>
+        <h2>Organizational Design for Product Teams</h2>
+        <p>Organizations are products. A seminar applying Conway's Law, the Rule of Seven, and platform team theory to real product org design — from startups to enterprise to the agentic era.</p>
+        <div class="course-card-footer">
+          <div class="course-card-tags">
+            <span class="post-tag">Teams</span>
+            <span class="post-tag yellow">Strategy</span>
+          </div>
+          <span class="coming-badge">Coming Soon</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- About Teaching -->
+<section class="teaching-about">
+  <div class="teaching-about-content">
+    <h2>About these courses</h2>
+    <p>These seminars are designed for dual-listed undergraduate and graduate audiences. Each course runs fifteen weeks and includes session-by-session reading lists with separate tracks for undergraduates (1–3 anchor texts per session) and graduate students (6–10 texts, full scholarly apparatus). A facilitation guide for instructors and TAs is available as a PDF download on each course page.</p>
+    <p>The courses draw on the same practitioner perspective that runs through my writing: I have built technology that reshapes urban space, managed teams that scaled from four people to four hundred, and watched the consequences of design decisions ripple outward in ways that weren't visible at the time. That experience is the courses' primary practitioner resource — not a substitute for the scholarly literature, but a complement to it.</p>
+    <p>If you are an instructor interested in adopting or adapting these materials, I welcome correspondence at <a href="https://www.threads.net/@arcktip" target="_blank" rel="noopener noreferrer">@arcktip</a> or via the <a href="../index.html#connect">Connect</a> page.</p>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p>© 2026 Patrick T. Hoffman · <a href="../index.html">Home</a> · <a href="https://www.threads.net/@arcktip" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true" style="vertical-align:-2px;margin-right:2px"><path d="M 18.263,11.097 C 18.233,7.611 16.344,5.511 13.152,5.511 C 11.021,5.511 9.23,6.474 8.289,8.01 L 10.351,9.448 C 10.886,8.605 11.623,7.905 12.979,7.905 C 14.507,7.905 15.297,8.755 15.523,10.336 C 14.785,10.223 14.047,10.163 13.287,10.163 C 9.162,10.163 7.219,12.03 7.219,14.499 C 7.219,16.968 9.162,18.489 12.023,18.489 C 15.162,18.489 17.036,16.374 17.804,13.754 C 18.602,14.115 19.152,14.958 19.152,16.223 C 19.152,19.611 15.245,21.456 11.932,21.456 C 7.047,21.456 3.855,18.248 3.855,13.032 C 3.855,6.64 8.078,2.545 13.754,2.545 C 17.563,2.545 19.445,4.216 20.725,6.459 L 22.833,4.984 C 21.44,2.078 18.331,-6.217e-15 13.664,-7.105e-15 C 6.226,-7.105e-15 1.167,5.277 1.167,12.934 C 1.167,19.935 6.12,24 12.023,24 C 16.901,24 21.832,21.154 21.832,16.284 C 21.832,13.739 20.371,12.053 18.263,11.097 L 18.263,11.097 M 11.932,15.952 C 10.856,15.952 9.907,15.44 9.907,14.499 C 9.907,13.016 11.729,12.565 13.513,12.565 C 14.191,12.565 14.853,12.61 15.44,12.738 C 15.019,14.665 13.769,15.952 11.932,15.952 L 11.932,15.952 L 11.932,15.952"/></svg>@arcktip</a></p>
+</footer>
+
+</body>
+</html>
