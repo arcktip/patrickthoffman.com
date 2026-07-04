@@ -627,6 +627,10 @@ section {
 .writing-cta {
   margin-top: 2.5rem;
   text-align: center;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .writing-cta a {
@@ -646,6 +650,41 @@ section {
   color: var(--white);
   transform: translateY(-2px);
 }
+
+.write-filter-tabs {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+}
+
+.filter-tab {
+  background: transparent;
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 20px;
+  padding: 0.35rem 1rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-tab:hover {
+  border-color: var(--royal);
+  color: var(--royal);
+}
+
+.filter-tab.active {
+  background: var(--royal);
+  border-color: var(--royal);
+  color: var(--white);
+}
+
+.post-item.is-hidden { display: none; }
 
 @media (max-width: 768px) {
   .post-item {
@@ -1277,10 +1316,16 @@ footer a { color: var(--orange); text-decoration: none; }
   <div class="container">
     <p class="section-label reveal">Writing</p>
     <h2 class="section-title reveal">Long-form <span>thinking</span></h2>
-    <p class="writing-intro reveal">Essays, reflections, and frameworks on product, cities, technology, and the spaces in between.</p>
+    <p class="writing-intro reveal">Essays and books on product, cities, technology, and the spaces in between.</p>
+
+    <div class="write-filter-tabs reveal">
+      <button class="filter-tab active" data-filter="all">All</button>
+      <button class="filter-tab" data-filter="essay">Essays</button>
+      <button class="filter-tab" data-filter="book">Books</button>
+    </div>
 
     <div class="posts-grid">
-      <a href="writing/rule-of-seven.html" class="post-item reveal">
+      <a href="writing/rule-of-seven.html" class="post-item reveal" data-type="essay">
         <div class="post-date">Feb 2026</div>
         <div class="post-content">
           <div><span class="post-tag">Product</span><span class="post-tag orange">Teams</span></div>
@@ -1290,7 +1335,7 @@ footer a { color: var(--orange); text-decoration: none; }
         </div>
       </a>
 
-      <a href="writing/co-op-city.html" class="post-item reveal">
+      <a href="writing/co-op-city.html" class="post-item reveal" data-type="essay">
         <div class="post-date">May 2026</div>
         <div class="post-content">
           <div><span class="post-tag">Cities</span><span class="post-tag yellow">History</span></div>
@@ -1300,7 +1345,7 @@ footer a { color: var(--orange); text-decoration: none; }
         </div>
       </a>
 
-      <a href="writing/counting-the-people.html" class="post-item reveal">
+      <a href="writing/counting-the-people.html" class="post-item reveal" data-type="essay">
         <div class="post-date">Jun 2026</div>
         <div class="post-content">
           <div><span class="post-tag yellow">STS</span><span class="post-tag yellow">History</span></div>
@@ -1310,7 +1355,7 @@ footer a { color: var(--orange); text-decoration: none; }
         </div>
       </a>
 
-      <a href="writing/exit-poll-disclosure.html" class="post-item reveal">
+      <a href="writing/exit-poll-disclosure.html" class="post-item reveal" data-type="essay">
         <div class="post-date">Jun 2026</div>
         <div class="post-content">
           <div><span class="post-tag yellow">STS</span><span class="post-tag yellow">History</span></div>
@@ -1320,7 +1365,7 @@ footer a { color: var(--orange); text-decoration: none; }
         </div>
       </a>
 
-      <a href="writing/technology-space-society-intro.html" class="post-item reveal">
+      <a href="writing/technology-space-society-intro.html" class="post-item reveal" data-type="essay">
         <div class="post-date">Jun 2026</div>
         <div class="post-content">
           <div><span class="post-tag yellow">STS</span><span class="post-tag">Cities</span><span class="post-tag orange">Teaching</span></div>
@@ -1329,41 +1374,31 @@ footer a { color: var(--orange); text-decoration: none; }
           <span class="post-readmore">Read essay →</span>
         </div>
       </a>
+
+      <a href="https://www.patrickthoffman.com/books/product-manager/" class="post-item reveal" data-type="book">
+        <div class="post-date">2026 · Original</div>
+        <div class="post-content">
+          <div><span class="post-tag orange">Product</span><span class="post-tag">Career</span></div>
+          <h3>Product Manager?</h3>
+          <p class="post-excerpt">The original short-form edition — a concise field guide for students testing whether product management fits them.</p>
+          <span class="post-readmore">Read the book →</span>
+        </div>
+      </a>
+
+      <a href="https://www.patrickthoffman.com/books/product-manager-v2/" class="post-item reveal" data-type="book">
+        <div class="post-date">2026 · Expanded</div>
+        <div class="post-content">
+          <div><span class="post-tag orange">Product</span><span class="post-tag">Career</span></div>
+          <h3>Product Manager? v2</h3>
+          <p class="post-excerpt">The expanded edition — 100+ pages going deep on what PMs actually do, the traits that survive AI, how to think like a PM, and six hands-on exercises to find out if you'd like the work.</p>
+          <span class="post-readmore">Read the book →</span>
+        </div>
+      </a>
     </div>
 
     <div class="writing-cta reveal">
       <a href="writing/index.html">View All Writing →</a>
-    </div>
-
-    <div id="books" style="margin-top:72px;">
-      <p class="section-label reveal">Also: Books</p>
-      <p class="writing-intro reveal">Two editions of a field guide to product management, written for students and early-career PMs deciding if the work is right for them.</p>
-
-      <div class="posts-grid">
-        <a href="https://www.patrickthoffman.com/books/product-manager-v2/" class="post-item reveal">
-          <div class="post-date">2026 · Expanded</div>
-          <div class="post-content">
-            <div><span class="post-tag orange">Product</span><span class="post-tag">Career</span></div>
-            <h3>Product Manager? v2</h3>
-            <p class="post-excerpt">The expanded edition — 100+ pages going deep on what PMs actually do, the traits that survive AI, how to think like a PM, and six hands-on exercises to find out if you'd like the work.</p>
-            <span class="post-readmore">Read the book →</span>
-          </div>
-        </a>
-
-        <a href="https://www.patrickthoffman.com/books/product-manager/" class="post-item reveal">
-          <div class="post-date">2026 · Original</div>
-          <div class="post-content">
-            <div><span class="post-tag orange">Product</span><span class="post-tag">Career</span></div>
-            <h3>Product Manager?</h3>
-            <p class="post-excerpt">The original short-form edition — a concise field guide for students testing whether product management fits them.</p>
-            <span class="post-readmore">Read the book →</span>
-          </div>
-        </a>
-      </div>
-
-      <div class="writing-cta reveal">
-        <a href="https://www.patrickthoffman.com/books/">View All Books →</a>
-      </div>
+      <a href="https://www.patrickthoffman.com/books/">View All Books →</a>
     </div>
   </div>
 </section>
@@ -1693,6 +1728,21 @@ const revealObserver = new IntersectionObserver((entries) => {
 }, observerOptions);
 
 revealEls.forEach(el => revealObserver.observe(el));
+
+// ===== WRITING / BOOKS FILTER =====
+const writeFilterTabs = document.querySelectorAll('.filter-tab');
+const writePostItems = document.querySelectorAll('#writing .post-item');
+writeFilterTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    writeFilterTabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const filter = tab.getAttribute('data-filter');
+    writePostItems.forEach(item => {
+      const show = filter === 'all' || item.getAttribute('data-type') === filter;
+      item.classList.toggle('is-hidden', !show);
+    });
+  });
+});
 
 // ===== NAV SCROLL =====
 const topNav = document.getElementById('topNav');
