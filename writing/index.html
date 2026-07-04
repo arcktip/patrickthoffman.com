@@ -492,6 +492,7 @@
         <button class="filter-btn" data-tag="Mobility">Mobility</button>
         <button class="filter-btn tag-yellow" data-tag="Mentorship">Mentorship</button>
         <button class="filter-btn tag-orange" data-tag="Teaching">Teaching</button>
+        <button class="filter-btn tag-yellow" data-tag="Health">Health</button>
       </div>
     </div>
   </div>
@@ -543,6 +544,39 @@
    Add new entries here as pieces are published.
 ================================================================ */
 const ESSAYS = [
+  {
+    slug:    'instrumented-convergence',
+    href:    'instrumented-convergence.html',
+    title:   'Where the Two Meet: When Personal Devices Become Civic Sensors',
+    excerpt: 'Contact tracing, insurance-linked wearables, and congestion pricing all recruit a personal device into civic measurement. An essay on three cases where the line between measuring a person and measuring a city has already dissolved.',
+    tags:    ['STS', 'Health', 'Mobility'],
+    date:    '2026-07',
+    dateLabel: 'July 2026',
+    readTime: '~14 min',
+    status:  'live',
+  },
+  {
+    slug:    'instrumented-city',
+    href:    'instrumented-city.html',
+    title:   'The Instrumented City: A Short History of Urban Sensing',
+    excerpt: 'From John Snow\'s cholera map to Sidewalk Labs\' failed Toronto waterfront, cities have always tried to see themselves through instruments. An essay on the case for urban sensing and the consent problem that sank its most ambitious attempt.',
+    tags:    ['STS', 'Mobility'],
+    date:    '2026-07',
+    dateLabel: 'July 2026',
+    readTime: '~12 min',
+    status:  'live',
+  },
+  {
+    slug:    'instrumented-self',
+    href:    'instrumented-self.html',
+    title:   'The Instrumented Self: What Wearables Measure, and What They Miss',
+    excerpt: 'Whoop, Oura, and continuous glucose monitors promise self-knowledge through data. An essay on what these devices actually validate against clinical gold standards, and what happens once the score becomes the goal.',
+    tags:    ['STS', 'Health'],
+    date:    '2026-07',
+    dateLabel: 'July 2026',
+    readTime: '~13 min',
+    status:  'live',
+  },
   {
     slug:    'counting-the-people',
     href:    'counting-the-people.html',
@@ -646,6 +680,7 @@ const TAG_COLORS = {
   'Mobility':   '',
   'Mentorship': 'yellow',
   'Teaching':   'orange',
+  'Health':     'yellow',
 };
 
 /* ================================================================

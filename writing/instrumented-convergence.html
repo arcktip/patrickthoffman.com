@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2TKMRQXKMJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-2TKMRQXKMJ');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Where the Two Meet: When Personal Devices Become Civic Sensors — Patrick T. Hoffman</title>
+<meta name="description" content="Contact tracing, insurance-linked wearables, and congestion pricing all recruit a personal device into civic measurement. An essay on three cases where the line between 'measuring a person' and 'measuring a city' has already dissolved.">
+<link rel="canonical" href="https://www.patrickthoffman.com/writing/instrumented-convergence.html">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:ital,wght@0,500;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/shared.css">
+<style>
+  .paper-note {
+    background: var(--color-surface, #f5f3ef);
+    border-left: 3px solid var(--color-accent, #c8a96e);
+    padding: 1rem 1.25rem;
+    margin: 0 0 2.5rem;
+    border-radius: 0 4px 4px 0;
+    font-size: 0.88rem;
+    color: var(--color-text-muted, #666);
+    line-height: 1.6;
+  }
+  .paper-note a { color: var(--color-accent, #c8a96e); text-decoration: underline; }
+  .bibliography {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border, #e0ddd7);
+  }
+  .bibliography h2 { font-size: 1.1rem; margin-bottom: 1.25rem; }
+  .bibliography ol { padding-left: 1.5rem; font-size: 0.85rem; line-height: 1.8; color: var(--color-text-muted, #555); }
+  .bibliography ol li { margin-bottom: 0.4rem; }
+  .article-body a { color: var(--royal, #1a3a8a); text-decoration: underline; text-underline-offset: 2px; }
+  .article-body h2 { scroll-margin-top: 90px; }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="top-nav solid" id="topNav">
+  <a href="../" class="nav-logo">PTH<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="../#about">About</a></li>
+    <li><a href="../#journey">Journey</a></li>
+    <li><a href="./">Writing</a></li>
+    <li><a href="../teaching/">Teaching</a></li>
+    <li><a href="../#speaking">Speaking</a></li>
+    <li><a href="../#connect">Connect</a></li>
+  </ul>
+</nav>
+
+<!-- Article Header -->
+<header class="article-header">
+  <div class="article-header-content">
+    <a href="./" class="article-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+      Back to Writing
+    </a>
+    <div class="article-tags">
+      <span class="article-tag yellow">STS</span>
+      <span class="article-tag yellow">Health</span>
+      <span class="article-tag">Mobility</span>
+    </div>
+    <h1 class="article-title">Where the Two Meet: When Personal Devices Become Civic Sensors</h1>
+    <div class="article-meta">
+      <span class="article-meta-item">Patrick T. Hoffman</span>
+      <span class="article-meta-item">July 2026</span>
+      <span class="article-meta-item">~14 min read</span>
+    </div>
+  </div>
+</header>
+
+<!-- Article Body -->
+<article class="article-body">
+
+  <div class="paper-note">
+    This essay is the third of a linked pair-plus-one. <a href="instrumented-self.html"><em>The Instrumented Self</em></a> asked whether wearable biosensors measure the body accurately, and what a daily score does to the person wearing it. <a href="instrumented-city.html"><em>The Instrumented City</em></a> asked the same questions of urban sensor networks, and argued that the difference between a personal, opt-in sensor and an ambient, non-opt-in one is the real fault line. This essay argues that fault line is dissolving.
+  </div>
+
+  <p class="lead">The two preceding essays in this series drew a clean distinction: a wearable is a sensor a person chooses to put on, and a city sensor is a sensor simply present in the environment a person occupies, chosen or not. That distinction is analytically useful and institutionally naive. In practice, a growing set of arrangements recruit the first kind of sensor to do the second kind of work — taking a device a person carries for personal reasons and making its data an input to a civic or institutional decision — and in doing so, dissolve the boundary the prior two essays relied on. This essay examines three cases where that boundary has already come down: contact-tracing apps, which turned a personal phone into an epidemiological sensor for the whole population; insurance-linked wearables and telematics, which turned a personal habit into a priced financial signal; and congestion pricing, which turns an ordinary vehicle into a taxed data point in a municipal traffic system the moment it crosses a line on a map. What the three share is a pattern more important than any one of them: the line between "my data" and "the city's data" is not fixed by what the sensor is, but by which institution has, at a given moment, gained the standing to read it.</p>
+
+  <h2 id="introduction">I. Introduction: A Boundary That Does Not Hold</h2>
+
+  <p>Contact tracing, wellness-linked insurance, and congestion pricing are not usually discussed together, because they sit in different regulatory domains — public health, insurance law, and transportation policy, respectively — and because the earlier essays in this series treated "personal" and "civic" sensing as different categories with different consent structures. But each of the three cases below takes a device built and marketed for personal use — a smartphone, a fitness tracker, a car — and turns it, under specific institutional conditions, into an instrument of population-level measurement. None of the three required inventing new sensor hardware. Each required only a new institutional arrangement for reading data an existing personal device already generated. That is the actual shape of the convergence: not new sensors, but new claims on old ones.</p>
+
+  <h2 id="contact-tracing">II. Case One: Contact Tracing and the Body as Civic Sensor</h2>
+
+  <p>In May 2020, Apple and Google jointly released the Exposure Notification API, a shared framework that let public-health authorities build contact-tracing apps for both iOS and Android without collecting location data at all. The system worked by having each phone broadcast a rotating, anonymous Bluetooth identifier and log the identifiers it came near; if a user later tested positive and consented to share their recent keys, other phones that had logged a matching identifier would be notified of possible exposure, all without any central server ever learning who had been near whom. The design was explicitly built to preserve the personal/civic boundary this series has relied on: the companies limited each country to a single authorized app, restricted the API to public-health authorities alone, and structured the system so it could not transmit the underlying proximity data to a central database — a design the UK's data-protection regulator concluded was consistent with privacy-by-design principles required under European law.</p>
+
+  <p>Yet even this carefully engineered, decentralized, opt-in system still did the thing this essay is about: it recruited a personal device, carried for personal reasons, into service as a unit of civic epidemiological infrastructure the moment a health authority's app was installed on it. The phone did not change; what changed was the claim being made on what the phone could see. That the system's designers went to unusual lengths to preserve user control does not change the basic structural fact that the boundary between a personal communications device and a public-health sensor node became, for the duration of a pandemic, a matter of which app was installed, not a fixed property of the hardware.</p>
+
+  <h2 id="insurance">III. Case Two: Insurance and the Priced Body</h2>
+
+  <p>The second case dispenses with the careful anonymization the exposure-notification system built in. When John Hancock announced in 2018 that it would sell only "interactive" life insurance policies, tied to wearable-reported activity data, in exchange for premium discounts of up to 15 percent, it created a direct financial link between a device built for personal wellness curiosity and a company's actuarial pricing of a customer's life. The same pattern exists on the auto side: Progressive's Snapshot program, running since 2008, uses a plugged-in device or phone app to track speed, braking, and driving hours, and prices a policy accordingly — access the company's own privacy policy describes as data it will "retain indefinitely."</p>
+
+  <p>The word "voluntary" is doing real work in both programs, and it is worth taking seriously how much weight it can bear. Workplace wellness programs offer the clearest legal test of the question, because U.S. disability and genetic-privacy law requires that participation in any wellness program involving medical data collection be genuinely voluntary. In 2016 the Equal Employment Opportunity Commission set a limit of financial incentives up to 30 percent of the cost of self-only health coverage; in 2017, a federal court, ruling in a challenge brought by AARP, held that an incentive that large made participation involuntary in substance if not in name, because an employee who could not absorb a premium increase of that size had no real choice but to disclose protected health information. The court vacated the incentive rule effective January 2019, and the EEOC's subsequent proposed rules would permit only "de minimis" rewards — a gift card, not a discount — for the same reason.</p>
+
+  <p>That ruling is the single clearest legal acknowledgment available that the line between an opt-in personal sensor and a coerced institutional one is not about whether a checkbox exists, but about the size of the number attached to it. A wearable a person straps on for their own curiosity is personal sensing in the sense the first essay in this series described; a wearable a person straps on because refusing costs them 15 percent of a life-insurance premium, or a job-linked wellness surcharge large enough that a federal court called it coercive, has crossed into something closer to the ambient, non-opt-in civic sensing the second essay in this series described — voluntary in name, compulsory in effect.</p>
+
+  <h2 id="congestion-pricing">IV. Case Three: Congestion Pricing and the Vehicle as Urban Sensor</h2>
+
+  <p>New York City's congestion pricing program, which began charging most drivers a peak-hour toll to enter Manhattan south of 61st Street on January 5, 2025, works through a network of license-plate-reading cameras posted at entry points to the zone — a fixed, ambient, civic sensor system squarely in the tradition of the previous essay's ATSAC case study. But the same program also illustrates the convergence this essay is tracing, because much of the traffic-flow data used to design, monitor, and defend the program's effectiveness comes not from the toll cameras themselves but from aggregated smartphone location data and connected-vehicle telematics — the same personal location signal a rideshare app, a mapping app, or an insurance telematics program collects for entirely different, personal or commercial reasons, now repurposed as an input to a public transportation-policy question.</p>
+
+  <p>This is the mirror image of the contact-tracing case. There, a personal device was recruited, with unusually careful privacy engineering, into an explicitly public-health role. Here, a personal device's ordinary commercial exhaust — the location trail a phone generates simply by running a navigation or rideshare app — becomes civic infrastructure with far less friction and far less public deliberation, because no single, visible policy decision analogous to "install this app" ever occurs. The driver whose phone is running a mapping app while they cross into the Congestion Relief Zone has, without any specific choice about it, become a data point in exactly the kind of aggregated civic sensing network the second essay in this series described Sidewalk Labs failing to build with public consent. Congestion pricing succeeded politically where Quayside failed in part because its ambient data collection is more diffuse, more familiar, and less visibly attributable to any single company's brand.</p>
+
+  <h2 id="synthesis">V. What the Three Cases Share</h2>
+
+  <p>None of the three cases required a technological breakthrough. Contact tracing repurposed a Bluetooth radio already in every smartphone. Insurance telematics repurposed a GPS chip and an accelerometer already in every phone and every fitness tracker. Congestion pricing repurposed location data every navigation app was already generating for an unrelated commercial purpose. In each case, the sensor was personal, pre-existing, and originally deployed for an individual's own convenience or curiosity; what changed was an institution's claim on it, made suddenly legible by a pandemic, an insurer's actuarial appetite, or a transportation authority's need for traffic data it could not otherwise afford to collect.</p>
+
+  <p>This reframes the question the first two essays in this series left open. The dividing line is not, as it first appeared, between sensors a person chooses to wear and sensors simply present in their environment. It is between data a person generates and data an institution has gained standing to read — and that standing can change without the sensor itself changing at all. Sidewalk Labs proposed, and then abandoned, a "civic data trust" to formalize exactly this kind of standing for the Quayside project; the AARP ruling against the EEOC's wellness rules is, in effect, a court doing the same work for the insurance case, setting a limit on how much financial pressure an institution can apply before "voluntary" data-sharing becomes compulsory in substance.</p>
+
+  <h2 id="conclusion">VI. Conclusion</h2>
+
+  <p>The methodological throughline of this entire site's writing on measurement — polling, wearables, urban sensors — has been that an instrument's accuracy and its normative effect are separate questions, and that the harder, more consequential arguments are almost always about the second. This essay's three cases confirm that pattern one level up: contact tracing, insurance telematics, and congestion pricing are not really disputes about whether a phone's Bluetooth radio or a car's GPS chip works. They are disputes about who has standing to read a sensor that already exists, once its data crosses an institutional threshold — a public-health agency, an insurer, a transportation authority. Bourdieu's argument, raised in <a href="counting-the-people.html">this site's essay on polling</a>, that a poll does not merely find an aggregate but constructs one, has a precise analogue here: a personal sensor does not merely generate data about a person, but about a population, the moment an institution gains standing to read it in aggregate — and the operative question for the next decade of this convergence is not whether that standing will be claimed, but who gets to grant it, and on what terms a person can still say no.</p>
+
+  <div class="bibliography">
+    <h2>Select Bibliography</h2>
+    <ol>
+      <li><a href="https://en.wikipedia.org/wiki/Exposure_Notification" target="_blank" rel="noopener noreferrer">"Exposure Notification."</a> Wikipedia.</li>
+      <li><a href="https://www.eff.org/deeplinks/2020/04/apple-and-googles-covid-19-exposure-notification-api-questions-and-answers" target="_blank" rel="noopener noreferrer">"Apple and Google's COVID-19 Exposure Notification API: Questions and Answers."</a> Electronic Frontier Foundation, April 2020.</li>
+      <li><a href="https://techcrunch.com/2020/05/20/apple-and-google-launch-exposure-notification-api-enabling-public-health-authorities-to-release-apps/" target="_blank" rel="noopener noreferrer">"Apple and Google Launch Exposure Notification API."</a> TechCrunch, May 20, 2020.</li>
+      <li><a href="https://www.weforum.org/stories/2018/09/strap-on-the-fitbit-john-hancock-to-sell-only-interactive-life-insurance/" target="_blank" rel="noopener noreferrer">"No Fitbit, No Insurance: Is This Company the Start of a Trend?"</a> World Economic Forum, September 2018.</li>
+      <li><a href="https://www.consumerreports.org/money/car-insurance/car-insurance-telematics-pros-and-cons-a5869096072/" target="_blank" rel="noopener noreferrer">"Usage-Based Car Insurance Can Save You Money, but It Puts Your Data Privacy at Risk."</a> Consumer Reports.</li>
+      <li><a href="https://www.statnews.com/2017/08/23/voluntary-workplace-wellness-court/" target="_blank" rel="noopener noreferrer">"'Voluntary' Workplace Wellness Programs Dealt Setback by U.S. Court."</a> STAT News, August 23, 2017.</li>
+      <li><a href="https://www.eeoc.gov/regulations/questions-and-answers-about-eeocs-notice-proposed-rulemaking-employer-wellness-programs" target="_blank" rel="noopener noreferrer">"Questions and Answers about EEOC's Notice of Proposed Rulemaking on Employer Wellness Programs."</a> U.S. Equal Employment Opportunity Commission.</li>
+      <li><a href="https://en.wikipedia.org/wiki/Congestion_pricing_in_New_York_City" target="_blank" rel="noopener noreferrer">"Congestion Pricing in New York City."</a> Wikipedia.</li>
+      <li><a href="https://www.governor.ny.gov/news/less-traffic-better-transit-its-first-anniversary-governor-hochul-celebrates-transformational" target="_blank" rel="noopener noreferrer">"Less Traffic, Better Transit: On Its First Anniversary, Governor Hochul Celebrates Transformational Success of Congestion Pricing."</a> Office of Governor Kathy Hochul, 2026.</li>
+      <li>Bourdieu, Pierre. "Public Opinion Does Not Exist." In <em>Communication and Class Struggle</em>, vol. 1, edited by Armand Mattelart and Seth Siegelaub, 124–130. New York: International General, 1979 (orig. 1973).</li>
+    </ol>
+  </div>
+
+</article>
+
+<!-- Footer -->
+<footer>
+  <p>© 2026 Patrick T. Hoffman · <a href="../">Home</a> · <a href="https://www.threads.net/@arcktip" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true" style="vertical-align:-2px;margin-right:2px"><path d="M 18.263,11.097 C 18.233,7.611 16.344,5.511 13.152,5.511 C 11.021,5.511 9.23,6.474 8.289,8.01 L 10.351,9.448 C 10.886,8.605 11.623,7.905 12.979,7.905 C 14.507,7.905 15.297,8.755 15.523,10.336 C 14.785,10.223 14.047,10.163 13.287,10.163 C 9.162,10.163 7.219,12.03 7.219,14.499 C 7.219,16.968 9.162,18.489 12.023,18.489 C 15.162,18.489 17.036,16.374 17.804,13.754 C 18.602,14.115 19.152,14.958 19.152,16.223 C 19.152,19.611 15.245,21.456 11.932,21.456 C 7.047,21.456 3.855,18.248 3.855,13.032 C 3.855,6.64 8.078,2.545 13.754,2.545 C 17.563,2.545 19.445,4.216 20.725,6.459 L 22.833,4.984 C 21.44,2.078 18.331,-6.217e-15 13.664,-7.105e-15 C 6.226,-7.105e-15 1.167,5.277 1.167,12.934 C 1.167,19.935 6.12,24 12.023,24 C 16.901,24 21.832,21.154 21.832,16.284 C 21.832,13.739 20.371,12.053 18.263,11.097 L 18.263,11.097 M 11.932,15.952 C 10.856,15.952 9.907,15.44 9.907,14.499 C 9.907,13.016 11.729,12.565 13.513,12.565 C 14.191,12.565 14.853,12.61 15.44,12.738 C 15.019,14.665 13.769,15.952 11.932,15.952 L 11.932,15.952 L 11.932,15.952"/></svg>arcktip</a></p>
+</footer>
+
+</body>
+</html>

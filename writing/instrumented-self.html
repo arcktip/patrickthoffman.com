@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2TKMRQXKMJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-2TKMRQXKMJ');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Instrumented Self: What Wearables Measure, and What They Miss — Patrick T. Hoffman</title>
+<meta name="description" content="Whoop, Oura, and continuous glucose monitors promise self-knowledge through data. An essay on what these devices actually validate against clinical gold standards, and what happens once the score becomes the goal.">
+<link rel="canonical" href="https://www.patrickthoffman.com/writing/instrumented-self.html">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:ital,wght@0,500;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/shared.css">
+<style>
+  .paper-note {
+    background: var(--color-surface, #f5f3ef);
+    border-left: 3px solid var(--color-accent, #c8a96e);
+    padding: 1rem 1.25rem;
+    margin: 0 0 2.5rem;
+    border-radius: 0 4px 4px 0;
+    font-size: 0.88rem;
+    color: var(--color-text-muted, #666);
+    line-height: 1.6;
+  }
+  .paper-note a { color: var(--color-accent, #c8a96e); text-decoration: underline; }
+  .bibliography {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border, #e0ddd7);
+  }
+  .bibliography h2 { font-size: 1.1rem; margin-bottom: 1.25rem; }
+  .bibliography ol { padding-left: 1.5rem; font-size: 0.85rem; line-height: 1.8; color: var(--color-text-muted, #555); }
+  .bibliography ol li { margin-bottom: 0.4rem; }
+  .article-body a { color: var(--royal, #1a3a8a); text-decoration: underline; text-underline-offset: 2px; }
+  .article-body h2 { scroll-margin-top: 90px; }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="top-nav solid" id="topNav">
+  <a href="../" class="nav-logo">PTH<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="../#about">About</a></li>
+    <li><a href="../#journey">Journey</a></li>
+    <li><a href="./">Writing</a></li>
+    <li><a href="../teaching/">Teaching</a></li>
+    <li><a href="../#speaking">Speaking</a></li>
+    <li><a href="../#connect">Connect</a></li>
+  </ul>
+</nav>
+
+<!-- Article Header -->
+<header class="article-header">
+  <div class="article-header-content">
+    <a href="./" class="article-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+      Back to Writing
+    </a>
+    <div class="article-tags">
+      <span class="article-tag yellow">STS</span>
+      <span class="article-tag yellow">Health</span>
+    </div>
+    <h1 class="article-title">The Instrumented Self: What Wearables Measure, and What They Miss</h1>
+    <div class="article-meta">
+      <span class="article-meta-item">Patrick T. Hoffman</span>
+      <span class="article-meta-item">July 2026</span>
+      <span class="article-meta-item">~13 min read</span>
+    </div>
+  </div>
+</header>
+
+<!-- Article Body -->
+<article class="article-body">
+
+  <div class="paper-note">
+    This essay is the first of a linked pair on the instrumentation of everyday life. The companion piece, <a href="instrumented-city.html"><em>The Instrumented City</em></a>, turns the same question outward, from the sensors worn on a body to the sensors embedded in a street. A third essay, <a href="instrumented-convergence.html"><em>Where the Two Meet</em></a>, argues the line between them is dissolving.
+  </div>
+
+  <p class="lead">Wearable devices and continuous biosensors now promise something that clinical medicine rarely offers an individual outside of illness: a continuous, personal, quantified account of one's own body. This essay asks the same two questions this site has asked of opinion polling — does the instrument measure what it claims to measure, and what does the instrument do to the thing it measures once the measurement becomes visible? The answer, again, is qualified in both directions. Modern wearables and biosensors validate well against clinical gold standards for some quantities and poorly for others, often in ways their marketing does not distinguish. And once a device turns a bodily process into a single daily number — a "readiness score," a "sleep score" — that number tends to become the object of management in its own right, sometimes at the expense of the underlying thing it was built to describe.</p>
+
+  <h2 id="introduction">I. Introduction: Two Decades of Wearing the Data</h2>
+
+  <p>I have been wearing some device that claimed to measure my body since the early 2010s: a Fitbit clipped to a waistband, a Jawbone UP on the wrist, a Misfit Shine's small aluminum disc, and later an Oura ring, a Whoop strap, and a continuous glucose monitor worn for reasons having nothing to do with diabetes. Later, at Google, I spent time as an internal dogfooder on the health-and-fitness surfaces that shipped on Pixel and on Fitbit's post-acquisition hardware, testing sensor accuracy and scoring logic against the same competitive set discussed in this essay — Whoop and Apple among them — from the inside of the pipeline rather than only as a consumer strapping on a ring each morning. That vantage point is part of why this essay is skeptical of both the technology's critics and its marketers: the interesting failures are rarely the crude ones a skeptic expects.</p>
+
+  <p>In 2012 I taught at Singularity University, in the cohort of instructors and fellows that included Rachel Kalmar, who was already, by that point, one of the more rigorous voices in what had recently been named the "quantified self" movement. Kalmar would go on to work as a data scientist at Misfit, and became known for an experiment that doubles, for the purposes of this essay, as a piece of methodological fieldwork: she wore twenty-one activity and fitness trackers simultaneously to see where their readings agreed, where they diverged, and what that divergence implied about what any single one of them was actually measuring. Her conclusion — that the devices disagreed with each other more than their single-number outputs implied, and that the data each generated was locked in a proprietary silo that made comparison difficult even for an expert user — is as true of the current generation of wearables as it was of the generation she wore.</p>
+
+  <p>The argument proceeds in four further parts. Part II sketches a short history of the instrumented self, from the earliest self-tracking devices through the "quantified self" movement to the current Whoop-Oura-CGM generation. Part III makes the measurement case: the quantities modern wearables validate well, and the real epistemic value of continuous personal baselines no periodic clinical visit could produce. Part IV makes the opposite case: the quantities these devices validate poorly, and the way proprietary scoring algorithms convert genuinely uncertain measurements into a single falsely precise number. Part V turns to the normative question — what a daily score does to the behavior of the person wearing it — using Goodhart's Law as the organizing frame. Part VI concludes.</p>
+
+  <h2 id="history">II. A Short History of the Instrumented Self</h2>
+
+  <p>Self-tracking predates the smartphone by centuries — Benjamin Franklin's virtue ledger and the nineteenth-century weight-and-pulse diaries kept by physicians' patients are both recognizable ancestors — but the current wave has a specific founding moment. In 2007, Wired editors Gary Wolf and Kevin Kelly coined the term "quantified self" to describe "a collaboration of users and tool makers who share an interest in self-knowledge through self-tracking," and began hosting informal show-and-tell meetups in San Francisco. Wolf's 2010 New York Times Magazine essay, "The Data-Driven Life," brought the framing to a mainstream audience just as the hardware caught up to the ambition: Fitbit (2009), Misfit's Shine (funded on Indiegogo in 2012), Jawbone's UP, and Pebble's smartwatch all shipped within a few years of each other, each wagering that consumers would pay to see numbers about themselves that had previously been visible only in a lab.</p>
+
+  <p>Kalmar's twenty-one-tracker experiment belongs to this founding period, and it is worth treating as more than a curiosity. It was, in effect, an unfunded validation study of consumer-grade self-tracking before anyone in the industry had run one at scale, and it anticipated the central finding of the peer-reviewed validation literature that would not arrive for another decade: that devices measuring the "same" thing — steps, sleep, heart rate — routinely disagree with each other by margins their single displayed number does not acknowledge.</p>
+
+  <p>The category has consolidated and specialized since. Misfit was acquired by Fossil Group in 2015; Fitbit, after years as the category's dominant name, was acquired by Google in a deal that closed in January 2021 following a fifteen-month antitrust review, and its hardware and software lineage now feeds directly into Pixel Watch. Whoop and Oura, both founded in the 2010s, abandoned the display screen altogether in favor of a subscription-based, algorithmically-scored "recovery" or "readiness" number, betting that consumers wanted an answer more than they wanted raw data. Continuous glucose monitors, originally a prescription medical device for diabetes management, began marketing directly to metabolically healthy consumers in the early 2020s on the premise that glucose variability was a general wellness signal worth watching continuously rather than only when a doctor orders a blood draw.</p>
+
+  <h2 id="measurement-case">III. The Measurement Case: What These Devices Get Right</h2>
+
+  <p>The first thing to say in wearables' defense is that some of what they measure, they measure well. A 2022 validation study placed fifty-three adults in a sleep laboratory overnight, wired to polysomnography — the clinical gold standard — while they simultaneously wore an Apple Watch, an Oura ring, a Whoop strap, and three other consumer devices. For the basic binary question of whether a person was asleep or awake at a given moment, agreement with polysomnography was 88 percent for Apple Watch, 89 percent for Oura, and 86 percent for Whoop. For heart-rate variability specifically, Whoop and Oura each achieved a 0.99 intraclass correlation with the clinical reference, a figure that would satisfy most clinical-grade instruments.</p>
+
+  <p>This is not a trivial result. Before continuous consumer sensors, a person's only access to their own resting heart rate, heart-rate variability, or sleep timing was an occasional clinical measurement, taken at a single moment under atypical conditions — the "white coat" effect is a documented distortion of blood pressure alone. A device that tracks the same quantity every night, in the person's own bed, generates a personal baseline and a record of its own drift over months that no annual physical could approximate. That is a genuine epistemic advance, structurally similar to the advantage longitudinal panel surveys have over a single cross-sectional poll: the value is less in any single reading than in the trend the readings reveal together.</p>
+
+  <p>The practical case follows the same shape as the practical case for polling made elsewhere on this site. Millions of people now have continuous, low-cost access to physiological baselines that would have required a research study or a hospital stay a generation ago, and that access has genuine clinical spillover: early atrial fibrillation detection via consumer smartwatches, still imperfect, has already prompted follow-up care in cases that would otherwise have gone unnoticed between annual physicals.</p>
+
+  <h2 id="measurement-problem">IV. The Measurement Problem: Where These Devices Fail</h2>
+
+  <p>The same 2022 sleep-lab study that found 86 to 89 percent agreement for the simple sleep/wake distinction found something much less flattering once the question became harder. Asked to classify sleep into its clinically meaningful stages — light, deep, and REM — agreement with polysomnography fell to 53 percent for Apple Watch, 60 percent for Whoop, and 61 percent for Oura. The devices, in other words, are good at telling whether you are asleep; they are not good, by the standard clinical measure, at telling what kind of sleep you are getting, which is precisely the distinction most wearable marketing emphasizes with the greatest confidence — the deep-sleep graph, the REM percentage, the sleep-stage hypnogram displayed each morning as though it were as solid as the wake/sleep line beneath it.</p>
+
+  <p>Continuous glucose monitors show a parallel gap. In diabetic populations, where CGMs were developed and are rigorously validated against blood draws, devices such as the Dexcom G6 and FreeStyle Libre 3 report mean absolute relative differences (MARD) in the range of 8 to 9 percent — good enough for insulin-dosing decisions. But the growing market of CGMs sold to metabolically healthy, non-diabetic consumers rests on much thinner validation: one study of a widely used sensor in thirty-four healthy participants found a MARD of 17.6 percent, roughly double the diabetic-population figure, and most of the studies establishing baseline "healthy" glucose curves have enrolled a few dozen to a few hundred people over one to two weeks — a sample size and duration that would be considered exploratory, not confirmatory, anywhere else in clinical research.</p>
+
+  <p>The deeper problem is not any single quantity's error margin but what happens when several imperfectly measured quantities are combined into one proprietary score. A "readiness" or "recovery" number is typically a weighted composite of heart-rate variability, resting heart rate, sleep, and sometimes skin temperature or respiratory rate, combined by an algorithm the manufacturer does not disclose in full. Each input carries its own measurement uncertainty; the composite inherits all of them while displaying none of them, presenting a single integer with a false air of clinical precision. This is structurally the same criticism this site has made of the polling industry's reported margin of error: a number that quietly captures only one source of uncertainty while implying it has captured all of them.</p>
+
+  <h2 id="normative-problem">V. The Normative Problem: When the Score Becomes the Goal</h2>
+
+  <p>Even a perfectly measured quantity creates a distinct problem once it is displayed daily and treated as a target. The economist Charles Goodhart observed in 1975, in a critique of British monetary policy, that any statistical regularity tends to collapse once pressure is placed on it for control purposes; the anthropologist Marilyn Strathern gave the idea its now-standard, more general phrasing two decades later:</p>
+
+  <blockquote>
+    <p>When a measure becomes a target, it ceases to be a good measure.</p>
+    <cite>— Marilyn Strathern, "'Improving ratings': audit in the British university system," 1997</cite>
+  </blockquote>
+
+  <p>Wearables supply a clean, almost laboratory-grade illustration of the mechanism. A sleep score is meant to describe sleep; once a user begins optimizing for a high sleep score specifically — going to bed earlier not because they are tired but because the ring rewards it, treating a low readiness number as a verdict to be argued with rather than a noisy estimate to be shrugged off — the score has become the target, and clinicians now have a name, "orthosomnia," for the resulting anxiety about sleep that a device meant to reassure has instead produced. The device has not become less accurate in Strathern's narrow sense; it has become a worse guide to the actual goal, which was rest, not a number describing rest.</p>
+
+  <p>This dynamic intensifies sharply once a third party attaches a financial incentive to the score, because the pressure toward gaming a metric that Goodhart described in monetary policy generalizes cleanly to human behavior under an external reward. John Hancock's 2018 decision to sell only "interactive" life insurance policies — offering premium discounts of up to 15 percent to customers who share Fitbit or Apple Watch activity data — turns a private wellness metric into a monitored, incentivized target for an external party with its own interest in the outcome, which is the exact structural setup Goodhart's Law describes and the exact bridge to the institutional question <a href="instrumented-convergence.html">the third essay in this series</a> takes up directly: what happens once a personal biometric feed crosses an institutional threshold and becomes an input to somebody else's decision.</p>
+
+  <h2 id="conclusion">VI. Conclusion</h2>
+
+  <p>The instrumented self is not a mirage, but it is not a diagnostic instrument either, and the marketing of these devices rarely marks the difference between the two. Wearables and consumer biosensors validate well against clinical gold standards for some quantities — sleep/wake timing, heart-rate variability — and poorly for others, including the sleep-stage and glucose-variability numbers their interfaces present with the most graphical confidence. That gap between what is well measured and what is confidently displayed is the methodological problem. Layered on top of it is the normative problem this site's other essays have applied to opinion polling and will apply, in the next piece, to civic sensing: once an uncertain measurement becomes a visible score, and especially once that score is watched by an employer, an insurer, or the wearer's own anxious attention, the score starts to shape the behavior it was only supposed to describe. The device that promised self-knowledge can end up manufacturing a slightly different self instead — one calibrated to a number rather than to how it actually feels to be well rested. Rachel Kalmar's twenty-one trackers, disagreeing quietly with each other on a decade-old wrist, made the same point before any of this had a name.</p>
+
+  <div class="bibliography">
+    <h2>Select Bibliography</h2>
+    <ol>
+      <li>Wolf, Gary. <a href="https://www.nytimes.com/2010/05/02/magazine/02self-measurement-t.html" target="_blank" rel="noopener noreferrer">"The Data-Driven Life."</a> <em>The New York Times Magazine</em>, April 28, 2010.</li>
+      <li><a href="https://quantifiedself.com/blog/what-is-the-quantified-self/" target="_blank" rel="noopener noreferrer">Quantified Self. "What Is the Quantified Self?"</a> quantifiedself.com.</li>
+      <li><a href="https://allthingsd.com/20130923/the-extremely-quantified-self-meet-rachel-kalmar-who-wears-21-fitness-trackers-at-the-same-time-video/" target="_blank" rel="noopener noreferrer">"The Extremely Quantified Self: Meet Rachel Kalmar, Who Wears 21 Fitness Trackers at the Same Time."</a> AllThingsD, September 23, 2013.</li>
+      <li><a href="https://www.fastcompany.com/3036433/misfit-engineer-rachel-kalmar-wants-you-to-be-an-intelligent-node" target="_blank" rel="noopener noreferrer">"Misfit Engineer Rachel Kalmar Wants You To Be an Intelligent Node."</a> Fast Company, 2014.</li>
+      <li><a href="https://en.wikipedia.org/wiki/Misfit_(company)" target="_blank" rel="noopener noreferrer">"Misfit (company)."</a> Wikipedia.</li>
+      <li><a href="https://www.cnbc.com/2021/01/14/google-closes-its-fitbit-acquisition.html" target="_blank" rel="noopener noreferrer">"Google Closes Its Fitbit Acquisition."</a> CNBC, January 14, 2021.</li>
+      <li>Chee, Nicole, et al. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9412437/" target="_blank" rel="noopener noreferrer">"A Validation of Six Wearable Devices for Estimating Sleep, Heart Rate and Heart Rate Variability in Healthy Adults."</a> <em>Sensors</em> 22, no. 16 (2022): 6317.</li>
+      <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7296129/" target="_blank" rel="noopener noreferrer">"Continuous Glucose Monitoring Profiles in Healthy Nondiabetic Participants: A Multicenter Prospective Study."</a> <em>Journal of Clinical Endocrinology & Metabolism</em> 104, no. 10 (2019): 4356–4364.</li>
+      <li>Goodhart, Charles. "Problems of Monetary Management: The U.K. Experience." In <em>Papers in Monetary Economics</em>, vol. 1. Reserve Bank of Australia, 1975.</li>
+      <li>Strathern, Marilyn. <a href="https://gwern.net/doc/statistics/decision/1997-strathern.pdf" target="_blank" rel="noopener noreferrer">"'Improving Ratings': Audit in the British University System."</a> <em>European Review</em> 5, no. 3 (1997): 305–321.</li>
+      <li><a href="https://www.weforum.org/stories/2018/09/strap-on-the-fitbit-john-hancock-to-sell-only-interactive-life-insurance/" target="_blank" rel="noopener noreferrer">"No Fitbit, No Insurance: Is This Company the Start of a Trend?"</a> World Economic Forum, September 2018.</li>
+    </ol>
+  </div>
+
+</article>
+
+<!-- Footer -->
+<footer>
+  <p>© 2026 Patrick T. Hoffman · <a href="../">Home</a> · <a href="https://www.threads.net/@arcktip" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true" style="vertical-align:-2px;margin-right:2px"><path d="M 18.263,11.097 C 18.233,7.611 16.344,5.511 13.152,5.511 C 11.021,5.511 9.23,6.474 8.289,8.01 L 10.351,9.448 C 10.886,8.605 11.623,7.905 12.979,7.905 C 14.507,7.905 15.297,8.755 15.523,10.336 C 14.785,10.223 14.047,10.163 13.287,10.163 C 9.162,10.163 7.219,12.03 7.219,14.499 C 7.219,16.968 9.162,18.489 12.023,18.489 C 15.162,18.489 17.036,16.374 17.804,13.754 C 18.602,14.115 19.152,14.958 19.152,16.223 C 19.152,19.611 15.245,21.456 11.932,21.456 C 7.047,21.456 3.855,18.248 3.855,13.032 C 3.855,6.64 8.078,2.545 13.754,2.545 C 17.563,2.545 19.445,4.216 20.725,6.459 L 22.833,4.984 C 21.44,2.078 18.331,-6.217e-15 13.664,-7.105e-15 C 6.226,-7.105e-15 1.167,5.277 1.167,12.934 C 1.167,19.935 6.12,24 12.023,24 C 16.901,24 21.832,21.154 21.832,16.284 C 21.832,13.739 20.371,12.053 18.263,11.097 L 18.263,11.097 M 11.932,15.952 C 10.856,15.952 9.907,15.44 9.907,14.499 C 9.907,13.016 11.729,12.565 13.513,12.565 C 14.191,12.565 14.853,12.61 15.44,12.738 C 15.019,14.665 13.769,15.952 11.932,15.952 L 11.932,15.952 L 11.932,15.952"/></svg>arcktip</a></p>
+</footer>
+
+</body>
+</html>

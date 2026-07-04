@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2TKMRQXKMJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-2TKMRQXKMJ');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Instrumented City: A Short History of Urban Sensing — Patrick T. Hoffman</title>
+<meta name="description" content="From John Snow's cholera map to Sidewalk Labs' failed Toronto waterfront, cities have always tried to see themselves through instruments. An essay on the case for urban sensing, and the consent problem that sank its most ambitious recent attempt.">
+<link rel="canonical" href="https://www.patrickthoffman.com/writing/instrumented-city.html">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:ital,wght@0,500;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/shared.css">
+<style>
+  .paper-note {
+    background: var(--color-surface, #f5f3ef);
+    border-left: 3px solid var(--color-accent, #c8a96e);
+    padding: 1rem 1.25rem;
+    margin: 0 0 2.5rem;
+    border-radius: 0 4px 4px 0;
+    font-size: 0.88rem;
+    color: var(--color-text-muted, #666);
+    line-height: 1.6;
+  }
+  .paper-note a { color: var(--color-accent, #c8a96e); text-decoration: underline; }
+  .bibliography {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border, #e0ddd7);
+  }
+  .bibliography h2 { font-size: 1.1rem; margin-bottom: 1.25rem; }
+  .bibliography ol { padding-left: 1.5rem; font-size: 0.85rem; line-height: 1.8; color: var(--color-text-muted, #555); }
+  .bibliography ol li { margin-bottom: 0.4rem; }
+  .article-body a { color: var(--royal, #1a3a8a); text-decoration: underline; text-underline-offset: 2px; }
+  .article-body h2 { scroll-margin-top: 90px; }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="top-nav solid" id="topNav">
+  <a href="../" class="nav-logo">PTH<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="../#about">About</a></li>
+    <li><a href="../#journey">Journey</a></li>
+    <li><a href="./">Writing</a></li>
+    <li><a href="../teaching/">Teaching</a></li>
+    <li><a href="../#speaking">Speaking</a></li>
+    <li><a href="../#connect">Connect</a></li>
+  </ul>
+</nav>
+
+<!-- Article Header -->
+<header class="article-header">
+  <div class="article-header-content">
+    <a href="./" class="article-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+      Back to Writing
+    </a>
+    <div class="article-tags">
+      <span class="article-tag yellow">STS</span>
+      <span class="article-tag">Mobility</span>
+    </div>
+    <h1 class="article-title">The Instrumented City: A Short History of Urban Sensing</h1>
+    <div class="article-meta">
+      <span class="article-meta-item">Patrick T. Hoffman</span>
+      <span class="article-meta-item">July 2026</span>
+      <span class="article-meta-item">~12 min read</span>
+    </div>
+  </div>
+</header>
+
+<!-- Article Body -->
+<article class="article-body">
+
+  <div class="paper-note">
+    This essay is the second of a linked pair. The companion piece, <a href="instrumented-self.html"><em>The Instrumented Self</em></a>, asks the same questions of wearable biosensors that this essay asks of urban sensor networks. A third essay, <a href="instrumented-convergence.html"><em>Where the Two Meet</em></a>, argues the boundary between the two is dissolving.
+  </div>
+
+  <p class="lead">Cities have always tried to see themselves. Before there were sensors, there were ledgers, maps, and enumerators walking door to door, and each new instrument for seeing a city has provoked the same two questions this site has asked of polling and of wearables: does the instrument measure accurately, and what does the act of measuring do to the people being measured? This essay traces urban sensing from its nineteenth-century, pre-digital origins through the branded "smart city" era to the project that did more than any other to expose the second question's teeth — Sidewalk Labs' attempt to build a sensor-rich neighborhood on Toronto's waterfront, and its collapse under a challenge not of accuracy but of legitimacy.</p>
+
+  <h2 id="introduction">I. Introduction: A Personal Vantage Point</h2>
+
+  <p>I came to this question from the inside of the instrument rather than from outside it. At Social Bicycles and later at JUMP and Superpedestrian, the product I helped build was, functionally, a fleet of urban sensors that happened to be shaped like bikes and scooters: each vehicle reported its location, its lock state, and its usage pattern back to a server that cities increasingly wanted access to, in aggregate, to manage curb space, plan transit, and enforce fleet caps. That work sits squarely inside what this essay calls urban sensing, and it is the reason this essay treats the question as more than academic: the data a city can see about how people actually move through it is genuinely useful for planning, and the terms on which a private fleet operator shares that data with a public agency are exactly the kind of governance question the rest of this essay is about.</p>
+
+  <p>The argument proceeds in four further parts. Part II sketches urban measurement before the "smart city" label existed, from John Snow's 1854 cholera map through Los Angeles's 1984 Olympics-era traffic control system. Part III describes the branded smart-city era of the 2010s and the case for what it accomplished. Part IV is a close case study of Sidewalk Labs' Quayside project in Toronto, the most ambitious recent attempt at comprehensive urban sensing and its collapse under public objection. Part V concludes with the distinction this pair of essays turns on: unlike a wearable, which a person chooses to put on, a city sensor is ambient by design, and that design choice is the source of the legitimacy problem the rest of this series pursues.</p>
+
+  <h2 id="before-smart">II. Before "Smart": A History of Urban Measurement</h2>
+
+  <p>The founding case study of urban measurement predates computing by more than a century. During the 1854 cholera outbreak in London's Soho neighborhood, which killed 616 people, the physician John Snow plotted the addresses of the dead against the water pumps that served them and found the deaths clustering tightly around a single pump on Broad Street. The local council removed the pump's handle on September 8, 1854; Snow, who was not trained as a cartographer, is now credited as a founder of the discipline of disease mapping, and his map remains the textbook example of how spatial data, correctly instrumented and correctly read, can settle a public-health question that pure theory — the era's dominant "miasma" account blamed foul air, not water — could not.</p>
+
+  <p>The twentieth century added continuous, mechanical sensing rather than one-time cartographic reconstruction. Los Angeles built its Automated Traffic Surveillance and Control system, ATSAC, for the 1984 Olympics, initially wiring 118 signals with inductive loop detectors and closed-circuit cameras feeding a central control room that adjusted signal timing in real time based on measured traffic flow. It was, functionally, exactly what a "smart city" system would later be marketed as, deployed decades before that marketing term existed, and it worked: independent evaluation credits the fully built-out system, now covering more than 4,500 signals, with cutting intersection delay by roughly a third and vehicle emissions by several percent across the network. ATSAC is a useful corrective to the idea that urban sensing is a recent phenomenon dressed up in new vocabulary; the vocabulary is recent, the practice is not.</p>
+
+  <h2 id="sensor-grid">III. The Sensor Grid Arrives</h2>
+
+  <p>What changed in the 2010s was not the existence of urban sensors but their density, their networking, and their branding. IBM's "Smarter Cities" campaign and deployments like Rio de Janeiro's centralized operations center — a single room aggregating feeds from traffic cameras, weather sensors, and utility systems into one dashboard — marketed a vision in which a city's entire operational state could be observed continuously from a single point, in the same way ATSAC had observed only traffic. Dockless mobility fleets, the sector I worked in, added another sensor layer on top of the fixed municipal grid: instead of loop detectors embedded in pavement, a fleet of GPS-equipped bikes and scooters became a moving census of trip origins, destinations, and demand, refreshed continuously rather than sampled periodically the way a traditional origin-destination travel survey had been.</p>
+
+  <p>The case for this density of sensing is a straightforward extension of the case for ATSAC: better data produces better-timed interventions; a city that can see where trips actually start and end can plan a bus route or a bike lane against real demand instead of an inference from a travel survey conducted once every few years. That argument is not wrong, and it is the reason transit agencies and city planning departments were, and are, eager customers for exactly this kind of data. The problem, as the next section shows, is not the case for sensing; it is the question of consent that fixed municipal infrastructure like ATSAC never had to answer, because a traffic light does not know whose car it is timing, while a comprehensive neighborhood sensor grid, by design, would.</p>
+
+  <h2 id="quayside">IV. Where It Broke: Sidewalk Labs and the Quayside Backlash</h2>
+
+  <p>In 2017, Sidewalk Labs — an Alphabet subsidiary, meaning a corporate sibling of Google — won the bid to develop Quayside, a stretch of Toronto's eastern waterfront, as what the company described as "the world's first neighbourhood built from the internet up": heated pavement that could report on its own ice conditions, sensor-driven waste management, adaptive traffic signals, and a pervasive network of environmental and movement sensors feeding a shared data layer. It was, in ambition, the fullest realization of the smart-city sensor grid described in Part III, proposed for an entire neighborhood rather than retrofitted onto an existing one.</p>
+
+  <p>The backlash arrived quickly and did not center on whether the sensors would work. Residents, privacy advocates, and members of the project's own advisory panel objected specifically to the governance question: who would own the data a comprehensive neighborhood sensor grid generated, who could access it, and what would stop the arrangement from becoming a template for privately-operated civic surveillance elsewhere. Sidewalk Labs responded by proposing an independent "civic data trust" to steward the data on the public's behalf rather than the company's, a structural concession that amounted to an admission that the original plan had not adequately answered the consent question in the first place. Waterfront Toronto, the public body overseeing the project, later stated plainly that the concerns raised about data governance had been legitimate. Alphabet cancelled the project outright in May 2020, citing pandemic-driven economic uncertainty as the proximate cause, but the project had already spent nearly three years fighting a legitimacy battle the pandemic did not create.</p>
+
+  <p>Quayside is the cleanest available case study of a general pattern: an urban sensor system can be technically sound and still fail, not on a measurement question but on a consent question that has no equivalent in the wearables essay in this pair. A person who finds their sleep score anxiety-inducing can simply remove the ring. A resident of a fully-instrumented neighborhood has no equivalent exit, short of not living there, which is precisely why the ambient, non-opt-in character of civic sensing raises a harder governance problem than the personal, opt-in character of a wearable device.</p>
+
+  <h2 id="conclusion">V. Conclusion</h2>
+
+  <p>Cities have been instrumenting themselves since long before the phrase "smart city" existed, and the case for doing so is genuinely strong: John Snow's map ended a specific outbreak; ATSAC measurably cut delay and emissions across an entire road network; a well-governed mobility-fleet data feed can direct a bike lane to where people actually ride rather than where planners guess they might. What Quayside demonstrated is that the case for accuracy and the case for legitimacy are separate arguments, and that a project can win the first decisively while losing the second entirely. The distinction that follows from this — between a sensor a person chooses to wear and a sensor that is simply present in the environment they occupy, chosen or not — is the dividing line <a href="instrumented-convergence.html">the third essay in this series</a> exists to blur, as contact tracing, insurance telematics, and congestion pricing each show a personal device being recruited, often without much genuine choice involved, into exactly the kind of ambient civic sensing this essay has just described.</p>
+
+  <div class="bibliography">
+    <h2>Select Bibliography</h2>
+    <ol>
+      <li><a href="https://en.wikipedia.org/wiki/1854_Broad_Street_cholera_outbreak" target="_blank" rel="noopener noreferrer">"1854 Broad Street Cholera Outbreak."</a> Wikipedia.</li>
+      <li><a href="https://www.londonmuseum.org.uk/collections/london-stories/john-snow-cholera-broad-street-pump/" target="_blank" rel="noopener noreferrer">"John Snow: Cholera & the Broad Street Pump."</a> London Museum.</li>
+      <li><a href="https://ladot.lacity.gov/projects/transportation-technology/atsac" target="_blank" rel="noopener noreferrer">"ATSAC."</a> Los Angeles Department of Transportation.</li>
+      <li><a href="https://www.itskrs.its.dot.gov/2023-b01770" target="_blank" rel="noopener noreferrer">"Los Angeles' Automated Traffic Surveillance and Control System Reduced Travel Time by Ten Percent."</a> U.S. DOT ITS Deployment Evaluation, 2023.</li>
+      <li><a href="https://en.wikipedia.org/wiki/Sidewalk_Toronto" target="_blank" rel="noopener noreferrer">"Sidewalk Toronto."</a> Wikipedia.</li>
+      <li><a href="https://www.cbc.ca/news/canada/toronto/sidewalk-labs-cancels-project-1.5559370" target="_blank" rel="noopener noreferrer">"Sidewalk Labs Cancels Plan to Build High-Tech Neighbourhood in Toronto Amid COVID-19."</a> CBC News, May 7, 2020.</li>
+      <li><a href="https://ccla.org/major-cases-and-reports/torontos-smart-city/" target="_blank" rel="noopener noreferrer">"Toronto's Smart City."</a> Canadian Civil Liberties Association.</li>
+      <li><a href="https://www.archdaily.com/939152/sidewalk-labs-cancels-quayside-smart-city-project-in-toronto" target="_blank" rel="noopener noreferrer">"Sidewalk Labs Cancels Quayside Smart City Project in Toronto."</a> ArchDaily, 2020.</li>
+    </ol>
+  </div>
+
+</article>
+
+<!-- Footer -->
+<footer>
+  <p>© 2026 Patrick T. Hoffman · <a href="../">Home</a> · <a href="https://www.threads.net/@arcktip" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true" style="vertical-align:-2px;margin-right:2px"><path d="M 18.263,11.097 C 18.233,7.611 16.344,5.511 13.152,5.511 C 11.021,5.511 9.23,6.474 8.289,8.01 L 10.351,9.448 C 10.886,8.605 11.623,7.905 12.979,7.905 C 14.507,7.905 15.297,8.755 15.523,10.336 C 14.785,10.223 14.047,10.163 13.287,10.163 C 9.162,10.163 7.219,12.03 7.219,14.499 C 7.219,16.968 9.162,18.489 12.023,18.489 C 15.162,18.489 17.036,16.374 17.804,13.754 C 18.602,14.115 19.152,14.958 19.152,16.223 C 19.152,19.611 15.245,21.456 11.932,21.456 C 7.047,21.456 3.855,18.248 3.855,13.032 C 3.855,6.64 8.078,2.545 13.754,2.545 C 17.563,2.545 19.445,4.216 20.725,6.459 L 22.833,4.984 C 21.44,2.078 18.331,-6.217e-15 13.664,-7.105e-15 C 6.226,-7.105e-15 1.167,5.277 1.167,12.934 C 1.167,19.935 6.12,24 12.023,24 C 16.901,24 21.832,21.154 21.832,16.284 C 21.832,13.739 20.371,12.053 18.263,11.097 L 18.263,11.097 M 11.932,15.952 C 10.856,15.952 9.907,15.44 9.907,14.499 C 9.907,13.016 11.729,12.565 13.513,12.565 C 14.191,12.565 14.853,12.61 15.44,12.738 C 15.019,14.665 13.769,15.952 11.932,15.952 L 11.932,15.952 L 11.932,15.952"/></svg>arcktip</a></p>
+</footer>
+
+</body>
+</html>
