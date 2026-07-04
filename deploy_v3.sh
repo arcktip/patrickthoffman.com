@@ -116,6 +116,7 @@ if ! run_with_timeout 300 lftp -c "
     --exclude-glob deploy.sh \
     --exclude-glob deploy_v2.sh \
     --exclude-glob deploy_v3.sh \
+    --exclude-glob pull_books.sh \
     $SCRIPT_DIR/ $DH_DIR
   quit
 "; then

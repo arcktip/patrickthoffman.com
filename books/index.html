@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Books | Patrick T. Hoffman</title>
+  <meta name="description" content="Books by Patrick T. Hoffman." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --paper: #f1eadb;
+      --paper-deep: #e3dac6;
+      --ink: #16223c;
+      --ink-soft: #4a5573;
+      --rev: #c1391f;
+      --gold: #b58b3e;
+    }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Instrument Serif', Georgia, serif;
+      min-height: 100vh;
+    }
+
+    /* Nav */
+    .pth-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 44px;
+      background: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 999;
+      box-shadow: 0 1px 8px rgba(22,34,60,0.22);
+    }
+
+    .pth-brand {
+      color: var(--paper);
+      font-family: 'Fraunces', Georgia, serif;
+      font-weight: 700;
+      font-size: 16px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: -0.01em;
+    }
+
+    .pth-hex { color: var(--gold); font-size: 20px; }
+
+    .pth-links { display: flex; gap: 24px; }
+
+    .pth-links a {
+      color: rgba(241,234,219,0.78);
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 13px;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .pth-links a:hover { color: var(--paper); }
+
+    /* Layout */
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 96px 24px 80px;
+    }
+
+    h1 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 2.4rem;
+      font-weight: 300;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 0.3em;
+      line-height: 1.15;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--ink-soft);
+      margin-bottom: 56px;
+      font-style: italic;
+    }
+
+    /* Book card */
+    .book-card {
+      display: flex;
+      gap: 32px;
+      align-items: flex-start;
+      padding: 32px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px rgba(22,34,60,0.08);
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.2s, transform 0.2s;
+      border: 1px solid rgba(22,34,60,0.07);
+    }
+
+    .book-card:hover {
+      box-shadow: 0 6px 24px rgba(22,34,60,0.13);
+      transform: translateY(-2px);
+    }
+
+    .book-cover {
+      flex-shrink: 0;
+      width: 100px;
+      height: 140px;
+      background: var(--ink);
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 12px;
+      text-align: center;
+      box-shadow: 3px 3px 0 rgba(22,34,60,0.2);
+    }
+
+    .book-cover-hex {
+      color: var(--gold);
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .book-cover-title {
+      color: var(--paper);
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1.3;
+      letter-spacing: 0.02em;
+    }
+
+    .book-info { flex: 1; }
+
+    .book-info h2 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .book-info p {
+      font-size: 1rem;
+      color: var(--ink-soft);
+      line-height: 1.65;
+      margin-bottom: 16px;
+    }
+
+    .book-meta {
+      font-size: 0.85rem;
+      color: var(--ink-soft);
+      font-style: italic;
+    }
+
+    .book-cta {
+      display: inline-block;
+      margin-top: 16px;
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 0.9rem;
+      color: var(--rev);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(193,57,31,0.4);
+      padding-bottom: 1px;
+      transition: border-color 0.15s;
+    }
+
+    .book-cta:hover { border-color: var(--rev); }
+
+    footer {
+      text-align: center;
+      padding: 40px 24px;
+      color: var(--ink-soft);
+      font-size: 0.85rem;
+    }
+
+    footer a { color: var(--ink-soft); }
+
+    @media (max-width: 600px) {
+      .book-card { flex-direction: column; gap: 20px; }
+      .book-cover { width: 80px; height: 112px; }
+      h1 { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="pth-nav">
+  <a class="pth-brand" href="https://patrickthoffman.com">
+    <span class="pth-hex">&#x2B21;</span> PTH.
+  </a>
+  <div class="pth-links">
+    <a href="https://patrickthoffman.com/writing">Writing</a>
+    <a href="https://www.threads.net/@arcktip">@arcktip</a>
+  </div>
+</nav>
+
+<main>
+  <h1>Books</h1>
+  <p class="subtitle">Long-form thinking on work, technology, and what comes next.</p>
+
+  <a class="book-card" href="/books/product-manager-v2/">
+    <div class="book-cover">
+      <div class="book-cover-hex">&#x2B21;</div>
+      <div class="book-cover-title">Product Manager? v2</div>
+    </div>
+    <div class="book-info">
+      <h2>Product Manager? <span style="color:var(--rev)">v2</span></h2>
+      <p>The expanded edition — 100+ pages going deep on what PMs actually do, the traits that survive AI, how to think like a PM, and six hands-on exercises to find out if you'd like the work.</p>
+      <div class="book-meta">Patrick T. Hoffman &middot; 2026 &middot; Expanded</div>
+      <span class="book-cta">Read &rarr;</span>
+    </div>
+  </a>
+
+  <div style="height: 24px;"></div>
+
+  <a class="book-card" href="/books/product-manager/" style="opacity: 0.8;">
+    <div class="book-cover" style="background: var(--ink-soft);">
+      <div class="book-cover-hex">&#x2B21;</div>
+      <div class="book-cover-title">Product Manager?</div>
+    </div>
+    <div class="book-info">
+      <h2>Product Manager? <span style="font-size:0.85rem; font-weight:400; color:var(--ink-soft)">v1</span></h2>
+      <p>The original short-form edition — a concise field guide for students testing whether product management fits them.</p>
+      <div class="book-meta">Patrick T. Hoffman &middot; 2026 &middot; Original</div>
+      <span class="book-cta">Read &rarr;</span>
+    </div>
+  </a>
+</main>
+
+<footer>
+  <a href="https://patrickthoffman.com">patrickthoffman.com</a>
+</footer>
+
+</body>
+</html>
