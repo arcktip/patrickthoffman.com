@@ -5,4 +5,17 @@ ErrorDocument 404 /404.html
 
 # END Error Handlers
 
+# BEGIN Canonical URL redirect (index.html -> directory root)
+# Sends any request that explicitly asks for .../index.html to the clean
+# directory URL instead, so search engines see one canonical URL per page
+# rather than two (e.g. /index.html and /). THE_REQUEST (not REQUEST_URI)
+# is used so this only fires for the browser's literal request line, not
+# for Apache's internal DirectoryIndex rewrite that serves index.html for "/".
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteCond %{THE_REQUEST} /index\.html[?\s] [NC]
+RewriteRule ^(.*?)index\.html$ /$1 [R=301,L]
+</IfModule>
+# END Canonical URL redirect
+
 
