@@ -412,16 +412,85 @@ function extractJSON(text) {
   try { return JSON.parse(s.slice(start,end+1)); } catch(e) { return null; }
 }
 
-async function callClaude(apiKey, prompt) {
+async function callClaude(apiKey, prompt, maxTokens) {
   var res = await fetch("https://api.anthropic.com/v1/messages", {
     method:"POST",
     headers:{"Content-Type":"application/json","x-api-key":apiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
-    body:JSON.stringify({ model:"claude-sonnet-5", max_tokens:4096, messages:[{role:"user",content:prompt}] })
+    body:JSON.stringify({ model:"claude-sonnet-5", max_tokens:maxTokens||4096, messages:[{role:"user",content:prompt}] })
   });
   if (!res.ok) throw new Error("API "+res.status);
   var data = await res.json();
   if (data.error) throw new Error(data.error.message);
   return (data.content||[]).filter(function(b){return b.type==="text";}).map(function(b){return b.text;}).join("\n");
+}
+
+// ═══════════════════════════════════════
+// MAP-REDUCE SUMMARIZATION
+// Partitions accumulated articles into batches, summarizes each batch (the
+// "map" step), then synthesizes those compact summaries into the final
+// briefing/trends (the "reduce" step). Every model call's OUTPUT stays bounded,
+// so generation keeps working as the corpus grows over time instead of hitting
+// the max_tokens ceiling.
+// ═══════════════════════════════════════
+
+var MAPREDUCE_THRESHOLD = 80; // articles; at/below this a single pass is fine
+var BATCH_SIZE = 50;          // articles per map batch
+var MAP_CONCURRENCY = 4;      // parallel map calls
+
+var MAP_PROMPT = "You are an analyst covering retail media and commerce/shopping. Summarize the following BATCH of articles into compact JSON. Be factual; name companies and cite figures where present.\n\nReturn ONLY valid JSON (no markdown, no backticks):\n{\"timeframe\":\"date range if inferable\",\"article_count\":0,\"key_developments\":[{\"headline\":\"short\",\"analysis\":\"1-2 sentences on why it matters\",\"entities\":[\"companies\"],\"domains\":[\"retail-media and/or commerce\"],\"significance\":1}],\"top_entities\":[\"most-mentioned\"],\"top_themes\":[\"dominant themes\"],\"signals\":[\"notable patterns\"],\"sentiment\":\"positive|negative|neutral\"}\n\nInclude at most 6 key_developments (the most significant). Batch data:\n";
+
+// Flatten all articles across sessions, tagging each with its content date.
+function flattenArticles(sessions) {
+  var out = [];
+  sessions.forEach(function(s) {
+    var d = getContentDate(s);
+    (s.articles || []).forEach(function(a) {
+      out.push({ title:a.title, source:a.source, url:a.url, summary:a.summary||"", themes:a.themes, entities:a.entities, signal_type:a.signal_type, sentiment:a.sentiment, strategic_insight:a.strategic_insight||"", date:d });
+    });
+  });
+  return out;
+}
+
+function chunkArray(arr, size) {
+  var out = [];
+  for (var i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+  return out;
+}
+
+// Run async workers with bounded concurrency to keep API usage sane.
+async function runLimited(items, limit, worker, onEach) {
+  var results = new Array(items.length);
+  var idx = 0, finished = 0;
+  async function next() {
+    while (idx < items.length) {
+      var cur = idx++;
+      results[cur] = await worker(items[cur], cur);
+      finished++;
+      if (onEach) onEach(finished, items.length);
+    }
+  }
+  var runners = [];
+  var n = Math.min(limit, items.length);
+  for (var k = 0; k < n; k++) runners.push(next());
+  await Promise.all(runners);
+  return results;
+}
+
+// MAP step: summarize each batch into a compact object. A failed/garbled batch
+// degrades to a small placeholder instead of breaking the whole run.
+async function summarizeBatches(apiKey, sessions, batchSize, onProgress) {
+  var articles = flattenArticles(sessions);
+  var batches = chunkArray(articles, batchSize);
+  var summaries = await runLimited(batches, MAP_CONCURRENCY, async function(batch) {
+    try {
+      var raw = await callClaude(apiKey, MAP_PROMPT + JSON.stringify(batch), 4000);
+      var parsed = extractJSON(raw);
+      return parsed || { note: "unparsed batch", key_developments: [], top_entities: [], top_themes: [] };
+    } catch(e) {
+      return { note: "batch failed: " + ((e && e.message) || "").slice(0, 60), key_developments: [] };
+    }
+  }, onProgress);
+  return { summaries: summaries, batchCount: batches.length, articleCount: articles.length };
 }
 
 // ═══════════════════════════════════════
@@ -773,7 +842,7 @@ function App() {
     if (hasKey) {
       try {
         setStatus("Running Claude analysis...");
-        var rawText = await callClaude(apiKey, ANALYSIS_PROMPT + trimmed);
+        var rawText = await callClaude(apiKey, ANALYSIS_PROMPT + trimmed, 8000);
         var parsed = extractJSON(rawText);
         if (parsed && parsed.articles && parsed.articles.length > 0) {
           parsed.articles.forEach(function(a){a.id=newId();});
@@ -848,7 +917,7 @@ function App() {
       if (hasKey) {
         try {
           setStatus("Running Claude analysis on " + result.count + " emails...");
-          var rawText = await callClaude(apiKey, ANALYSIS_PROMPT + result.content.slice(0, 12000));
+          var rawText = await callClaude(apiKey, ANALYSIS_PROMPT + result.content.slice(0, 12000), 8000);
           var parsed = extractJSON(rawText);
           if (parsed && parsed.articles && parsed.articles.length > 0) {
             parsed.articles.forEach(function(a) { a.id = newId(); });
@@ -897,8 +966,17 @@ function App() {
     setTrendBusy(true); setStatus("Synthesizing trends...");
     try {
       var syn = synthesize(sessions);
-      var payload = JSON.stringify({sessions:sessions.map(function(s){return{date:getContentDate(s),articles:s.articles,synthesis:s.synthesis};}),entities:syn.entityCount,themes:syn.themeCount,domain_breakdown:syn.domainCount});
-      var rawText = await callClaude(apiKey, TREND_PROMPT + payload);
+      var tbase = { entities: syn.entityCount, themes: syn.themeCount, domain_breakdown: syn.domainCount, total_articles: syn.totalArticles, total_sessions: sCount };
+      if (syn.totalArticles > MAPREDUCE_THRESHOLD) {
+        var tmapped = await summarizeBatches(apiKey, sessions, BATCH_SIZE, function(done,total){ setStatus("Summarizing batches " + done + "/" + total + "..."); });
+        tbase.batch_summaries = tmapped.summaries;
+        tbase.note = "Data is pre-summarized into " + tmapped.batchCount + " batch summaries covering " + tmapped.articleCount + " articles; identify trends across all of them.";
+        setStatus("Synthesizing trends from " + tmapped.batchCount + " batch summaries...");
+      } else {
+        tbase.sessions = sessions.map(function(s){return {date:getContentDate(s),articles:s.articles,synthesis:s.synthesis};});
+      }
+      var payload = JSON.stringify(tbase);
+      var rawText = await callClaude(apiKey, TREND_PROMPT + payload, 16000);
       var parsed = extractJSON(rawText);
       if (parsed) {
         var report = {
@@ -919,22 +997,31 @@ function App() {
     setBriefingBusy(true); setStatus("Generating briefing...");
     try {
       var syn = synthesize(sessions);
-      var payload = JSON.stringify({
+      var base = {
         total_sessions: sCount,
         total_articles: syn.totalArticles,
         date_range: { earliest: getContentDate(sessions[sessions.length - 1]), latest: getContentDate(sessions[0]) },
-        sessions: sessions.map(function(s) {
-          return { date: getContentDate(s), source: s.source, articles: s.articles.map(function(a) {
-            return { title: a.title, source: a.source, url: a.url, summary: a.summary || "", themes: a.themes, signal_type: a.signal_type, sentiment: a.sentiment, entities: a.entities, strategic_insight: a.strategic_insight || "" };
-          })};
-        }),
         accumulated_themes: Object.entries(syn.themeCount).sort(function(a,b){return b[1]-a[1];}),
         accumulated_entities: Object.entries(syn.entityCount).sort(function(a,b){return b[1]-a[1];}),
         sentiment_breakdown: syn.sentiments,
         signal_breakdown: syn.signalCounts,
         domain_breakdown: syn.domainCount
-      });
-      var rawText = await callClaude(apiKey, BRIEFING_PROMPT + payload);
+      };
+      if (syn.totalArticles > MAPREDUCE_THRESHOLD) {
+        // MAP: summarize in batches, then REDUCE over the batch summaries.
+        var mapped = await summarizeBatches(apiKey, sessions, BATCH_SIZE, function(done,total){ setStatus("Summarizing batches " + done + "/" + total + "..."); });
+        base.batch_summaries = mapped.summaries;
+        base.note = "Data is pre-summarized into " + mapped.batchCount + " batch summaries covering " + mapped.articleCount + " articles; synthesize across all of them.";
+        setStatus("Synthesizing briefing from " + mapped.batchCount + " batch summaries...");
+      } else {
+        base.sessions = sessions.map(function(s) {
+          return { date: getContentDate(s), source: s.source, articles: s.articles.map(function(a) {
+            return { title: a.title, source: a.source, url: a.url, summary: a.summary || "", themes: a.themes, signal_type: a.signal_type, sentiment: a.sentiment, entities: a.entities, strategic_insight: a.strategic_insight || "" };
+          })};
+        });
+      }
+      var payload = JSON.stringify(base);
+      var rawText = await callClaude(apiKey, BRIEFING_PROMPT + payload, 16000);
       var parsed = extractJSON(rawText);
       if (parsed) {
         var report = {
