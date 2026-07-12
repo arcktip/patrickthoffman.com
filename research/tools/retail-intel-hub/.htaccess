@@ -20,3 +20,11 @@ Header always set X-Frame-Options "SAMEORIGIN"
 Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()"
 
 </IfModule>
+
+# These pages (app, privacy, terms) are extensionless files that contain HTML.
+# With nosniff set above, the browser will not guess the type, so we must
+# declare it explicitly — otherwise the browser shows raw source instead of
+# rendering the page.
+<FilesMatch "^(app|privacy|terms)$">
+  ForceType text/html
+</FilesMatch>
