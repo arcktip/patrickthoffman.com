@@ -1,5 +1,12 @@
 # Security headers scoped to the Retail Intel Hub tool only.
 # Kept in this directory (not the site root) so it cannot affect other pages.
+
+# Never auto-generate a directory listing (it exposes the file structure and
+# renders in unstyled default browser chrome). Instead, serve the app itself
+# when the directory root is requested, so /retail-intel-hub/ loads the tool.
+Options -Indexes
+DirectoryIndex app
+
 <IfModule mod_headers.c>
 
 # Content-Security-Policy
