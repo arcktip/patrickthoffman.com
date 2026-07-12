@@ -11,7 +11,10 @@ Options -Indexes
 DirectoryIndex app
 <IfModule mod_rewrite.c>
 RewriteEngine On
-RewriteRule ^$ app [R=301,L]
+# Absolute URL-path (leading slash) is required here: a relative target in a
+# per-directory .htaccess without RewriteBase makes Apache emit the server
+# filesystem path in the redirect. This keeps the redirect on the public URL.
+RewriteRule ^$ /research/tools/retail-intel-hub/app [R=301,L]
 </IfModule>
 
 <IfModule mod_headers.c>
