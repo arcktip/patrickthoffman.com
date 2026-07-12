@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2TKMRQXKMJ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-2TKMRQXKMJ');
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tools — Patrick T. Hoffman</title>
+  <meta name="description" content="Interactive tools and applications by Patrick T. Hoffman — including the Retail Media Intel hub and The Complete Product Owner course.">
+  <link rel="canonical" href="https://www.patrickthoffman.com/research/tools/">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/shared.css">
+
+  <style>
+    /* ── Tools index — page-specific ── */
+    .tools-header {
+      background: var(--navy-dark);
+      padding: 7rem 2rem 3.25rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .tools-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(rgba(26,58,138,0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(26,58,138,0.12) 1px, transparent 1px);
+      background-size: 30px 30px;
+      opacity: 0.4;
+    }
+    .tools-header-content { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; }
+    .article-back {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      color: rgba(255,255,255,0.6); text-decoration: none;
+      font-size: 0.82rem; font-weight: 500; letter-spacing: 0.04em;
+      margin-bottom: 1.5rem; transition: color 0.2s ease;
+    }
+    .article-back:hover { color: var(--yellow); }
+    .article-back svg { width: 16px; height: 16px; }
+    .tools-eyebrow {
+      font-size: 0.72rem; letter-spacing: 0.25em; text-transform: uppercase;
+      font-weight: 700; color: var(--yellow); margin-bottom: 0.75rem;
+    }
+    .tools-title {
+      font-family: 'Playfair Display', serif; font-weight: 900;
+      color: var(--white); font-size: clamp(2.2rem, 5vw, 3.4rem);
+      line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 0.9rem;
+    }
+    .tools-title span { color: var(--orange); font-style: italic; font-weight: 400; }
+    .tools-desc {
+      color: rgba(255,255,255,0.7); font-size: 1.05rem; line-height: 1.6; max-width: 600px;
+    }
+
+    .tools-body { background: var(--white); padding: 3.25rem 2rem 4rem; }
+    .tools-grid {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;
+    }
+    .tool-card {
+      display: flex; flex-direction: column;
+      border: 1px solid var(--grey-mid); border-radius: 12px;
+      padding: 1.75rem 1.75rem 1.5rem; text-decoration: none; color: inherit;
+      background: var(--white); transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+    .tool-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(10,20,40,0.10);
+      border-color: var(--royal);
+    }
+    .tool-tag {
+      align-self: flex-start;
+      font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700;
+      color: var(--royal); background: var(--grey-light);
+      padding: 4px 9px; border-radius: 4px; margin-bottom: 1rem;
+    }
+    .tool-card h2 {
+      font-family: 'Playfair Display', serif; font-weight: 700;
+      font-size: 1.4rem; line-height: 1.2; color: var(--navy-dark); margin-bottom: 0.6rem;
+    }
+    .tool-card p { color: var(--text-body); font-size: 0.95rem; line-height: 1.6; flex: 1; }
+    .tool-open {
+      margin-top: 1.25rem; display: inline-flex; align-items: center; gap: 0.35rem;
+      font-size: 0.82rem; font-weight: 700; letter-spacing: 0.03em; color: var(--royal);
+    }
+    .tool-card:hover .tool-open { color: var(--orange-accessible); }
+    .tool-open span { transition: transform 0.18s ease; }
+    .tool-card:hover .tool-open span { transform: translateX(3px); }
+  </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="top-nav solid" id="topNav">
+  <a href="../../" class="nav-logo">PTH<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="../../#about">About</a></li>
+    <li><a href="../../#journey">Journey</a></li>
+    <li><a href="../../writing/">Writing</a></li>
+    <li><a href="../../teaching/">Teaching</a></li>
+    <li><a href="../../#speaking">Speaking</a></li>
+    <li><a href="../../#connect">Connect</a></li>
+  </ul>
+</nav>
+
+<!-- Header -->
+<header class="tools-header">
+  <div class="tools-header-content">
+    <a href="../../" class="article-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+      Back to Home
+    </a>
+    <p class="tools-eyebrow">Research / Tools</p>
+    <h1 class="tools-title">Interactive <span>tools</span></h1>
+    <p class="tools-desc">Working applications and living references — built to explore ideas in product, retail media, and the systems around them.</p>
+  </div>
+</header>
+
+<!-- Body -->
+<main class="tools-body">
+  <div class="tools-grid">
+
+    <a class="tool-card" href="retail-intel-hub/app">
+      <span class="tool-tag">Retail Media · App</span>
+      <h2>Retail Media Intel</h2>
+      <p>An intelligence hub that turns your Google Alerts into a longitudinal knowledge graph — ingesting articles, then generating AI briefings and trend synthesis across retail media and commerce/shopping.</p>
+      <span class="tool-open">Open the hub <span>→</span></span>
+    </a>
+
+    <a class="tool-card" href="product-owner-course">
+      <span class="tool-tag">Course · Guide</span>
+      <h2>The Complete Product Owner</h2>
+      <p>A comprehensive 9-module course guide for people transitioning into the Product Owner role — 39 deep-dive topics with practical guidance on Scrum and being effective in an agile environment.</p>
+      <span class="tool-open">Open the course <span>→</span></span>
+    </a>
+
+  </div>
+</main>
+
+<!-- Footer -->
+<footer>
+  <p>© 2026 Patrick T. Hoffman · <a href="../../">Home</a></p>
+</footer>
+
+</body>
+</html>
