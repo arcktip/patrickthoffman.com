@@ -402,12 +402,41 @@ var TREND_PROMPT = "You are a strategist covering retail media and commerce/shop
 
 var BRIEFING_PROMPT = "You are a senior strategist preparing an intelligence briefing for someone building products in the retail media and commerce space. You have accumulated article data from Google Alerts across multiple sessions, spanning two domains: Retail Media (networks, measurement, in-store, programmatic, etc.) and Commerce & Shopping (product feeds, Shopping ads, Merchant Center, marketplaces, etc.).\n\nAnalyze ALL the data provided — look across sessions AND across domains for patterns. Connect dots between retail media developments and commerce/shopping developments. Be specific: name companies, cite numbers, reference concrete developments.\n\nReturn ONLY valid JSON (no markdown, no backticks):\n{\n\"executive_summary\": \"3-4 paragraph overview covering BOTH retail media and commerce/shopping. Be specific and opinionated. Reference concrete developments, name companies, cite growth figures. Highlight cross-domain connections.\",\n\"market_dynamics\": \"2-3 paragraphs on structural forces — consolidation, tech shifts, budget flows, regulatory pressure. Connect signals across both domains.\",\n\"key_developments\": [\n{\"headline\": \"short headline\", \"analysis\": \"2-3 sentences explaining why this matters\", \"entities\": [\"companies\"], \"domains\": [\"retail-media and/or commerce\"], \"significance\": 1-5}\n],\n\"strategic_implications\": \"2-3 paragraphs for someone BUILDING retail media or commerce products. What should they prioritize? What cross-domain opportunities exist?\",\n\"competitive_landscape\": \"1-2 paragraphs on who is winning across both domains.\",\n\"action_items\": [\"5-7 specific, actionable items for a product or strategy team\"],\n\"risk_factors\": [\"3-4 specific risks with concrete reasoning\"],\n\"opportunities\": [\"3-4 specific opportunities — especially cross-domain gaps\"]\n}\n\nAccumulated intelligence data:\n";
 
+// Escape raw control characters (literal newlines/tabs) inside string values.
+// LLMs often emit multi-paragraph prose with real line breaks, which is invalid
+// JSON and makes JSON.parse reject the whole object.
+function repairControlChars(s) {
+  var out = "", inStr = false, esc = false;
+  for (var i = 0; i < s.length; i++) {
+    var ch = s[i], code = s.charCodeAt(i);
+    if (inStr) {
+      if (esc) { out += ch; esc = false; continue; }
+      if (ch === "\\") { out += ch; esc = true; continue; }
+      if (ch === '"') { out += ch; inStr = false; continue; }
+      if (code < 0x20) {
+        if (code === 10) out += "\\n";
+        else if (code === 13) out += "\\r";
+        else if (code === 9) out += "\\t";
+        else if (code === 8) out += "\\b";
+        else if (code === 12) out += "\\f";
+        else out += "\\u" + ("000" + code.toString(16)).slice(-4);
+        continue;
+      }
+      out += ch; continue;
+    }
+    if (ch === '"') { inStr = true; out += ch; continue; }
+    out += ch;
+  }
+  return out;
+}
+
 function extractJSON(text) {
   if (!text) return null;
-  var s = text.replace(/```json/gi,"").replace(/```/g,"").trim();
-  // 1) The response is meant to be JSON only, so try the whole thing first.
-  //    JSON.parse is string-aware, so this also handles values that happen to
-  //    contain { or } characters (which broke the old brace-counter).
+  var raw = text.replace(/```json/gi,"").replace(/```/g,"").trim();
+  // 1) Response is meant to be JSON only, so try the whole thing — first as-is,
+  //    then with literal control characters inside strings escaped.
+  try { return JSON.parse(raw); } catch(e) {}
+  var s = repairControlChars(raw);
   try { return JSON.parse(s); } catch(e) {}
   var start = s.indexOf("{");
   if (start === -1) return null;
@@ -469,6 +498,54 @@ async function callClaude(apiKey, prompt, maxTokens) {
   return (data.content||[]).filter(function(b){return b.type==="text";}).map(function(b){return b.text;}).join("\n");
 }
 
+// JSON Schemas for structured (tool) output — the model fills these as a tool
+// call, so the API returns an already-parsed, guaranteed-valid object. This
+// avoids fragile text parsing of model-authored JSON (literal newlines,
+// unescaped quotes, truncation, etc.).
+var STR = { type:"string" }, NUM = { type:"number" }, STRARR = { type:"array", items:{ type:"string" } };
+var DEV_ITEM = { type:"object", properties:{ headline:STR, analysis:STR, entities:STRARR, domains:STRARR, significance:NUM } };
+
+var MAP_SCHEMA = { type:"object", properties:{
+  timeframe:STR, article_count:NUM, key_developments:{ type:"array", items:DEV_ITEM },
+  top_entities:STRARR, top_themes:STRARR, signals:STRARR, sentiment:STR
+} };
+
+var BRIEFING_SCHEMA = { type:"object", properties:{
+  executive_summary:STR, market_dynamics:STR, key_developments:{ type:"array", items:DEV_ITEM },
+  strategic_implications:STR, competitive_landscape:STR, action_items:STRARR, risk_factors:STRARR, opportunities:STRARR
+}, required:["executive_summary","market_dynamics","key_developments","strategic_implications","competitive_landscape","action_items","risk_factors","opportunities"] };
+
+var TREND_SCHEMA = { type:"object", properties:{
+  trend_lines:{ type:"array", items:{ type:"object", properties:{ theme:STR, trajectory:STR, evidence_count:NUM, narrative:STR, key_players:STRARR, domains:STRARR } } },
+  contradictions:STRARR, blind_spots:STRARR, connections:STRARR, weekly_briefing:STR
+}, required:["trend_lines","weekly_briefing"] };
+
+// Call Claude and get a structured object back via forced tool use. The result
+// is the tool's validated input, so no text JSON parsing is needed.
+async function callClaudeJSON(apiKey, prompt, schema, maxTokens) {
+  var res = await fetch("https://api.anthropic.com/v1/messages", {
+    method:"POST",
+    headers:{"Content-Type":"application/json","x-api-key":apiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+    body:JSON.stringify({
+      model:"claude-sonnet-5",
+      max_tokens:maxTokens||4096,
+      tools:[{ name:"emit_result", description:"Return the structured result as this tool's input.", input_schema:schema }],
+      tool_choice:{ type:"tool", name:"emit_result" },
+      messages:[{ role:"user", content:prompt }]
+    })
+  });
+  if (!res.ok) throw new Error("API "+res.status);
+  var data = await res.json();
+  if (data.error) throw new Error(data.error.message);
+  var blocks = data.content || [];
+  for (var i = 0; i < blocks.length; i++) {
+    if (blocks[i].type === "tool_use" && blocks[i].input) return blocks[i].input;
+  }
+  // Fallback: parse any plain text the model returned instead.
+  var txt = blocks.filter(function(b){return b.type==="text";}).map(function(b){return b.text;}).join("\n");
+  return extractJSON(txt);
+}
+
 // ═══════════════════════════════════════
 // MAP-REDUCE SUMMARIZATION
 // Partitions accumulated articles into batches, summarizes each batch (the
@@ -528,8 +605,7 @@ async function summarizeBatches(apiKey, sessions, batchSize, onProgress) {
   var batches = chunkArray(articles, batchSize);
   var summaries = await runLimited(batches, MAP_CONCURRENCY, async function(batch) {
     try {
-      var raw = await callClaude(apiKey, MAP_PROMPT + JSON.stringify(batch), 4000);
-      var parsed = extractJSON(raw);
+      var parsed = await callClaudeJSON(apiKey, MAP_PROMPT + JSON.stringify(batch), MAP_SCHEMA, 4000);
       return parsed || { note: "unparsed batch", key_developments: [], top_entities: [], top_themes: [] };
     } catch(e) {
       return { note: "batch failed: " + ((e && e.message) || "").slice(0, 60), key_developments: [] };
@@ -1021,8 +1097,7 @@ function App() {
         tbase.sessions = sessions.map(function(s){return {date:getContentDate(s),articles:s.articles,synthesis:s.synthesis};});
       }
       var payload = JSON.stringify(tbase);
-      var rawText = await callClaude(apiKey, TREND_PROMPT + payload, 16000);
-      var parsed = extractJSON(rawText);
+      var parsed = await callClaudeJSON(apiKey, TREND_PROMPT + payload, TREND_SCHEMA, 16000);
       if (parsed) {
         var report = {
           id:newId(), date:new Date().toISOString(), data:parsed,
@@ -1066,8 +1141,7 @@ function App() {
         });
       }
       var payload = JSON.stringify(base);
-      var rawText = await callClaude(apiKey, BRIEFING_PROMPT + payload, 16000);
-      var parsed = extractJSON(rawText);
+      var parsed = await callClaudeJSON(apiKey, BRIEFING_PROMPT + payload, BRIEFING_SCHEMA, 16000);
       if (parsed) {
         var report = {
           id: newId(), date: new Date().toISOString(), data: parsed,
