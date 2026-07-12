@@ -404,12 +404,57 @@ var BRIEFING_PROMPT = "You are a senior strategist preparing an intelligence bri
 
 function extractJSON(text) {
   if (!text) return null;
-  var s = text.replace(/```json/g,"").replace(/```/g,"").trim();
-  var start = s.indexOf("{"); if (start===-1) return null;
-  var depth=0, end=-1;
-  for (var i=start;i<s.length;i++) { if(s[i]==="{")depth++; else if(s[i]==="}"){depth--;if(depth===0){end=i;break;}} }
-  if (end===-1) return null;
-  try { return JSON.parse(s.slice(start,end+1)); } catch(e) { return null; }
+  var s = text.replace(/```json/gi,"").replace(/```/g,"").trim();
+  // 1) The response is meant to be JSON only, so try the whole thing first.
+  //    JSON.parse is string-aware, so this also handles values that happen to
+  //    contain { or } characters (which broke the old brace-counter).
+  try { return JSON.parse(s); } catch(e) {}
+  var start = s.indexOf("{");
+  if (start === -1) return null;
+  // 2) Scan to the matching closing brace, ignoring braces inside strings.
+  var depth = 0, inStr = false, esc = false, end = -1;
+  for (var i = start; i < s.length; i++) {
+    var ch = s[i];
+    if (inStr) {
+      if (esc) esc = false;
+      else if (ch === "\\") esc = true;
+      else if (ch === '"') inStr = false;
+      continue;
+    }
+    if (ch === '"') { inStr = true; continue; }
+    if (ch === "{") depth++;
+    else if (ch === "}") { depth--; if (depth === 0) { end = i; break; } }
+  }
+  if (end !== -1) { try { return JSON.parse(s.slice(start, end + 1)); } catch(e) {} }
+  // 3) Salvage a truncated object: rescan tracking open structures and close
+  //    them (handles a cut in the middle of an array/object, e.g. from a
+  //    max_tokens truncation).
+  var frag = s.slice(start), stack = [], sInStr = false, sEsc = false;
+  for (var j = 0; j < frag.length; j++) {
+    var cj = frag[j];
+    if (sInStr) { if (sEsc) sEsc = false; else if (cj === "\\") sEsc = true; else if (cj === '"') sInStr = false; continue; }
+    if (cj === '"') { sInStr = true; continue; }
+    if (cj === "{" || cj === "[") stack.push(cj === "{" ? "}" : "]");
+    else if (cj === "}" || cj === "]") stack.pop();
+  }
+  var patched = frag;
+  if (sInStr) patched += '"';
+  for (var kk = stack.length - 1; kk >= 0; kk--) patched += stack[kk];
+  try { return JSON.parse(patched); } catch(e) {}
+  // Fallback: drop a trailing incomplete key/value, then close.
+  var trimmed = frag.replace(/,\s*("(?:[^"\\]|\\.)*"\s*:?\s*)?$/, "");
+  var st2 = [], i2 = false, e2 = false;
+  for (var m2 = 0; m2 < trimmed.length; m2++) {
+    var c2 = trimmed[m2];
+    if (i2) { if (e2) e2 = false; else if (c2 === "\\") e2 = true; else if (c2 === '"') i2 = false; continue; }
+    if (c2 === '"') { i2 = true; continue; }
+    if (c2 === "{" || c2 === "[") st2.push(c2 === "{" ? "}" : "]");
+    else if (c2 === "}" || c2 === "]") st2.pop();
+  }
+  var patched2 = trimmed; if (i2) patched2 += '"';
+  for (var qq = st2.length - 1; qq >= 0; qq--) patched2 += st2[qq];
+  try { return JSON.parse(patched2); } catch(e) {}
+  return null;
 }
 
 async function callClaude(apiKey, prompt, maxTokens) {
