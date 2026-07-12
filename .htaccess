@@ -18,4 +18,23 @@ RewriteRule ^(.*?)index\.html$ /$1 [R=301,L]
 </IfModule>
 # END Canonical URL redirect
 
+# BEGIN Extensionless URLs (e.g. /writing/instrumented-match)
+# Pairs with the canonical redirect above so every page has exactly one
+# canonical URL. Two rules:
+# 1. Any *.html request (other than .../index.html, already handled above)
+#    is permanently redirected to the extensionless URL.
+# 2. The extensionless URL is then served internally from the real .html
+#    file on disk, so dropping ".html" from any link never 404s.
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+RewriteCond %{THE_REQUEST} /([^.\s]+)\.html[?\s] [NC]
+RewriteRule ^ /%1 [R=301,L]
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}\.html -f
+RewriteRule ^(.*)$ $1.html [L]
+</IfModule>
+# END Extensionless URLs
 
