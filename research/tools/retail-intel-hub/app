@@ -504,6 +504,12 @@ async function callClaude(apiKey, prompt, maxTokens) {
 // unescaped quotes, truncation, etc.).
 var STR = { type:"string" }, NUM = { type:"number" }, STRARR = { type:"array", items:{ type:"string" } };
 var DEV_ITEM = { type:"object", properties:{ headline:STR, analysis:STR, entities:STRARR, domains:STRARR, significance:NUM } };
+var ARTICLE_ITEM = { type:"object", properties:{ title:STR, source:STR, url:STR, summary:STR, entities:STRARR, themes:STRARR, domains:STRARR, signal_type:STR, sentiment:STR, significance:NUM, strategic_insight:STR } };
+
+var ANALYSIS_SCHEMA = { type:"object", properties:{
+  articles:{ type:"array", items:ARTICLE_ITEM },
+  meta_synthesis:{ type:"object", properties:{ dominant_themes:STRARR, key_movers:STRARR, emerging_signals:STRARR, market_direction:STR, action_items:STRARR } }
+}, required:["articles"] };
 
 var MAP_SCHEMA = { type:"object", properties:{
   timeframe:STR, article_count:NUM, key_developments:{ type:"array", items:DEV_ITEM },
@@ -963,8 +969,7 @@ function App() {
     if (hasKey) {
       try {
         setStatus("Running Claude analysis...");
-        var rawText = await callClaude(apiKey, ANALYSIS_PROMPT + trimmed, 8000);
-        var parsed = extractJSON(rawText);
+        var parsed = await callClaudeJSON(apiKey, ANALYSIS_PROMPT + trimmed, ANALYSIS_SCHEMA, 8000);
         if (parsed && parsed.articles && parsed.articles.length > 0) {
           parsed.articles.forEach(function(a){a.id=newId();});
           dedup = deduplicateArticles(parsed.articles, knownUrls);
@@ -1038,8 +1043,7 @@ function App() {
       if (hasKey) {
         try {
           setStatus("Running Claude analysis on " + result.count + " emails...");
-          var rawText = await callClaude(apiKey, ANALYSIS_PROMPT + result.content.slice(0, 12000), 8000);
-          var parsed = extractJSON(rawText);
+          var parsed = await callClaudeJSON(apiKey, ANALYSIS_PROMPT + result.content.slice(0, 12000), ANALYSIS_SCHEMA, 8000);
           if (parsed && parsed.articles && parsed.articles.length > 0) {
             parsed.articles.forEach(function(a) { a.id = newId(); });
             dedup = deduplicateArticles(parsed.articles, knownUrls);

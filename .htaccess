@@ -9,6 +9,12 @@ ErrorDocument 404 /404.html
 # Blocks dotfiles / dot-directories (.git, .env.deploy, .gitignore, .dh-diag)
 # and shell/backup files from ever being served. Returns 403 (see ErrorDocument
 # above). .well-known is explicitly allowed so ACME/SSL renewals keep working.
+
+# Disable auto-generated directory listings site-wide (info disclosure).
+# Directories with an index file still serve it; directories without one now
+# return 403 instead of listing their contents.
+Options -Indexes
+
 <IfModule mod_rewrite.c>
 RewriteEngine On
 RewriteRule "(?:^|/)\.(?!well-known/)" - [F,L]

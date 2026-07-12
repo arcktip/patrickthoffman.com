@@ -2,10 +2,17 @@
 # Kept in this directory (not the site root) so it cannot affect other pages.
 
 # Never auto-generate a directory listing (it exposes the file structure and
-# renders in unstyled default browser chrome). Instead, serve the app itself
-# when the directory root is requested, so /retail-intel-hub/ loads the tool.
+# renders in unstyled default browser chrome).
 Options -Indexes
+
+# Canonical URL: redirect the bare tool directory to the app page so there is a
+# single canonical URL (.../retail-intel-hub/app). DirectoryIndex is kept as a
+# fallback if mod_rewrite is unavailable.
 DirectoryIndex app
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule ^$ app [R=301,L]
+</IfModule>
 
 <IfModule mod_headers.c>
 
