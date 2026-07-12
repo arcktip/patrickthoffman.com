@@ -5,6 +5,27 @@ ErrorDocument 404 /404.html
 
 # END Error Handlers
 
+# BEGIN Security — deny sensitive files (secrets, VCS, deploy scripts)
+# Blocks dotfiles / dot-directories (.git, .env.deploy, .gitignore, .dh-diag)
+# and shell/backup files from ever being served. Returns 403 (see ErrorDocument
+# above). .well-known is explicitly allowed so ACME/SSL renewals keep working.
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule "(?:^|/)\.(?!well-known/)" - [F,L]
+RewriteRule "\.(sh|bak|old)(?:$|/)" - [F,L]
+</IfModule>
+# Belt-and-suspenders filename match if mod_rewrite is unavailable
+<FilesMatch "(?i)(^\.|\.sh$)">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+# END Security
+
 # BEGIN Canonical URL redirect (index.html -> directory root)
 # Sends any request that explicitly asks for .../index.html to the clean
 # directory URL instead, so search engines see one canonical URL per page

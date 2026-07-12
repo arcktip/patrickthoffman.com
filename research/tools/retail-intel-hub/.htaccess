@@ -1,0 +1,22 @@
+# Security headers scoped to the Retail Intel Hub tool only.
+# Kept in this directory (not the site root) so it cannot affect other pages.
+<IfModule mod_headers.c>
+
+# Content-Security-Policy
+# NOTE: 'unsafe-inline' + 'unsafe-eval' are required because this app runs its
+# React source through in-browser Babel (which eval()s compiled code) from an
+# inline <script type="text/babel"> block. They cannot be removed without
+# precompiling the app. The real protection here is the tight connect-src /
+# img-src / default-src allowlist: even if a script misbehaved, it can only
+# talk to Anthropic + Google + this origin, so it cannot exfiltrate data
+# (e.g. an API key) to an arbitrary attacker server.
+Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://accounts.google.com https://apis.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: https://*.googleusercontent.com https://www.gstatic.com; connect-src 'self' https://api.anthropic.com https://gmail.googleapis.com https://www.googleapis.com https://oauth2.googleapis.com https://accounts.google.com https://content.googleapis.com; frame-src https://accounts.google.com https://content.googleapis.com https://apis.google.com; object-src 'none'; base-uri 'self'; form-action 'self'"
+
+# Stop MIME-sniffing, limit referrer leakage, block framing (clickjacking),
+# and drop unused powerful features.
+Header always set X-Content-Type-Options "nosniff"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+Header always set X-Frame-Options "SAMEORIGIN"
+Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()"
+
+</IfModule>
