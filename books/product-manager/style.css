@@ -170,7 +170,18 @@
   margin: 3rem 0;
 }
 
-/* ── Mobile ───────────────────────────────────────────── */
+/* ── Chapter sketch illustrations ────────────────────────── */
+.chapter-sketch {
+  text-align: center;
+  margin: 2rem 0;
+}
+.chapter-sketch img {
+  max-width: 100%;
+  width: 540px;
+  border-radius: 6px;
+}
+
+/* ── Mobile ─────────────────────────────────────────── */
 @media (max-width: 768px) {
 
   /* Sidebar: always hidden on mobile, slides in as overlay */

@@ -79,6 +79,10 @@
 
 <p><strong>Bad PM:</strong> "We should add an AI assistant."</p>
 <p><strong>PM:</strong> "Support tickets about onboarding are up 30% month-over-month. Half are 'where do I start?' What's the smallest thing we can test to see if better guidance cuts that in half?"</p>
+<figure class="chapter-sketch">
+<img src="images/ch3-good-bad-pm.jpg" alt="Illustration: Bad PM vs. Good PM — team asleep vs. team engaged around real problems" />
+</figure>
+
 
 <p>This principle — problem first, not solution — has been a PM mantra for twenty years. It's never been harder to follow than it is right now.</p>
 
@@ -147,12 +151,16 @@
 
 <p><strong>2015 leverage:</strong> Write a spec so five engineers build the right thing instead of building the wrong thing or nothing.</p>
 <p><strong>2026 leverage:</strong> Decide which three experiments, out of the twenty-five your team could build in a week, are worth running — and then kill the results of two of them before they become roadmap commitments.</p>
+<figure class="chapter-sketch">
+<img src="images/ch3-selection-leverage.jpg" alt="Illustration: 2015 PM with spec book vs. 2026 PM deleting AI options" />
+</figure>
+
 
 <p>Your job moved up one abstraction layer. You don't primarily manage execution. You decide which experiments are worth running, which results are worth building on, and which promising-looking things should be killed before they consume attention and planning slots that should go to something better. The model can generate experiments faster than you can think of them. Your edge is knowing which experiments answer a question worth asking.</p>
 
 <h3>What leverage looks like in practice</h3>
 
-<p>At Meta, managing ads growth at scale, the leverage question was always about what to build versus what to let the system optimize. A large-scale ads platform has hundreds of variables that can be tuned — bid strategies, creative optimization, audience targeting parameters, delivery algorithms. The PM who thinks about output asks: what new feature can we ship this quarter? The PM who thinks about leverage asks: what is the one change that, if we get it right, makes the next ten features easier to build and more likely to work?</p>
+<p>At Meta, managing ads growth at scale, the leverage question was always about what to build versus what to let the system optimize. A large-scale ads platform has hundreds of variables that can be tuned — bid strategies, creative optimization, audience targeting parameters, delivery algorithms. The PM who thinks about output asks: what new feature can we ship this quarter? The PM who thinks about leverage asks: what is the one change—to the auction signal, the delivery policy, the bidding incentive—that, if we get it right, shifts how advertisers bid, how users engage, and how the platform balances supply and demand, improving outcomes on both sides without requiring a new feature for each improvement?</p>
 
 <p>That's a fundamentally different question. It requires understanding the system deeply enough to identify the leverage point — the place where a change creates positive feedback rather than just adding a new capability in isolation. Finding those leverage points is slow work. It requires understanding your data model, your user behavior, your technical architecture, and your organizational incentives simultaneously. There is no shortcut. But the payoff of getting it right is asymmetrically better than the payoff of getting ten smaller things right.</p>
 
@@ -190,6 +198,10 @@
 <p>This is the distinction between a roadmap and a sequence. A roadmap says: in Q1 we'll build auth, in Q2 we'll build sharing, in Q3 we'll build AI features. A sequence says: auth is the precondition for sharing; but we should build a minimal sharing feature before we design auth fully, because we don't know yet whether our users will share in a way that has security implications — and if they won't, our auth requirements simplify significantly. If sharing is adopted more than we expect, we learn something about our user's workflow that changes our read on whether the AI feature in Q3 is solving the right problem. The sequence is not a timeline. It's an order of learning.</p>
 
 <p>AI can generate "Q1: Auth. Q2: Sharing. Q3: AI features." It cannot tell you that if Auth slips, Sharing is worthless, but that if Sharing ships early you learn whether the AI feature is even needed — or whether users care about sharing at all.</p>
+<figure class="chapter-sketch">
+<img src="images/ch3-roadmap-learning.jpg" alt="Illustration: ROADMAP (Q1→Q4) vs. SEQUENCE (learning flowchart)" />
+</figure>
+
 
 <h3>Sequencing decisions in 2026: the AI feature example</h3>
 
