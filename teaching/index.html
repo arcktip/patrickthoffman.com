@@ -258,6 +258,41 @@
       color: var(--royal-light);
       white-space: nowrap;
     }
+
+    /* ── Track filter bar ── */
+    .track-filter-bar {
+      background: var(--white);
+      border-bottom: 1px solid var(--grey-mid);
+      padding: 0.85rem 2rem;
+      position: sticky;
+      top: 56px; /* below nav */
+      z-index: 10;
+    }
+    .track-filter-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .track-tab {
+      background: transparent;
+      border: 1px solid rgba(0,0,0,0.15);
+      border-radius: 20px;
+      padding: 0.35rem 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .track-tab:hover { border-color: var(--royal); color: var(--royal); }
+    .track-tab.active { background: var(--royal); border-color: var(--royal); color: var(--white); }
+    .track-section { transition: opacity 0.2s ease; }
+    .track-section.is-hidden { display: none; }
   </style>
 </head>
 <body>
@@ -291,8 +326,17 @@
   </div>
 </header>
 
+<!-- Track filter bar -->
+<div class="track-filter-bar">
+  <div class="track-filter-inner">
+    <button class="track-tab active" data-track="all">All</button>
+    <button class="track-tab" data-track="seminar">Practitioner Seminars</button>
+    <button class="track-tab" data-track="academic">Academic Courses</button>
+  </div>
+</div>
+
 <!-- Courses Grid -->
-<section class="courses-section">
+<section class="courses-section track-section" data-track="academic">
   <div class="courses-section-inner">
     <p class="courses-section-label">Academic Courses</p>
     <h2 class="courses-section-title">Four courses. One <span>through-line.</span></h2>
@@ -361,7 +405,7 @@
 </section>
 
 <!-- Practitioner Seminars -->
-<section class="courses-section" style="padding-top: 0;">
+<section class="courses-section track-section" data-track="seminar" style="padding-top: 0;">
   <div class="courses-section-inner">
     <p class="courses-section-label">Practitioner Seminars</p>
     <h2 class="courses-section-title">For practitioners, <span>not classrooms.</span></h2>
@@ -400,5 +444,20 @@
   <p>© 2026 Patrick T. Hoffman · <a href="../">Home</a> · <a href="https://www.threads.net/@arcktip" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true" style="vertical-align:-2px;margin-right:2px"><path d="M 18.263,11.097 C 18.233,7.611 16.344,5.511 13.152,5.511 C 11.021,5.511 9.23,6.474 8.289,8.01 L 10.351,9.448 C 10.886,8.605 11.623,7.905 12.979,7.905 C 14.507,7.905 15.297,8.755 15.523,10.336 C 14.785,10.223 14.047,10.163 13.287,10.163 C 9.162,10.163 7.219,12.03 7.219,14.499 C 7.219,16.968 9.162,18.489 12.023,18.489 C 15.162,18.489 17.036,16.374 17.804,13.754 C 18.602,14.115 19.152,14.958 19.152,16.223 C 19.152,19.611 15.245,21.456 11.932,21.456 C 7.047,21.456 3.855,18.248 3.855,13.032 C 3.855,6.64 8.078,2.545 13.754,2.545 C 17.563,2.545 19.445,4.216 20.725,6.459 L 22.833,4.984 C 21.44,2.078 18.331,-6.217e-15 13.664,-7.105e-15 C 6.226,-7.105e-15 1.167,5.277 1.167,12.934 C 1.167,19.935 6.12,24 12.023,24 C 16.901,24 21.832,21.154 21.832,16.284 C 21.832,13.739 20.371,12.053 18.263,11.097 L 18.263,11.097 M 11.932,15.952 C 10.856,15.952 9.907,15.44 9.907,14.499 C 9.907,13.016 11.729,12.565 13.513,12.565 C 14.191,12.565 14.853,12.61 15.44,12.738 C 15.019,14.665 13.769,15.952 11.932,15.952 L 11.932,15.952 L 11.932,15.952"/></svg>arcktip</a></p>
 </footer>
 
+<script>
+  const trackTabs = document.querySelectorAll('.track-tab');
+  const trackSections = document.querySelectorAll('.track-section');
+  trackTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      trackTabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const track = tab.getAttribute('data-track');
+      trackSections.forEach(section => {
+        const show = track === 'all' || section.getAttribute('data-track') === track;
+        section.classList.toggle('is-hidden', !show);
+      });
+    });
+  });
+</script>
 </body>
 </html>

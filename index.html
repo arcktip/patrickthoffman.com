@@ -1489,8 +1489,14 @@ footer a { color: var(--orange); text-decoration: none; }
     <h2 class="section-title reveal">Courses in product, cities, <span>and systems</span></h2>
     <p class="writing-intro reveal">Two tracks, one practitioner's perspective: an academic series for dual-listed undergraduate and graduate audiences, and practitioner seminars drawn directly from the work. Fifteen years building products at Social Bicycles, JUMP, Google, and Meta.</p>
 
+    <div class="write-filter-tabs reveal">
+      <button class="filter-tab active" data-teach-filter="all">All</button>
+      <button class="filter-tab" data-teach-filter="seminar">Practitioner Seminars</button>
+      <button class="filter-tab" data-teach-filter="academic">Academic Courses</button>
+    </div>
+
     <div class="posts-grid">
-      <a href="teaching/storytelling/" class="post-item reveal">
+      <a href="teaching/storytelling/" class="post-item reveal" data-teach-type="seminar">
         <div class="post-date">Seminar</div>
         <div class="post-content">
           <div><span class="post-tag orange">Craft</span><span class="post-tag">Narrative</span></div>
@@ -1500,7 +1506,7 @@ footer a { color: var(--orange); text-decoration: none; }
         </div>
       </a>
 
-      <a href="teaching/course-01-technology-space-society.html" class="post-item reveal">
+      <a href="teaching/course-01-technology-space-society.html" class="post-item reveal" data-teach-type="academic">
         <div class="post-date">Course 01</div>
         <div class="post-content">
           <div><span class="post-tag yellow">STS</span><span class="post-tag">Cities</span></div>
@@ -1510,7 +1516,7 @@ footer a { color: var(--orange); text-decoration: none; }
         </div>
       </a>
 
-      <a href="teaching/course-02-urban-systems-product-design.html" class="post-item reveal">
+      <a href="teaching/course-02-urban-systems-product-design.html" class="post-item reveal" data-teach-type="academic">
         <div class="post-date">Course 02</div>
         <div class="post-content">
           <div><span class="post-tag">Urbanism</span><span class="post-tag orange">Product</span></div>
@@ -1520,7 +1526,7 @@ footer a { color: var(--orange); text-decoration: none; }
         </div>
       </a>
 
-      <a href="teaching/course-03-product-mgmt-physical-digital.html" class="post-item reveal">
+      <a href="teaching/course-03-product-mgmt-physical-digital.html" class="post-item reveal" data-teach-type="academic">
         <div class="post-date">Course 03</div>
         <div class="post-content">
           <div><span class="post-tag orange">Hardware</span><span class="post-tag">Product</span></div>
@@ -1530,7 +1536,7 @@ footer a { color: var(--orange); text-decoration: none; }
         </div>
       </a>
 
-      <a href="teaching/course-04-organizational-design-product-teams.html" class="post-item reveal">
+      <a href="teaching/course-04-organizational-design-product-teams.html" class="post-item reveal" data-teach-type="academic">
         <div class="post-date">Course 04</div>
         <div class="post-content">
           <div><span class="post-tag">Teams</span><span class="post-tag yellow">Strategy</span></div>
@@ -1874,7 +1880,7 @@ const revealObserver = new IntersectionObserver((entries) => {
 revealEls.forEach(el => revealObserver.observe(el));
 
 // ===== WRITING / BOOKS FILTER =====
-const writeFilterTabs = document.querySelectorAll('.filter-tab');
+const writeFilterTabs = document.querySelectorAll('.filter-tab[data-filter]');
 const writePostItems = document.querySelectorAll('#writing .post-item');
 writeFilterTabs.forEach(tab => {
   tab.addEventListener('click', () => {
@@ -1883,6 +1889,21 @@ writeFilterTabs.forEach(tab => {
     const filter = tab.getAttribute('data-filter');
     writePostItems.forEach(item => {
       const show = filter === 'all' || item.getAttribute('data-type') === filter;
+      item.classList.toggle('is-hidden', !show);
+    });
+  });
+});
+
+// ===== TEACHING FILTER =====
+const teachFilterTabs = document.querySelectorAll('.filter-tab[data-teach-filter]');
+const teachPostItems = document.querySelectorAll('#teaching .post-item');
+teachFilterTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    teachFilterTabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const filter = tab.getAttribute('data-teach-filter');
+    teachPostItems.forEach(item => {
+      const show = filter === 'all' || item.getAttribute('data-teach-type') === filter;
       item.classList.toggle('is-hidden', !show);
     });
   });
