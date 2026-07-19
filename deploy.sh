@@ -29,6 +29,7 @@ source "$ENV_FILE"
 cd "$SCRIPT_DIR"
 if [ "$#" -gt 0 ] && [ -n "$1" ]; then
   git config user.email "arcktip@users.noreply.github.com"
+  git config user.name "Patrick Hoffman"
   git add .
   if git diff --cached --quiet; then
     echo "Nothing new to commit."

@@ -17,7 +17,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../css/shared.css">
   <style>
-    /* Seminar index page */
+    /* ── Header ── */
     .seminar-header {
       background: var(--navy-dark);
       padding: 7rem 2rem 3.5rem;
@@ -69,9 +69,75 @@
       padding: 0.3em 0.75em; border-radius: 20px;
     }
 
+    /* ── Session pills strip ── */
+    .session-nav-strip {
+      background: var(--white);
+      border-bottom: 1px solid var(--grey-mid);
+      padding: 2rem 2rem 2.25rem;
+    }
+    .session-nav-strip-inner {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .session-nav-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.85rem;
+    }
+    .session-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .session-pill {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.4rem;
+      padding: 0.4em 0.9em;
+      border: 1px solid var(--grey-mid);
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--charcoal);
+      text-decoration: none;
+      background: var(--white);
+      transition: background 0.18s, border-color 0.18s, color 0.18s;
+    }
+    .session-pill:hover {
+      background: var(--navy-dark);
+      border-color: var(--navy-dark);
+      color: var(--white);
+    }
+    .session-pill-num {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+    }
+    .session-pill:hover .session-pill-num {
+      color: rgba(255,255,255,0.55);
+    }
+    .session-start-cta {
+      display: inline-block;
+      background: var(--orange);
+      color: var(--white);
+      padding: 0.65em 1.5em;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background 0.18s;
+    }
+    .session-start-cta:hover { background: #c45e0a; color: var(--white); }
+
+    /* ── Body text ── */
     .seminar-body {
       max-width: 700px; margin: 0 auto;
-      padding: 4rem 2rem 2rem;
+      padding: 3.5rem 2rem 1.5rem;
     }
     .seminar-body p {
       font-size: 1.05rem; line-height: 1.85;
@@ -79,16 +145,9 @@
     }
     .seminar-body h2 {
       font-family: 'Playfair Display', serif;
-      font-size: 1.6rem; font-weight: 900;
+      font-size: 1.5rem; font-weight: 900;
       color: var(--charcoal);
-      margin-top: 2.5rem; margin-bottom: 1rem;
-    }
-    .seminar-body ol {
-      padding-left: 1.5rem; margin: 1.5rem 0;
-    }
-    .seminar-body li {
-      font-size: 1rem; line-height: 1.75;
-      color: var(--text-body); margin-bottom: 0.65rem;
+      margin-top: 2.5rem; margin-bottom: 0.85rem;
     }
     .seminar-body a {
       color: var(--royal-light); text-decoration: underline;
@@ -96,47 +155,56 @@
     }
     .seminar-body a:hover { color: var(--orange); }
 
-    /* Session cards */
+    /* ── Session cards ── */
     .session-grid {
       max-width: 700px; margin: 0 auto;
-      padding: 0 2rem 5rem;
-      display: flex; flex-direction: column; gap: 0.75rem;
+      padding: 1rem 2rem 5rem;
+      display: flex; flex-direction: column; gap: 0.65rem;
+    }
+    .session-grid-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      padding: 0 0 0.25rem;
     }
     .session-card {
       display: flex; align-items: flex-start; gap: 1.25rem;
-      padding: 1.25rem 1.5rem;
+      padding: 1.1rem 1.4rem;
       background: var(--white);
       border: 1px solid var(--grey-mid);
       border-radius: 8px;
       text-decoration: none; color: inherit;
-      transition: box-shadow 0.2s, transform 0.2s;
+      transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
     }
     .session-card:hover {
       box-shadow: 0 4px 20px rgba(0,0,0,0.08);
       transform: translateY(-2px);
+      border-color: var(--royal-light);
     }
     .session-num {
-      font-size: 0.68rem; font-weight: 700;
+      font-size: 0.65rem; font-weight: 700;
       letter-spacing: 0.18em; text-transform: uppercase;
       color: var(--text-muted);
-      white-space: nowrap; padding-top: 0.2rem;
-      min-width: 4rem;
+      white-space: nowrap; padding-top: 0.25rem;
+      min-width: 3.5rem;
     }
     .session-info h3 {
       font-family: 'Playfair Display', serif;
-      font-size: 1.05rem; font-weight: 700;
-      color: var(--charcoal); margin-bottom: 0.25rem;
+      font-size: 1rem; font-weight: 700;
+      color: var(--charcoal); margin-bottom: 0.2rem;
       line-height: 1.3;
     }
     .session-info p {
-      font-size: 0.85rem; color: var(--text-secondary);
+      font-size: 0.82rem; color: var(--text-secondary);
       line-height: 1.5;
     }
   </style>
 </head>
 <body>
 
-<!-- Navigation -->
 <nav class="top-nav solid" id="topNav">
   <a href="../../" class="nav-logo">PTH<span>.</span></a>
   <ul class="nav-links">
@@ -169,72 +237,94 @@
   </div>
 </header>
 
-<div class="seminar-body">
-<p>For a product manager to succeed, storytelling is not optional. It is critical and load-bearing. Despite recent advances in AI streamlining much of a PM&#x2019;s day-to-day production work, storytelling remains mostly untouched. This matters because storytelling was always the actual job: taking a pile of incomplete, contradictory information, collapsing it into a direction you are willing to defend, and then holding an organization aligned around that direction long enough to build something. That was and remains the most critical contribution a PM makes to any organization.</p>
-
-<p>This seminar is about the craft of storytelling for product managers. Those who use it will leave with a more deliberate approach to a skill that forms the bedrock of career success &#x2014; and that remains stubbornly resistant to delegation to AI.</p>
-
-<p>My target audience is advanced product managers who want to be the model others learn from. You already ship impactful products by influencing effectively and you know how much communication matters. But you may be less aware about the structure and mechanics behind communication that actually works, or the places where the craft is genuinely hard and might hold back those you want to benefit from your model.</p>
-
-<h2>How the seminar is built</h2>
-
-<p>The first of eight sessions introduces a framework of five load-bearing elements &#x2014; audience, intent, stakes, structure, and through-line &#x2014; that sits underneath every product narrative that holds. Everything after it is either a deeper treatment of one element or a specialized application of the whole. You can read the eight in order, which is how they are designed to build, or you can drop into the one that maps to the problem in front of you. They are written to work on their own and to compound when used together.</p>
-
-<p>A word on what this is not. It is not a bag of delivery tricks, and it is not a case for spin. The through-line of the whole seminar is that a story has integrity only when the interpretation it offers is one you actually believe and would defend under hostile scrutiny. The techniques here work &#x2014; which is exactly why they are only safe in the hands of someone using them for something real. Credibility is the compound interest of storytelling, and this seminar is, in the end, about earning it.</p>
+<!-- Session navigation strip -->
+<div class="session-nav-strip">
+  <div class="session-nav-strip-inner">
+    <p class="session-nav-label">Eight Sessions</p>
+    <div class="session-pills">
+      <a href="01-the-storytelling-framework.html" class="session-pill"><span class="session-pill-num">01</span> The Framework</a>
+      <a href="02-listen-first.html" class="session-pill"><span class="session-pill-num">02</span> Listen First</a>
+      <a href="03-five-questions.html" class="session-pill"><span class="session-pill-num">03</span> Five Questions</a>
+      <a href="04-communication-driven-design.html" class="session-pill"><span class="session-pill-num">04</span> Comm. Driven Design</a>
+      <a href="05-prioritizing-your-message.html" class="session-pill"><span class="session-pill-num">05</span> Prioritizing Your Message</a>
+      <a href="06-customizing-for-the-audience.html" class="session-pill"><span class="session-pill-num">06</span> Customizing for the Audience</a>
+      <a href="07-self-talk.html" class="session-pill"><span class="session-pill-num">07</span> Self-Talk</a>
+      <a href="08-it-takes-a-village.html" class="session-pill"><span class="session-pill-num">08</span> It Takes a Village</a>
+    </div>
+    <a href="01-the-storytelling-framework.html" class="session-start-cta">Start with Session 1 →</a>
+  </div>
 </div>
 
+<!-- Intro -->
+<div class="seminar-body">
+  <p>For a product manager to succeed, storytelling is not optional. It is critical and load-bearing. Despite recent advances in AI streamlining much of a PM&#x2019;s day-to-day production work, storytelling remains mostly untouched. This matters because storytelling was always the actual job: taking a pile of incomplete, contradictory information, collapsing it into a direction you are willing to defend, and then holding an organization aligned around that direction long enough to build something.</p>
+
+  <p>This seminar is about the craft of that work. Those who use it will leave with a more deliberate approach to a skill that forms the bedrock of career success &#x2014; and that remains stubbornly resistant to delegation to AI.</p>
+
+  <p>My target audience is advanced product managers who want to be the model others learn from. You already ship impactful products by influencing effectively and you know how much communication matters. But you may be less aware of the structure and mechanics behind communication that actually works, or the places where the craft is genuinely hard.</p>
+
+  <h2>How the seminar is built</h2>
+
+  <p>The first session introduces a framework of five load-bearing elements &#x2014; audience, intent, stakes, structure, and through-line &#x2014; that sits underneath every product narrative that holds. Everything after it is either a deeper treatment of one element or a specialized application of the whole. You can read the eight in order, which is how they are designed to build, or you can drop into the one that maps to the problem in front of you.</p>
+
+  <p>A word on what this is not. It is not a bag of delivery tricks, and it is not a case for spin. The through-line of the whole seminar is that a story has integrity only when the interpretation it offers is one you actually believe and would defend under hostile scrutiny. Credibility is the compound interest of storytelling, and this seminar is, in the end, about earning it.</p>
+</div>
+
+<!-- Full session list -->
 <div class="session-grid">
+  <p class="session-grid-label">All Sessions</p>
+
   <a href="01-the-storytelling-framework.html" class="session-card">
-    <div class="session-num">Session 1</div>
+    <div class="session-num">01</div>
     <div class="session-info">
       <h3>The Storytelling Framework</h3>
-      <p>Why the whole job is narrative now</p>
+      <p>Why the whole job is narrative now — and the five load-bearing elements every story needs</p>
     </div>
   </a>
   <a href="02-listen-first.html" class="session-card">
-    <div class="session-num">Session 2</div>
+    <div class="session-num">02</div>
     <div class="session-info">
       <h3>Listen First, Listen Deeply</h3>
       <p>Listening as the foundational act of audience research</p>
     </div>
   </a>
   <a href="03-five-questions.html" class="session-card">
-    <div class="session-num">Session 3</div>
+    <div class="session-num">03</div>
     <div class="session-info">
       <h3>The Five Questions Every PM Needs to Answer</h3>
       <p>A durable structure for the strategy story</p>
     </div>
   </a>
   <a href="04-communication-driven-design.html" class="session-card">
-    <div class="session-num">Session 4</div>
+    <div class="session-num">04</div>
     <div class="session-info">
       <h3>Communication Driven Design</h3>
       <p>If you can&#x2019;t tell the story, you don&#x2019;t have the product</p>
     </div>
   </a>
   <a href="05-prioritizing-your-message.html" class="session-card">
-    <div class="session-num">Session 5</div>
+    <div class="session-num">05</div>
     <div class="session-info">
       <h3>Prioritizing Your Message</h3>
       <p>The rule of three and the arithmetic of attention</p>
     </div>
   </a>
   <a href="06-customizing-for-the-audience.html" class="session-card">
-    <div class="session-num">Session 6</div>
+    <div class="session-num">06</div>
     <div class="session-info">
       <h3>Customizing for the Audience</h3>
       <p>Holding the message fixed while varying the telling</p>
     </div>
   </a>
   <a href="07-self-talk.html" class="session-card">
-    <div class="session-num">Session 7</div>
+    <div class="session-num">07</div>
     <div class="session-info">
       <h3>Self-Talk: Telling Yourself the Story</h3>
       <p>The internal narrative as professional infrastructure</p>
     </div>
   </a>
   <a href="08-it-takes-a-village.html" class="session-card">
-    <div class="session-num">Session 8</div>
+    <div class="session-num">08</div>
     <div class="session-info">
       <h3>It Takes a Village: Scaling Your Stories</h3>
       <p>When the organization tells your story in rooms you&#x2019;ll never enter</p>
