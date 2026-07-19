@@ -23,22 +23,26 @@ fi
 
 source "$ENV_FILE"
 
-# Commit message from argument or prompt
-MSG="${1:-}"
-if [ -z "$MSG" ]; then
-  read -p "Commit message: " MSG
-fi
-
 # Git: stage, commit, push
+# Pass a commit message as $1 to commit+push any staged changes.
+# Pass no argument (or "") to skip git entirely and just run the lftp deploy.
 cd "$SCRIPT_DIR"
-git config user.email "arcktip@users.noreply.github.com"
-git add .
-if git diff --cached --quiet; then
-  echo "Nothing to commit, skipping git step."
+if [ "$#" -gt 0 ] && [ -n "$1" ]; then
+  git config user.email "arcktip@users.noreply.github.com"
+  git add .
+  if git diff --cached --quiet; then
+    echo "Nothing new to commit."
+  else
+    git commit -m "$1"
+    echo "Committed."
+  fi
+  if ! git push 2>/dev/null; then
+    echo "WARNING: git push failed (run 'git pull && git push' to sync). Continuing to deploy..."
+  else
+    echo "Pushed to GitHub."
+  fi
 else
-  git commit -m "$MSG"
-  git push
-  echo "Pushed to GitHub."
+  echo "No commit message given — skipping git, running lftp deploy only."
 fi
 
 # Deploy to DreamHost
