@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2TKMRQXKMJ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-2TKMRQXKMJ');
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Communication Driven Design — Storytelling for PMs — Patrick T. Hoffman</title>
+  <meta name="description" content="If you can't tell the story, you don't have the product">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/shared.css">
+  <style>
+    .post-tag { display: inline-block; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--white); background: var(--royal); padding: 0.2em 0.6em; border-radius: 3px; margin-right: 0.35rem; }
+    .post-tag.orange { background: #c45e0a; }
+    .post-tag.yellow { background: #b8960a; }
+    .session-nav { background: var(--grey-light); padding: 2rem; border-top: 1px solid var(--grey-mid); }
+    .session-nav-inner { max-width: 680px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+    .session-nav a { font-size: 0.85rem; font-weight: 600; color: var(--royal-light); text-decoration: none; }
+    .session-nav a:hover { color: var(--orange); }
+    .session-nav .sep { color: var(--grey-mid); }
+  </style>
+</head>
+<body>
+
+<nav class="top-nav solid" id="topNav">
+  <a href="../../" class="nav-logo">PTH<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="https://www.patrickthoffman.com/#about">About</a></li>
+    <li><a href="https://www.patrickthoffman.com/#journey">Journey</a></li>
+    <li><a href="https://www.patrickthoffman.com/#passions">Passions</a></li>
+    <li><a href="https://www.patrickthoffman.com/#writing">Writing</a></li>
+    <li><a href="https://www.patrickthoffman.com/#teaching">Teaching</a></li>
+    <li><a href="https://www.patrickthoffman.com/#research">Research</a></li>
+    <li><a href="https://www.patrickthoffman.com/#speaking">Speaking</a></li>
+    <li><a href="https://www.patrickthoffman.com/#connect">Connect</a></li>
+  </ul>
+</nav>
+<script src="https://www.patrickthoffman.com/js/nav.js" defer></script>
+
+<header class="article-header">
+  <div class="article-header-content">
+    <a href="./index.html" class="article-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+      Storytelling for Product Managers
+    </a>
+    <div class="article-tags">
+      <span class="article-tag">Session 4 of 8</span>
+      <span class="post-tag orange">Design</span> <span class="post-tag">Craft</span>
+    </div>
+    <h1 class="article-title">Communication Driven Design</h1>
+    <div class="article-meta">
+      <span class="article-meta-item">Patrick T. Hoffman</span>
+      <span class="article-meta-item">2026</span>
+    </div>
+  </div>
+</header>
+
+<div class="article-body">
+<p>Every piece before this treats storytelling as something you do <em>after</em> the product work: decide what to build, then craft the narrative that sells it. This one argues for inverting the order. The narrative should come first, and the product should be designed backward from the story you want to be able to tell. I call this communication driven design, and once you have seen it work you cannot unsee it, because it explains why so many well-staffed, well-funded efforts ship something that no one can quite describe.</p>
+
+<h2>The premise: if you can&#x2019;t tell the story, you don&#x2019;t have the product</h2>
+
+<p>Start with an observation every experienced PM has made and few have turned into a method. When a product is genuinely good &#x2014; coherent, valuable, well-scoped &#x2014; the story that explains it tends to be easy to tell. When a product is muddled &#x2014; a bag of features with no center, a solution hunting for a problem, a treaty negotiated between too many stakeholders &#x2014; the story is hard to tell, and no amount of narrative skill fully rescues it. We usually treat that difficulty as a communication problem to grind through at launch. It is not. The difficulty of the narrative is <em>signal</em> about the quality of the underlying thing.</p>
+
+<p>Communication driven design takes that observation and makes it a tool. Instead of discovering the incoherence at the end, when it is expensive, you move the narrative to the very front and use its clarity &#x2014; or its refusal to cohere &#x2014; as your primary design instrument. If you cannot write a clear, compelling account of what you are building, for whom, and why it matters, before you build it, that is not a sign you need to write better. It is a sign the concept is not yet resolved, and you have just caught the flaw at the cheapest possible moment: before a single engineer has been pointed at it.</p>
+
+<h2>This is Conway&#x2019;s Law, pointed forward</h2>
+
+<p>I cannot write about building things without Conway. In 1968 Melvin Conway observed that a system&#x2019;s design is constrained to mirror the communication structure of the organization that builds it. The usual lesson is defensive &#x2014; watch out, your silos will ship as seams. But there is a constructive version, and communication driven design is an instance of it: the narrative is the earliest, cheapest communication structure you can create, so architect it deliberately and let the product inherit its coherence. The document everyone aligns on before the build is the mold. What you pour into it will take its shape whether you intended that or not. A muddled narrative is a mold with no walls; you will get a puddle and call it a launch.</p>
+
+<h2>Working backward, and why prose is the instrument</h2>
+
+<p>The most famous institutionalization of this idea is Amazon&#x2019;s working-backwards process: a team begins a new product not with a spec but by writing the press release and the FAQ that would accompany its launch, before a line of code exists. The press release forces the team to say, in customer-facing language, what the thing does and why anyone would care. The FAQ forces them to face the hard questions a hostile outsider would ask.</p>
+
+<p>The mechanism generalizes far past Amazon&#x2019;s specific ritual. Prose is a ruthless clarifier. Slides let you hide behind bullet fragments and adjacency &#x2014; two bullets near each other imply a relationship the author never had to actually construct. A paragraph does not permit that. It forces you to connect claims with real sentences, to make the logic explicit, to commit to a specific value for a specific customer with a verb in between. Writing the story surfaces every place the thinking is vague, every unstated assumption, every leap that does not survive being written down. Jeff Bezos banned PowerPoint in favor of six-page narrative memos on exactly these grounds: full sentences reveal the quality of thought in a way bullets are designed to conceal.</p>
+
+<h2>What the narrative forces you to decide</h2>
+
+<p><strong>The single customer and the single problem.</strong> A narrative has a protagonist. To write it you must name the specific customer and the specific problem, which instantly exposes the common pathology of the feature that vaguely serves &#x201C;many users&#x201D; with &#x201C;various needs.&#x201D; If your story keeps sliding between different customers with different problems, your product is quietly trying to be several products, and the narrative has caught it while it is still cheap to catch.</p>
+
+<p><strong>The before-and-after.</strong> A product story is fundamentally a story about a change in the customer&#x2019;s world. Articulating that transformation forces you to be concrete about value delivered rather than features shipped. &#x201C;We added a dashboard&#x201D; is a feature. &#x201C;The merchant who used to close the shop and reconcile the day&#x2019;s sales by hand now sees the number the moment the last customer leaves&#x201D; is a transformation. If you cannot describe a meaningful before-and-after, you may be shipping features that do not add up to a change anyone will notice.</p>
+
+<p><strong>The reason to believe.</strong> A skeptical audience will ask why <em>your</em> product delivers this transformation when others have not. Writing the narrative forces you to confront your real differentiation and your real mechanism. If the only answer is &#x201C;we&#x2019;ll execute better,&#x201D; the story is weak, and the weakness is in the concept, not the copy.</p>
+
+<p><strong>The scope boundary.</strong> A clear narrative has a shape, which means it has edges &#x2014; things deliberately in and things deliberately out. The discipline of telling one coherent story is the best antidote to scope creep I know, because every additional feature now has to earn a place in the narrative or be cut.</p>
+
+<h2>The narrative as the alignment artifact</h2>
+
+<p>There is a second, compounding payoff to writing the story first: it becomes the alignment artifact for the whole team, at the moment when alignment is cheapest to buy. When a team agrees up front on the narrative &#x2014; this customer, this problem, this transformation, this reason to believe &#x2014; they have agreed on the thing that actually matters, and a thousand smaller decisions downstream get easier because there is a shared reference to adjudicate them against. &#x201C;Does this belong in the release?&#x201D; stops being a clash of opinions and becomes a question of whether it serves the story everyone already signed.</p>
+
+<h2>Two failure signatures, and how to tell them apart</h2>
+
+<p>The hardest judgment in this practice is distinguishing a communication gap from a product gap, because they present with nearly identical symptoms: the reader does not get it. The temptation is to always diagnose the cheaper problem &#x2014; &#x201C;I just need to explain it better&#x201D; &#x2014; because rewriting a paragraph is easier than admitting the concept is wrong.</p>
+
+<p>A communication gap has a local signature. The overall arc lands &#x2014; people believe the problem is real and the direction is right &#x2014; but one specific step loses them, and when you clarify that step, the objection resolves and stays resolved. A product gap has a global signature. You clarify, and the objection moves rather than resolves &#x2014; the reader nods at your explanation and then raises a different doubt, and then another, because the thing they are actually detecting is that the center does not hold and their questions are circling the hole. The tell is durability: fix a communication gap once and it stays fixed; a product gap regenerates objections faster than you can answer them. When you notice yourself answering the fourth reframed version of the same underlying &#x201C;but why does this matter,&#x201D; stop writing. The narrative has finished its real job, which was to find the gap.</p>
+
+<h2>The deeper claim</h2>
+
+<p>The deepest version of this is that for a product manager, communication and design are not two activities but one. The narrative is not a representation of the product produced after the fact. It is the specification of the product&#x2019;s meaning, and meaning is the thing you are actually in the business of creating &#x2014; an architect does not draw a picture of a building, they specify a building into existence, and the drawing is the building at the only stage where it is still cheap to change. Make the narrative the first artifact instead of the last, and you ensure that meaning gets designed on purpose rather than discovered by accident. Designing meaning on purpose is, in the end, the whole job.</p>
+</div>
+
+<nav class="session-nav">
+  <div class="session-nav-inner">
+    <a href="03-five-questions.html">&larr; Session 3: The Five Questions Every PM Needs to Answer</a>
+    <span class="sep">&middot;</span>
+    <a href="05-prioritizing-your-message.html">Session 5: Prioritizing Your Message &rarr;</a>
+  </div>
+</nav>
+
+<footer>
+  <p>© 2026 Patrick T. Hoffman · <a href="../../">Home</a> · <a href="../">Teaching</a> · <a href="https://www.threads.net/@arcktip" target="_blank" rel="noopener noreferrer">@arcktip</a></p>
+</footer>
+
+</body>
+</html>

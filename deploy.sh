@@ -31,6 +31,7 @@ fi
 
 # Git: stage, commit, push
 cd "$SCRIPT_DIR"
+git config user.email "arcktip@users.noreply.github.com"
 git add .
 if git diff --cached --quiet; then
   echo "Nothing to commit, skipping git step."

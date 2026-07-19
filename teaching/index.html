@@ -186,6 +186,78 @@
       max-width: 560px;
       line-height: 1.65;
     }
+
+    /* ── Post tags (shared with main index) ── */
+    .post-tag {
+      display: inline-block;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--white);
+      background: var(--royal);
+      padding: 0.2em 0.6em;
+      border-radius: 3px;
+      margin-right: 0.4rem;
+      margin-bottom: 0.4rem;
+    }
+    .post-tag.orange { background: #c45e0a; }
+    .post-tag.yellow { background: #b8960a; }
+
+    /* ── Seminar card (wide, single column) ── */
+    .seminar-card {
+      display: flex;
+      gap: 2rem;
+      align-items: flex-start;
+      background: var(--white);
+      border: 1px solid var(--grey-mid);
+      border-left: 4px solid var(--orange);
+      border-radius: 8px;
+      padding: 1.75rem;
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.25s, transform 0.25s;
+      margin-top: 2.5rem;
+    }
+    .seminar-card:hover {
+      box-shadow: 0 8px 30px rgba(0,0,0,0.10);
+      transform: translateY(-3px);
+    }
+    .seminar-card-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 0.6rem;
+    }
+    .seminar-card h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 0.85rem;
+      color: var(--charcoal);
+    }
+    .seminar-card p {
+      font-size: 0.88rem;
+      line-height: 1.65;
+      color: var(--text-secondary);
+      margin-bottom: 1.25rem;
+    }
+    .seminar-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+    }
+    .seminar-card-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .seminar-card-link {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--royal-light);
+      white-space: nowrap;
+    }
   </style>
 </head>
 <body>
@@ -285,6 +357,31 @@
       </div>
 
     </div>
+  </div>
+</section>
+
+<!-- Practitioner Seminars -->
+<section class="courses-section" style="padding-top: 0;">
+  <div class="courses-section-inner">
+    <p class="courses-section-label">Practitioner Seminars</p>
+    <h2 class="courses-section-title">For practitioners, <span>not classrooms.</span></h2>
+    <p class="courses-section-sub">Short-form seminars drawn from practice. No reading lists or instructor guides — just the craft, direct.</p>
+
+    <a href="storytelling/index.html" class="seminar-card">
+      <div style="flex: 1;">
+        <div class="seminar-card-label">Practitioner Seminar · Eight sessions</div>
+        <h2>Storytelling for Product Managers</h2>
+        <p>The craft of product narrative — from the five load-bearing elements of every story that holds, to making a narrative portable enough to survive being carried by others, to building the kind of ambient story that the organization eventually tells to itself.</p>
+        <div class="seminar-card-footer">
+          <div class="seminar-card-tags">
+            <span class="post-tag orange">Craft</span>
+            <span class="post-tag">Narrative</span>
+            <span class="post-tag yellow">Influence</span>
+          </div>
+          <span class="seminar-card-link">Start reading →</span>
+        </div>
+      </div>
+    </a>
   </div>
 </section>
 
