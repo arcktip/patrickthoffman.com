@@ -3,231 +3,213 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Books | Patrick T. Hoffman</title>
-  <meta name="description" content="Books by Patrick T. Hoffman." />
+  <title>Books — Patrick T. Hoffman</title>
+  <meta name="description" content="Long-form thinking on work, technology, and what comes next. Books by Patrick T. Hoffman." />
+  <link rel="canonical" href="https://www.patrickthoffman.com/books/" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/shared.css" />
+
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --paper: #f1eadb;
-      --paper-deep: #e3dac6;
-      --ink: #16223c;
-      --ink-soft: #4a5573;
-      --rev: #c1391f;
-      --gold: #b58b3e;
+    /* ── Page header ── */
+    .books-header {
+      background: var(--navy-dark);
+      padding: 7rem 2rem 3.5rem;
+      position: relative;
+      overflow: hidden;
     }
 
-    body {
-      background: var(--paper);
-      color: var(--ink);
-      font-family: 'Instrument Serif', Georgia, serif;
-      min-height: 100vh;
+    .books-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(rgba(26,58,138,0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(26,58,138,0.12) 1px, transparent 1px);
+      background-size: 30px 30px;
+      opacity: 0.4;
     }
 
-    /* Nav */
-    .pth-nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      height: 44px;
-      background: var(--ink);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 24px;
-      z-index: 999;
-      box-shadow: 0 1px 8px rgba(22,34,60,0.22);
-    }
-
-    .pth-brand {
-      color: var(--paper);
-      font-family: 'Fraunces', Georgia, serif;
-      font-weight: 700;
-      font-size: 16px;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      letter-spacing: -0.01em;
-    }
-
-    .pth-hex { color: var(--gold); font-size: 20px; }
-
-    .pth-links { display: flex; gap: 24px; }
-
-    .pth-links a {
-      color: rgba(241,234,219,0.78);
-      font-family: 'Fraunces', Georgia, serif;
-      font-size: 13px;
-      text-decoration: none;
-      transition: color 0.15s;
-    }
-
-    .pth-links a:hover { color: var(--paper); }
-
-    /* Layout */
-    main {
-      max-width: 720px;
+    .books-header-content {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
       margin: 0 auto;
-      padding: 96px 24px 80px;
     }
 
-    h1 {
-      font-family: 'Fraunces', Georgia, serif;
-      font-size: 2.4rem;
-      font-weight: 300;
-      letter-spacing: -0.03em;
-      color: var(--ink);
-      margin-bottom: 0.3em;
-      line-height: 1.15;
+    .books-label {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 1rem;
     }
 
-    .subtitle {
-      font-size: 1.1rem;
-      color: var(--ink-soft);
-      margin-bottom: 56px;
-      font-style: italic;
+    .books-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.1;
+      margin-bottom: 0.75rem;
     }
 
-    /* Book card */
+    .books-header p {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.6);
+      max-width: 520px;
+    }
+
+    /* ── Book list ── */
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+    }
+
     .book-card {
       display: flex;
-      gap: 32px;
+      gap: 2rem;
       align-items: flex-start;
-      padding: 32px;
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 12px rgba(22,34,60,0.08);
+      padding: 2rem;
+      background: var(--white);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 6px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
       text-decoration: none;
       color: inherit;
       transition: box-shadow 0.2s, transform 0.2s;
-      border: 1px solid rgba(22,34,60,0.07);
+      margin-bottom: 1.5rem;
     }
 
     .book-card:hover {
-      box-shadow: 0 6px 24px rgba(22,34,60,0.13);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.11);
       transform: translateY(-2px);
     }
 
     .book-cover {
       flex-shrink: 0;
-      width: 100px;
-      height: 140px;
-      background: var(--ink);
-      border-radius: 4px;
+      width: 90px;
+      height: 126px;
+      background: var(--navy-dark);
+      border-radius: 3px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 16px 12px;
+      padding: 12px 10px;
       text-align: center;
-      box-shadow: 3px 3px 0 rgba(22,34,60,0.2);
+      box-shadow: 3px 3px 0 rgba(10,20,40,0.18);
     }
 
-    .book-cover-hex {
-      color: var(--gold);
-      font-size: 28px;
+    .book-cover-icon {
+      color: var(--orange);
+      font-size: 22px;
       margin-bottom: 8px;
     }
 
     .book-cover-title {
-      color: var(--paper);
-      font-family: 'Fraunces', Georgia, serif;
-      font-size: 11px;
+      color: rgba(255,255,255,0.85);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 9px;
       font-weight: 600;
-      line-height: 1.3;
-      letter-spacing: 0.02em;
+      line-height: 1.35;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
     }
 
     .book-info { flex: 1; }
 
     .book-info h2 {
-      font-family: 'Fraunces', Georgia, serif;
-      font-size: 1.4rem;
-      font-weight: 600;
-      color: var(--ink);
-      margin-bottom: 8px;
-      letter-spacing: -0.02em;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--charcoal);
+      margin-bottom: 0.3rem;
     }
 
-    .book-info p {
-      font-size: 1rem;
-      color: var(--ink-soft);
+    .book-subtitle {
+      font-size: 0.9rem;
+      font-style: italic;
+      color: var(--text-secondary);
+      margin-bottom: 0.65rem;
+    }
+
+    .book-desc {
+      font-size: 0.92rem;
+      color: var(--text-body);
       line-height: 1.65;
-      margin-bottom: 16px;
+      margin-bottom: 0.75rem;
     }
 
     .book-meta {
-      font-size: 0.85rem;
-      color: var(--ink-soft);
+      font-size: 0.8rem;
+      color: var(--text-muted);
       font-style: italic;
+      margin-bottom: 0.85rem;
     }
 
     .book-cta {
       display: inline-block;
-      margin-top: 16px;
-      font-family: 'Fraunces', Georgia, serif;
-      font-size: 0.9rem;
-      color: var(--rev);
-      text-decoration: none;
-      border-bottom: 1px solid rgba(193,57,31,0.4);
-      padding-bottom: 1px;
-      transition: border-color 0.15s;
-    }
-
-    .book-cta:hover { border-color: var(--rev); }
-
-    footer {
-      text-align: center;
-      padding: 40px 24px;
-      color: var(--ink-soft);
       font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--orange-accessible);
+      text-decoration: underline;
+      text-underline-offset: 3px;
     }
 
-    footer a { color: var(--ink-soft); }
-
-    @media (max-width: 600px) {
-      .book-card { flex-direction: column; gap: 20px; }
-      .book-cover { width: 80px; height: 112px; }
-      h1 { font-size: 1.8rem; }
+    @media (max-width: 540px) {
+      .book-card { flex-direction: column; gap: 1.25rem; }
+      .book-cover { width: 70px; height: 98px; }
     }
   </style>
 </head>
 <body>
 
-<nav class="pth-nav">
-  <a class="pth-brand" href="https://patrickthoffman.com">
-    <span class="pth-hex">&#x2B21;</span> PTH.
-  </a>
-  <div class="pth-links">
-    <a href="https://patrickthoffman.com/writing">Writing</a>
-    <a href="https://www.threads.net/@arcktip">@arcktip</a>
-  </div>
+<nav class="top-nav solid" id="topNav">
+  <a href="https://patrickthoffman.com" class="nav-logo">PTH<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="https://www.patrickthoffman.com/#about">About</a></li>
+    <li><a href="https://www.patrickthoffman.com/#journey">Journey</a></li>
+    <li><a href="https://www.patrickthoffman.com/#passions">Passions</a></li>
+    <li><a href="https://www.patrickthoffman.com/#writing">Writing</a></li>
+    <li><a href="https://www.patrickthoffman.com/#teaching">Teaching</a></li>
+    <li><a href="https://www.patrickthoffman.com/#research">Research</a></li>
+    <li><a href="https://www.patrickthoffman.com/#speaking">Speaking</a></li>
+    <li><a href="https://www.patrickthoffman.com/#connect">Connect</a></li>
+  </ul>
 </nav>
+<script src="https://www.patrickthoffman.com/js/nav.js" defer></script>
+
+<header class="books-header">
+  <div class="books-header-content">
+    <span class="books-label">Books</span>
+    <h1>Long-form thinking</h1>
+    <p>On work, technology, and what comes next.</p>
+  </div>
+</header>
 
 <main>
-  <h1>Books</h1>
-  <p class="subtitle">Long-form thinking on work, technology, and what comes next.</p>
-
   <a class="book-card" href="/books/product-manager/">
     <div class="book-cover">
-      <div class="book-cover-hex">&#x2B21;</div>
+      <div class="book-cover-icon">&#x2B21;</div>
       <div class="book-cover-title">Product Manager?</div>
     </div>
     <div class="book-info">
       <h2>Product Manager?</h2>
-      <p style="font-style:italic; color:var(--ink-soft); margin-bottom:10px; font-size:0.95rem;">The Traits That Survive AI and Whether You'd Like the Work</p>
-      <p>100+ pages on what PMs actually do, the traits that survive AI, how to think like a PM, and hands-on exercises to find out if you'd like the work.</p>
-      <div class="book-meta">Patrick T. Hoffman &middot; 2026</div>
+      <p class="book-subtitle">The Traits That Survive AI and Whether You'd Like the Work</p>
+      <p class="book-desc">100+ pages on what PMs actually do, the traits that survive AI, how to think like a PM, and hands-on exercises to find out if you'd like the work.</p>
+      <p class="book-meta">Patrick T. Hoffman &middot; 2026</p>
       <span class="book-cta">Read &rarr;</span>
     </div>
   </a>
 </main>
 
 <footer>
-  <a href="https://patrickthoffman.com">patrickthoffman.com</a>
+  <p>© 2026 Patrick T. Hoffman · <a href="https://patrickthoffman.com">Home</a> · <a href="/writing/">Writing</a></p>
 </footer>
 
 </body>
