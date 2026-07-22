@@ -19,10 +19,11 @@ cd ~/Library/CloudStorage/GoogleDrive-patrick.t.hoffman@gmail.com/.shortcut-targ
 - `.env.deploy` — credentials
 - `.git/`, `.DS_Store`
 
-### If git push fails with 403:
-Fix expired GitHub Personal Access Token in macOS Keychain — do NOT skip git and deploy directly. Skipping git breaks sync between Google Drive, GitHub, and DreamHost.
-
-Fix: System Preferences → Passwords, or run `git credential-osxkeychain erase` then re-authenticate.
+### If git push fails:
+Remote uses SSH (`git@github.com:arcktip/patrickthoffman.com.git`) — auth is via SSH key, not a PAT.
+Check that your SSH key is loaded: `ssh -T git@github.com`
+If not, add it: `ssh-add ~/.ssh/id_ed25519` (or whichever key is registered with GitHub)
+Never switch to HTTPS — that requires a fine-grained PAT and conflicts with other repos.
 
 ### Claude sandbox cannot deploy:
 The sandbox has no outbound network access to GitHub or DreamHost. Always hand the deploy command to Patrick to run on his Mac.
