@@ -303,3 +303,14 @@
     -webkit-overflow-scrolling: touch;
   }
 }
+
+/* ── Calendar-day paragraphs (Exercise 6 week view) ── */
+p.calendar-day {
+  padding-left: 1.3em;
+  text-indent: -1.3em;
+  margin: 0.28em 0;
+  line-height: 1.62;
+}
+p.calendar-day::before {
+  content: "• ";
+}

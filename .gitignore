@@ -3,3 +3,4 @@
 .env.deploy
 books/product-manager/*.pdf
 books/product-manager/*.epub
+_kdp/

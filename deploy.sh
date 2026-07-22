@@ -61,6 +61,8 @@ lftp -c "
     --exclude-glob .dh-diag/ \
     --exclude-glob .env.deploy \
     --exclude-glob deploy.sh \
+    --exclude-glob _kdp \
+    --exclude-glob _kdp/ \
     $SCRIPT_DIR/ $DH_DIR
   quit
 "
