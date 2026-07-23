@@ -80,5 +80,29 @@ cp /sessions/.../outputs/product-manager.epub _kdp/
 - Stray `<hr>` before a heading inside a closing `</div>`: build script won't auto-remove it — delete from HTML source manually
 - To control which page a figure lands on: reorder the `<figure>` element in the HTML source relative to surrounding paragraphs
 
+---
+
+## Russian Edition — Product Manager? (Менеджер по продукту?)
+
+### Mandate (permanent — survives context compaction):
+- A standalone Russian-language edition exists at `books/product-manager-ru/`
+- It is PRIVATE — excluded from git and lftp; never deployed to patrickthoffman.com
+- It does NOT replace the English edition; both coexist independently
+- Formats: web HTML (local preview only), print PDF, EPUB — all built from Russian HTML source
+- Build scripts: `build_interior_ru.py` and `build_epub_ru.py` (in /tmp/ on sandbox)
+- Outputs: `_kdp/product-manager-interior-ru.pdf` and `_kdp/product-manager-ru.epub`
+
+### When English content is edited, Russian MUST be updated too:
+1. Make the English edit in `books/product-manager/`
+2. Apply the equivalent translation change to the matching file in `books/product-manager-ru/`
+3. Rebuild both English and Russian PDF + EPUB
+4. Run visual layout audit on Russian PDF (Russian text runs ~30% longer than English — page breaks shift)
+
+### Russian layout audit checklist (same as English):
+- No unintentional blank space at bottom of pages
+- No stray horizontal lines
+- Figures land on correct pages relative to their referencing text
+- Author page fits on 1 page
+
 ### Legacy URL redirects:
 - `/books/product-manager-v2/*` → `/books/product-manager/*` (301, in .htaccess)
