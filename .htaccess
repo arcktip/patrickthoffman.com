@@ -32,6 +32,13 @@ RewriteRule "\.(sh|bak|old)(?:$|/)" - [F,L]
 </FilesMatch>
 # END Security
 
+# BEGIN Legacy redirects
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule ^books/product-manager-v2(/.*)?$ /books/product-manager$1 [R=301,L]
+</IfModule>
+# END Legacy redirects
+
 # BEGIN Canonical URL redirect (index.html -> directory root)
 # Sends any request that explicitly asks for .../index.html to the clean
 # directory URL instead, so search engines see one canonical URL per page
