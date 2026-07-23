@@ -115,8 +115,6 @@ if ! run_with_timeout 300 lftp -c "
     --exclude-glob .env.deploy \
     --exclude-glob _kdp \
     --exclude-glob _kdp/ \
-    --exclude-glob product-manager-ru \
-    --exclude-glob product-manager-ru/ \
     --exclude-glob *.sh \
     --exclude-glob *.docx \
     --exclude-glob *.md \
