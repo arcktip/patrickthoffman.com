@@ -5,3 +5,5 @@ books/product-manager/*.pdf
 books/product-manager/*.epub
 _kdp/
 books/product-manager-ru/
+CONTENT_WORKFLOW.md
+DEPLOY_PROTOCOL.md
