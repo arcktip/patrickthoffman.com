@@ -314,3 +314,42 @@ p.calendar-day {
 p.calendar-day::before {
   content: "• ";
 }
+
+/* ── Language switcher (sidebar, all editions) ── */
+.book-summary ul.summary li.pth-lang-switch {
+  padding: 8px 15px 6px;
+}
+.pth-lang-switch .pth-lang-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #8a8f98;
+  margin-bottom: 6px;
+}
+.book-summary ul.summary li.pth-lang-switch a,
+.pth-lang-switch .pth-lang-current {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  padding: 4px 9px;
+  margin: 0 3px 5px 0;
+  border: 1px solid rgba(26,58,138,0.28);
+  border-radius: 999px;
+  color: #1a3a8a;
+  background: transparent;
+  text-decoration: none;
+}
+.book-summary ul.summary li.pth-lang-switch a:hover {
+  background: #0a1428;
+  border-color: #0a1428;
+  color: #fff;
+}
+.pth-lang-switch .pth-lang-current {
+  background: #1a3a8a;
+  border-color: #1a3a8a;
+  color: #fff;
+  cursor: default;
+}
