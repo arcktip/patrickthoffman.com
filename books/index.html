@@ -161,9 +161,58 @@
       text-underline-offset: 3px;
     }
 
+    /* ── Language editions strip ── */
+    .book-card.has-langs {
+      border-radius: 6px 6px 0 0;
+      margin-bottom: 0;
+      border-bottom: none;
+    }
+
+    .book-langs {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.9rem 2rem 1rem;
+      background: #f6f7f9;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-top: 1px dashed rgba(0,0,0,0.1);
+      border-radius: 0 0 6px 6px;
+      margin-bottom: 1.5rem;
+    }
+
+    .book-langs-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-right: 0.35rem;
+    }
+
+    .lang-pill {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--royal, #1a3a8a);
+      background: var(--white);
+      border: 1px solid rgba(26,58,138,0.28);
+      border-radius: 999px;
+      padding: 0.24rem 0.75rem;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+
+    .lang-pill:hover {
+      background: var(--navy-dark, #0a1428);
+      border-color: var(--navy-dark, #0a1428);
+      color: var(--white);
+    }
+
     @media (max-width: 540px) {
       .book-card { flex-direction: column; gap: 1.25rem; }
       .book-cover { width: 70px; height: 98px; }
+      .book-langs { padding: 0.8rem 1.25rem 0.9rem; }
     }
   </style>
 </head>
@@ -193,7 +242,7 @@
 </header>
 
 <main>
-  <a class="book-card" href="/books/product-manager/">
+  <a class="book-card has-langs" href="/books/product-manager/">
     <div class="book-cover">
       <div class="book-cover-icon">&#x2B21;</div>
       <div class="book-cover-title">Product Manager?</div>
@@ -206,6 +255,13 @@
       <span class="book-cta">Read &rarr;</span>
     </div>
   </a>
+  <div class="book-langs">
+    <span class="book-langs-label">Also available in</span>
+    <a class="lang-pill" href="/books/product-manager-fr/" lang="fr" hreflang="fr">Français</a>
+    <a class="lang-pill" href="/books/product-manager-ru/" lang="ru" hreflang="ru">Русский</a>
+    <a class="lang-pill" href="/books/product-manager-es-419/" lang="es" hreflang="es-419">Español&nbsp;· Latinoamérica</a>
+    <a class="lang-pill" href="/books/product-manager-es-es/" lang="es" hreflang="es-ES">Español&nbsp;· España</a>
+  </div>
 </main>
 
 <footer>

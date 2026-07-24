@@ -687,6 +687,56 @@ section {
 
 .post-item.is-hidden { display: none; }
 
+/* ===== BOOK LANGUAGE EDITIONS ROW ===== */
+.post-item.has-langs { border-bottom: none; padding-bottom: 1.1rem; }
+
+.post-item.post-langs {
+  padding: 0 0 1.8rem;
+  cursor: default;
+  align-items: center;
+}
+
+.post-item.post-langs:hover {
+  padding-left: 0;
+  background: transparent;
+  border-radius: 0;
+}
+
+.post-langs-content {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.post-langs-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #767676;
+  margin-right: 0.35rem;
+}
+
+.lang-pill {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--royal);
+  background: transparent;
+  border: 1px solid rgba(26,58,138,0.28);
+  border-radius: 999px;
+  padding: 0.22rem 0.75rem;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.lang-pill:hover {
+  background: var(--navy-dark);
+  border-color: var(--navy-dark);
+  color: var(--white);
+}
+
 @media (max-width: 768px) {
   .post-item {
     grid-template-columns: 1fr;
@@ -1454,7 +1504,7 @@ footer a { color: var(--orange); text-decoration: none; }
         </div>
       </a>
 
-      <a href="https://www.patrickthoffman.com/books/product-manager/" class="post-item reveal" data-type="book">
+      <a href="https://www.patrickthoffman.com/books/product-manager/" class="post-item has-langs reveal" data-type="book">
         <div class="post-date">2026</div>
         <div class="post-content">
           <div><span class="post-tag orange">Product</span><span class="post-tag">Career</span></div>
@@ -1463,6 +1513,16 @@ footer a { color: var(--orange); text-decoration: none; }
           <span class="post-readmore">Read the book →</span>
         </div>
       </a>
+      <div class="post-item post-langs reveal" data-type="book">
+        <div class="post-date"></div>
+        <div class="post-langs-content">
+          <span class="post-langs-label">Also available in</span>
+          <a class="lang-pill" href="https://www.patrickthoffman.com/books/product-manager-fr/" lang="fr" hreflang="fr">Français</a>
+          <a class="lang-pill" href="https://www.patrickthoffman.com/books/product-manager-ru/" lang="ru" hreflang="ru">Русский</a>
+          <a class="lang-pill" href="https://www.patrickthoffman.com/books/product-manager-es-419/" lang="es" hreflang="es-419">Español&nbsp;· Latinoamérica</a>
+          <a class="lang-pill" href="https://www.patrickthoffman.com/books/product-manager-es-es/" lang="es" hreflang="es-ES">Español&nbsp;· España</a>
+        </div>
+      </div>
     </div>
 
     <div class="writing-cta reveal">
