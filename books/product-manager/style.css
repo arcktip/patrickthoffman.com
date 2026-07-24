@@ -317,7 +317,8 @@ p.calendar-day::before {
 
 /* ── Language switcher (sidebar, all editions) ── */
 .book-summary ul.summary li.pth-lang-switch {
-  padding: 8px 15px 6px;
+  padding: 4px 15px 8px;
+  line-height: 1.75;
 }
 .pth-lang-switch .pth-lang-label {
   display: block;
@@ -325,31 +326,42 @@ p.calendar-day::before {
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #8a8f98;
-  margin-bottom: 6px;
+  color: #9aa0a8;
+  margin-bottom: 1px;
 }
 .book-summary ul.summary li.pth-lang-switch a,
 .pth-lang-switch .pth-lang-current {
-  display: inline-block;
-  font-size: 11px;
-  font-weight: 600;
-  line-height: 1;
-  padding: 4px 9px;
-  margin: 0 3px 5px 0;
-  border: 1px solid rgba(26,58,138,0.28);
-  border-radius: 999px;
-  color: #1a3a8a;
-  background: transparent;
+  display: inline;
+  padding: 0;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  background: none;
+  font-size: 13px;
+  font-weight: 400;
   text-decoration: none;
 }
+.book-summary ul.summary li.pth-lang-switch a {
+  color: #4a5573;
+}
 .book-summary ul.summary li.pth-lang-switch a:hover {
-  background: #0a1428;
-  border-color: #0a1428;
-  color: #fff;
+  color: #1a3a8a;
+  background: none;
+  text-decoration: underline;
 }
 .pth-lang-switch .pth-lang-current {
-  background: #1a3a8a;
-  border-color: #1a3a8a;
-  color: #fff;
+  color: #1a3a8a;
+  font-weight: 600;
   cursor: default;
+}
+/* thin separators between languages */
+.pth-lang-switch a::after,
+.pth-lang-switch .pth-lang-current::after {
+  content: "·";
+  color: #c4c8cf;
+  margin: 0 5px 0 7px;
+  font-weight: 400;
+}
+.pth-lang-switch > :last-child::after {
+  content: none;
 }
