@@ -118,6 +118,7 @@ if ! run_with_timeout 300 lftp -c "
     --exclude-glob *.sh \
     --exclude-glob *.docx \
     --exclude-glob *.md \
+    --exclude-glob *.gdoc \
     $SCRIPT_DIR/ $DH_DIR
   quit
 "; then

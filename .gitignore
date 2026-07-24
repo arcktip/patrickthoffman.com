@@ -7,3 +7,5 @@ _kdp/
 books/product-manager-ru/
 CONTENT_WORKFLOW.md
 DEPLOY_PROTOCOL.md
+books/TRANSLATION_HANDOFF.md
+*.gdoc
